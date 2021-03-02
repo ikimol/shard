@@ -55,7 +55,7 @@ BreakInheritanceList: AfterColon
 BreakConstructorInitializers: AfterColon
 # BreakAfterJavaFieldAnnotations: false
 # BreakStringLiterals: true
-ColumnLimit:     0
+ColumnLimit:     120
 # CommentPragmas:  '^ IWYU pragma:'
 # CompactNamespaces: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
