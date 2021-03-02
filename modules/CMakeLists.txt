@@ -7,6 +7,7 @@
 include(${PROJECT_SOURCE_DIR}/cmake/macros.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/os.cmake)
 
+add_subdirectory(any)
 add_subdirectory(math)
 add_subdirectory(meta)
 add_subdirectory(string)
