@@ -7,6 +7,9 @@ set(SHARD_CONFIG_EXPORT_NAME "shard_config_export")
 # use the paths from the GNU cmake module as defaults
 include(GNUInstallDirs)
 
+# include cmake utilities
+include(${CMAKE_SOURCE_DIR}/cmake/utility.cmake)
+
 # add a new static library target
 #
 # usage: shard_add_static_library(<name>
@@ -18,6 +21,9 @@ macro (shard_add_static_library MODULE_NAME)
 
     add_library(${MODULE_NAME} STATIC)
     add_library(shard::${MODULE_NAME} ALIAS ${MODULE_NAME})
+
+    # enable warnings
+    shard_target_enable_warnings(${MODULE_NAME})
 
     target_sources(${MODULE_NAME} PRIVATE ${LOCAL_SOURCES})
 
@@ -85,12 +91,20 @@ endmacro ()
 # usage: shard_add_example(<name>
 #                          SOURCES <src>...
 #                          [MODULES <module>...]
+#                          [RESOURCE_DIR <dir>]
 #                          )
 macro (shard_add_example EXAMPLE_NAME)
     cmake_parse_arguments(LOCAL "" "RESOURCE_DIR" "SOURCES;MODULES" ${ARGN})
+
     set(TARGET_NAME "example.${EXAMPLE_NAME}")
+
     add_executable(${TARGET_NAME} ${LOCAL_SOURCES})
+
+    # enable warnings
+    shard_target_enable_warnings(${TARGET_NAME})
+
     target_link_libraries(${TARGET_NAME} ${LOCAL_MODULES})
+
     if (LOCAL_RESOURCE_DIR)
         file(GLOB RESOURCE_FILES ${LOCAL_RESOURCE_DIR}/*)
         file(COPY ${RESOURCE_FILES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
