@@ -6,4 +6,4 @@
 
 include(${PROJECT_SOURCE_DIR}/cmake/macros.cmake)
 
-# TODO: Add example directories
+add_subdirectory(math)

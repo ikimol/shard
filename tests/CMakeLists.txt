@@ -13,9 +13,13 @@ add_executable(${SHARD_TEST_TARGET})
 target_sources(${SHARD_TEST_TARGET} PRIVATE
                # main test runner
                ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+               # math
+               ${CMAKE_CURRENT_SOURCE_DIR}/math_test.cpp
                )
 
-# TODO: Link required project libraries
+target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
+                      shard::math
+                      )
 
 target_include_directories(${SHARD_TEST_TARGET} PUBLIC
                            ${CMAKE_CURRENT_SOURCE_DIR}
