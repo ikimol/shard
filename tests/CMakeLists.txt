@@ -11,15 +11,16 @@ set(SHARD_TEST_TARGET "tests")
 add_executable(${SHARD_TEST_TARGET}
                # main test runner
                ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-               # math
+               # modules
                ${CMAKE_CURRENT_SOURCE_DIR}/math_test.cpp
-               # meta
                ${CMAKE_CURRENT_SOURCE_DIR}/meta_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/string_test.cpp
                )
 
 target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
                       shard::math
                       shard::meta
+                      shard::string
                       )
 
 target_include_directories(${SHARD_TEST_TARGET} PUBLIC
