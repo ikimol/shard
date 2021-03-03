@@ -51,6 +51,11 @@ struct is_numeric : std::integral_constant<bool, is_integer<T>::value || std::is
 template <typename S, typename T>
 struct is_streamable : std::integral_constant<bool, decltype(detail::stream_test::test<S, T>(0))::value> {};
 
+// is_empty
+
+template <typename... Args>
+struct is_empty : std::integral_constant<bool, sizeof...(Args) == 0> {};
+
 // are_same
 
 template <typename T, typename...>
@@ -121,6 +126,7 @@ using meta::is_integer;
 using meta::is_numeric;
 using meta::is_streamable;
 
+using meta::is_empty;
 using meta::are_same;
 
 using meta::and_type;
