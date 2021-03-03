@@ -15,6 +15,7 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/any_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/math_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/meta_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/signal_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/string_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/optional_test.cpp
                )
@@ -24,6 +25,7 @@ target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
                       shard::math
                       shard::meta
                       shard::optional
+                      shard::signal
                       shard::string
                       )
 
