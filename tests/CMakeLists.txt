@@ -16,6 +16,7 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/core_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/enums_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/math_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/memory_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/meta_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/signal_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/string_test.cpp
@@ -27,6 +28,7 @@ target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
                       shard::core
                       shard::enums
                       shard::math
+                      shard::memory
                       shard::meta
                       shard::optional
                       shard::signal
