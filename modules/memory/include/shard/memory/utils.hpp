@@ -69,6 +69,18 @@ std::size_t get_padding(const void* ptr, std::size_t align) {
     return sizeof(T) + get_padding(add(ptr, sizeof(T)), align);
 }
 
+/// Return the pointer aligned to the given bytes
+inline void* align(const void* ptr, std::size_t align) {
+    auto padding = get_padding(ptr, align);
+    return as_ptr(as_uint(ptr) + padding);
+}
+
+/// Return the pointer aligned to the given bytes
+template <typename T>
+inline T* align(const T* ptr) {
+    return align(ptr, alignof(T));
+}
+
 /// Check if a memory address is n-byte aligned
 inline bool is_aligned(const void* ptr, std::size_t align) {
     return get_padding(ptr, align) == 0;
