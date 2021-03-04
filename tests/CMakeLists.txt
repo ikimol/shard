@@ -13,6 +13,7 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
                # modules
                ${CMAKE_CURRENT_SOURCE_DIR}/any_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/core_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/enums_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/math_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/meta_test.cpp
@@ -23,6 +24,7 @@ add_executable(${SHARD_TEST_TARGET}
 
 target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
                       shard::any
+                      shard::core
                       shard::enums
                       shard::math
                       shard::meta
