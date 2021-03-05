@@ -166,6 +166,7 @@ public:
         m_size = 0;
     }
 
+    /// Exchange the contents of the array with those of another
     void swap(array& other) {
         using std::swap;
         swap(m_allocator, other.m_allocator);

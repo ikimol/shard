@@ -4,5 +4,6 @@
 #define SHARD_CONTAINERS_HPP
 
 #include "shard/containers/array.hpp"
+#include "shard/containers/stack.hpp"
 
 #endif // SHARD_CONTAINERS_HPP
