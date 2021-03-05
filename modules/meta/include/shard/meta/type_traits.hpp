@@ -27,12 +27,16 @@ template <> struct is_integer_impl<unsigned long> : std::true_type {};
 template <> struct is_integer_impl<unsigned long long> : std::true_type {};
 // clang-format on
 
-struct stream_test {
-    template <typename S, typename T>
-    static auto test(int) -> decltype(std::declval<S&>() << std::declval<T>(), std::true_type()) {}
+template <typename S, typename T>
+class stream_test {
+    template <typename S2, typename T2>
+    static auto test(int) -> decltype(std::declval<S2&>() << std::declval<T2>(), std::true_type());
 
     template <typename, typename>
-    static auto test(...) -> std::false_type {}
+    static auto test(...) -> std::false_type;
+
+public:
+    static const bool value = decltype(test<S, T>(0))::value;
 };
 
 } // namespace detail
@@ -49,7 +53,7 @@ template <typename T>
 struct is_numeric : std::integral_constant<bool, is_integer<T>::value || std::is_floating_point<T>::value> {};
 
 template <typename S, typename T>
-struct is_streamable : std::integral_constant<bool, decltype(detail::stream_test::test<S, T>(0))::value> {};
+struct is_streamable : std::integral_constant<bool, detail::stream_test<S, T>::value> {};
 
 // is_empty
 
@@ -126,8 +130,8 @@ using meta::is_integer;
 using meta::is_numeric;
 using meta::is_streamable;
 
-using meta::is_empty;
 using meta::are_same;
+using meta::is_empty;
 
 using meta::and_type;
 using meta::if_type;
