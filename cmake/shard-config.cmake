@@ -3,10 +3,25 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 if (NOT shard_FIND_COMPONENTS)
-    message(FATAL_ERROR "find_package(shard) called with no components")
+    set(shard_FIND_COMPONENTS
+        algorithm any containers core enums math memory meta optional random
+        signal string system
+        )
 endif ()
 
+set(FIND_SHARD_ALGORITHM_DEPENDENCIES "")
+set(FIND_SHARD_ANY_DEPENDENCIES meta)
+set(FIND_SHARD_CONTAINERS_DEPENDENCIES memory)
+set(FIND_SHARD_CORE_DEPENDENCIES "")
+set(FIND_SHARD_ENUMS_DEPENDENCIES "")
 set(FIND_SHARD_MATH_DEPENDENCIES "")
+set(FIND_SHARD_MEMORY_DEPENDENCIES core)
+set(FIND_SHARD_META_DEPENDENCIES "")
+set(FIND_SHARD_OPTIONAL_DEPENDENCIES meta)
+set(FIND_SHARD_RANDOM_DEPENDENCIES meta)
+set(FIND_SHARD_SIGNAL_DEPENDENCIES meta)
+set(FIND_SHARD_STRING_DEPENDENCIES meta)
+set(FIND_SHARD_SYSTEM_DEPENDENCIES optional)
 
 set(FIND_SHARD_ADDITIONAL_COMPONENTS "")
 foreach (COMPONENT ${shard_FIND_COMPONENTS})
@@ -25,10 +40,14 @@ if (EXISTS "${TARGETS_CONFIG_FILENAME}")
 
     set(SHARD_FOUND TRUE)
 
+    # create an umbrella target that links all modules
+    add_library(shard::shard INTERFACE IMPORTED)
+
     foreach (COMPONENT ${shard_FIND_COMPONENTS})
         string(TOUPPER "${COMPONENT}" UPPER_COMPONENT)
         if (TARGET shard::${COMPONENT})
             set(SHARD_${UPPER_COMPONENT}_FOUND TRUE)
+            target_link_libraries(shard::shard INTERFACE shard::${COMPONENT})
         else ()
             set(SHARD_FIND_ERROR "Requested shard component '${COMPONENT}' is missing")
             set(SHARD_${UPPER_COMPONENT}_FOUND FALSE)

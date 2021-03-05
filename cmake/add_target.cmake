@@ -1,5 +1,5 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# shard :: cmake :: macros.cmake
+# shard :: cmake :: add_targets.cmake
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 set(SHARD_CONFIG_EXPORT_NAME "shard_config_export")
@@ -51,7 +51,7 @@ macro (shard_add_static_library MODULE_NAME)
 
     install(DIRECTORY ${LOCAL_INCLUDE_DIR}/
             DESTINATION include
-            FILES_MATCHING PATTERN "*.hpp"
+            FILES_MATCHING PATTERN "*.hpp" PATTERN "*.inl"
             )
 
     install(TARGETS ${MODULE_NAME} EXPORT ${SHARD_CONFIG_EXPORT_NAME}
@@ -78,7 +78,7 @@ macro (shard_add_header_only_library MODULE_NAME INCLUDE_DIR)
 
     install(DIRECTORY ${INCLUDE_DIR}/
             DESTINATION include
-            FILES_MATCHING PATTERN "*.hpp"
+            FILES_MATCHING PATTERN "*.hpp" PATTERN "*.inl"
             )
 
     install(TARGETS ${MODULE_NAME} EXPORT ${SHARD_CONFIG_EXPORT_NAME}
@@ -125,34 +125,3 @@ macro (shard_add_benchmark BENCHMARK_NAME)
     target_link_libraries(${TARGET_NAME} ${LOCAL_MODULES})
     target_include_directories(${TARGET_NAME} PRIVATE ${LOCAL_INCLUDE_DIR})
 endmacro ()
-
-# export all the library targets from the project
-function (shard_export_targets)
-    # CMAKE_CURRENT_LIST_DIR is not usable here
-    set(CURRENT_DIR "${PROJECT_SOURCE_DIR}/cmake")
-
-    # use the package helpers when installing
-    include(CMakePackageConfigHelpers)
-
-    set(TARGETS_CONFIG_FILENAME "shard-targets.cmake")
-    set(CONFIG_PACKAGE_LOCATION "${CMAKE_INSTALL_LIBDIR}/cmake/shard")
-
-    export(EXPORT ${SHARD_CONFIG_EXPORT_NAME}
-           FILE "${CMAKE_CURRENT_BINARY_DIR}/${TARGETS_CONFIG_FILENAME}"
-           )
-
-    configure_package_config_file("${CURRENT_DIR}/shard-config.cmake"
-                                  "${CMAKE_CURRENT_BINARY_DIR}/shard-config.cmake"
-                                  INSTALL_DESTINATION ${CONFIG_PACKAGE_LOCATION}
-                                  )
-
-    install(EXPORT ${SHARD_CONFIG_EXPORT_NAME}
-            FILE ${TARGETS_CONFIG_FILENAME}
-            NAMESPACE "shard::"
-            DESTINATION ${CONFIG_PACKAGE_LOCATION}
-            )
-
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/shard-config.cmake"
-            DESTINATION ${CONFIG_PACKAGE_LOCATION}
-            )
-endfunction ()
