@@ -22,7 +22,7 @@ public:
 
 public:
     /// Default constructor
-    channel() noexcept = default;
+    channel() = default;
 
     /// Destructor that closes the channel and thus notifies waiting threads
     ~channel() { close(); }
