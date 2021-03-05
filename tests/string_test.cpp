@@ -6,6 +6,7 @@
 
 #include <doctest.h>
 
+#include <cstring>
 #include <set>
 #include <vector>
 
