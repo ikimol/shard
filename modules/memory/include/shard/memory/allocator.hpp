@@ -7,6 +7,7 @@
 
 #include <cassert>
 #include <cstddef>
+#include <type_traits>
 
 namespace shard {
 namespace memory {
