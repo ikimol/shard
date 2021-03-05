@@ -120,8 +120,18 @@ endmacro ()
 #                            )
 macro (shard_add_benchmark BENCHMARK_NAME)
     cmake_parse_arguments(LOCAL "" "INCLUDE_DIR" "SOURCES;MODULES" ${ARGN})
+
     set(TARGET_NAME "benchmark.${BENCHMARK_NAME}")
     add_executable(${TARGET_NAME} ${LOCAL_SOURCES})
+
     target_link_libraries(${TARGET_NAME} ${LOCAL_MODULES})
-    target_include_directories(${TARGET_NAME} PRIVATE ${LOCAL_INCLUDE_DIR})
+
+    # locate the benchpress header file
+    set(BENCHPRESS_ROOT_DIR ${PROJECT_SOURCE_DIR}/third_party/benchpress)
+    set(BENCHPRESS_INCLUDE_DIR ${BENCHPRESS_ROOT_DIR}/include)
+
+    target_include_directories(${TARGET_NAME} PRIVATE
+                               ${LOCAL_INCLUDE_DIR}
+                               ${BENCHPRESS_INCLUDE_DIR}
+                               )
 endmacro ()
