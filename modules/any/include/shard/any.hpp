@@ -20,19 +20,15 @@ public:
     any(const any& other) : m_holder(other.m_holder ? other.m_holder->clone() : nullptr) {}
 
     /// Move constructor
-    any(any&& other) noexcept : m_holder(other.m_holder) {
-        other.m_holder = nullptr;
-    }
+    any(any&& other) noexcept : m_holder(other.m_holder) { other.m_holder = nullptr; }
 
     /// Perfect forwarding constructor
     template <typename T, meta::disable_if_t<std::is_same<any&, T>::value>* = nullptr,
-              meta::disable_if_t<std::is_const<T>::value>* = nullptr>
+    meta::disable_if_t<std::is_const<T>::value>* = nullptr>
     any(T&& value) /* NOLINT */ : m_holder(new holder<std::decay_t<T>>(std::forward<T>(value))) {}
 
     /// Destructor
-    ~any() noexcept {
-        delete m_holder;
-    }
+    ~any() noexcept { delete m_holder; }
 
     /// Copy assignment operator
     any& operator=(const any& other) {
@@ -63,9 +59,7 @@ public:
     }
 
     /// Delete the contained object
-    void reset() noexcept {
-        any().swap(*this);
-    }
+    void reset() noexcept { any().swap(*this); }
 
     /// Swap the contained object
     void swap(any& other) noexcept {
@@ -74,14 +68,10 @@ public:
     }
 
     /// Check if an object is contained
-    bool has_value() const noexcept {
-        return m_holder != nullptr;
-    }
+    bool has_value() const noexcept { return m_holder != nullptr; }
 
     /// Get the type of the contained object
-    const std::type_info& type() const noexcept {
-        return m_holder ? m_holder->type() : typeid(void);
-    }
+    const std::type_info& type() const noexcept { return m_holder ? m_holder->type() : typeid(void); }
 
 private:
     class holder_base {
@@ -105,13 +95,9 @@ private:
 
         holder& operator=(const holder&) = delete;
 
-        const std::type_info& type() const noexcept override {
-            return typeid(T);
-        }
+        const std::type_info& type() const noexcept override { return typeid(T); }
 
-        holder_base* clone() const override {
-            return new holder(value);
-        }
+        holder_base* clone() const override { return new holder(value); }
 
         T value;
     };
@@ -131,9 +117,7 @@ inline void swap(any& lhs, any& rhs) noexcept {
 
 class bad_any_cast : public std::bad_cast {
 public:
-    const char* what() const noexcept override {
-        return "shard::bad_any_cast";
-    }
+    const char* what() const noexcept override { return "shard::bad_any_cast"; }
 };
 
 template <typename T>

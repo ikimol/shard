@@ -5,10 +5,11 @@
 
 #include <shard/meta/type_traits.hpp>
 
+#include <algorithm>
 #include <functional>
 #include <memory>
-#include <vector>
 #include <utility>
+#include <vector>
 
 namespace shard {
 
