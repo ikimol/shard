@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <iterator>
 #include <stdexcept>
+#include <utility>
 
 namespace shard {
 namespace containers {

@@ -11,6 +11,8 @@
 #include <shared_mutex>
 #endif
 
+#include <utility>
+
 namespace shard {
 namespace concurrency {
 namespace detail {

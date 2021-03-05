@@ -7,6 +7,7 @@
 
 #include <sstream>
 #include <string>
+#include <utility>
 
 namespace shard {
 namespace string {
@@ -43,7 +44,8 @@ std::string to_string(const T& value) {
 } // namespace detail
 
 /// Convert an arbitrary type to a string
-template <typename T> std::string to_string(T&& value) {
+template <typename T>
+std::string to_string(T&& value) {
     using detail::to_string;
     using std::to_string;
     return to_string(std::forward<T>(value));
