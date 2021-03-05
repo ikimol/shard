@@ -7,6 +7,7 @@
 include(${PROJECT_SOURCE_DIR}/cmake/macros.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/os.cmake)
 
+add_subdirectory(algorithm)
 add_subdirectory(any)
 add_subdirectory(containers)
 add_subdirectory(core)
