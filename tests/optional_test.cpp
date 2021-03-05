@@ -1,5 +1,7 @@
 // Copyright (c) 2021 Miklos Molnar. All rights reserved.
 
+#include "helpers/no_default.hpp"
+
 #include <shard/optional.hpp>
 
 #include <doctest.h>
@@ -8,18 +10,11 @@
 #include <vector>
 
 TEST_SUITE("optional") {
-    struct no_default {
-        no_default(int a, int b) : a(a), b(b) {}
-
-        int a;
-        int b;
-    };
-
     static_assert(sizeof(shard::optional<char>) == 2, "size check");
     static_assert(sizeof(shard::optional<int>) == 8, "size check");
 
     TEST_CASE("storing class with no default constructor") {
-        shard::optional<no_default> o;
+        shard::optional<test::no_default> o;
         CHECK_FALSE(o.has_value());
 
         o.emplace(10, 20);

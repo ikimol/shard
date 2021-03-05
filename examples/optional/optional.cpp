@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#if __cplusplus > 201402L
+#if __cplusplus >= 201703L
 #include <optional>
 #endif
 
@@ -22,7 +22,7 @@ inline shard::optional<int> to_int(const std::string& str) {
 }
 
 int main(int argc, char* argv[]) {
-#if __cplusplus > 201402L
+#if __cplusplus >= 201703L
     static_assert(sizeof(std::optional<char>) == sizeof(shard::optional<char>));
     static_assert(sizeof(std::optional<int>) == sizeof(shard::optional<int>));
     static_assert(sizeof(std::optional<void*>) == sizeof(shard::optional<void*>));
