@@ -144,7 +144,8 @@ TEST_SUITE("any") {
         shard::any original = s;
         shard::any swapped;
         auto original_ptr = shard::any_cast<std::string>(&original);
-        shard::any* result = &original.swap(swapped);
+        original.swap(swapped);
+        shard::any* result = &original;
 
         CHECK_FALSE(original.has_value());
         CHECK(swapped.has_value());

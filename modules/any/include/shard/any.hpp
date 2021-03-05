@@ -68,10 +68,9 @@ public:
     }
 
     /// Swap the contained object
-    any& swap(any& other) noexcept {
+    void swap(any& other) noexcept {
         using std::swap;
         swap(m_holder, other.m_holder);
-        return *this;
     }
 
     /// Check if an object is contained
