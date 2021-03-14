@@ -5,7 +5,6 @@
 # include CMake helper macros
 
 include(${PROJECT_SOURCE_DIR}/cmake/add_target.cmake)
-include(${PROJECT_SOURCE_DIR}/cmake/os.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/export.cmake)
 
 add_subdirectory(algorithm)
