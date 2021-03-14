@@ -68,7 +68,8 @@ TEST_CASE("meta") {
             REQUIRE(shard::is_streamable<std::ostream, int>::value);
             REQUIRE(shard::is_streamable<std::ostream, float>::value);
             REQUIRE(shard::is_streamable<std::ostream, void*>::value);
-            REQUIRE(shard::is_streamable<std::ostream, std::nullptr_t>::value);
+            // TODO: Re-enable in C++17
+            // REQUIRE(shard::is_streamable<std::ostream, std::nullptr_t>::value);
 
             REQUIRE(shard::is_streamable<std::ostream, Widget>::value);
 
