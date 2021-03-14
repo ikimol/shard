@@ -5,125 +5,125 @@
 
 #include <shard/any.hpp>
 
-#include <doctest.h>
+#include <catch.hpp>
 
 #include <string>
 
-TEST_SUITE("any") {
-    TEST_CASE("default constructor") {
+TEST_CASE("any") {
+    SECTION("default constructor") {
         shard::any a;
 
         CHECK_FALSE(a.has_value());
-        CHECK(shard::any_cast<int>(&a) == nullptr);
-        CHECK(a.type() == typeid(void));
+        REQUIRE(shard::any_cast<int>(&a) == nullptr);
+        REQUIRE(a.type() == typeid(void));
     }
 
-    TEST_CASE("copy constructor") {
+    SECTION("copy constructor") {
         std::string s = "foobar";
         shard::any original = s;
         shard::any copy = original;
 
-        CHECK(copy.has_value());
-        CHECK(original.type() == copy.type());
-        CHECK(shard::any_cast<std::string>(copy) == shard::any_cast<std::string>(original));
-        CHECK(shard::any_cast<std::string>(copy) == s);
-        CHECK(shard::any_cast<std::string>(&original) != shard::any_cast<std::string>(&copy));
+        REQUIRE(copy.has_value());
+        REQUIRE(original.type() == copy.type());
+        REQUIRE(shard::any_cast<std::string>(copy) == shard::any_cast<std::string>(original));
+        REQUIRE(shard::any_cast<std::string>(copy) == s);
+        REQUIRE(shard::any_cast<std::string>(&original) != shard::any_cast<std::string>(&copy));
     }
 
-    TEST_CASE("move constructor") {
+    SECTION("move constructor") {
         shard::any original(test::counter {});
         test::counter::reset();
 
         shard::any moved_to(std::move(original));
 
         CHECK_FALSE(original.has_value()); /* NOLINT */
-        CHECK(moved_to.has_value());
-        CHECK(moved_to.type() == typeid(test::counter));
-        CHECK(shard::any_cast<test::counter>(&original) == nullptr);
-        CHECK(shard::any_cast<test::counter>(&moved_to) != nullptr);
-        CHECK(test::counter::copy_constructor == 0);
-        CHECK(test::counter::move_constructor == 0);
+        REQUIRE(moved_to.has_value());
+        REQUIRE(moved_to.type() == typeid(test::counter));
+        REQUIRE(shard::any_cast<test::counter>(&original) == nullptr);
+        REQUIRE(shard::any_cast<test::counter>(&moved_to) != nullptr);
+        REQUIRE(test::counter::copy_constructor == 0);
+        REQUIRE(test::counter::move_constructor == 0);
 
         test::counter::reset();
     }
 
-    TEST_CASE("forwarding constructor") {
+    SECTION("forwarding constructor") {
         std::string s = "foobar";
         shard::any a = s;
 
-        CHECK(a.has_value());
-        CHECK(a.type() == typeid(std::string));
-        CHECK(shard::any_cast<int>(&a) == nullptr);
-        CHECK(shard::any_cast<std::string>(&a) != nullptr);
-        CHECK(shard::any_cast<std::string>(a) == s);
-        CHECK(shard::any_cast<std::string>(&a) != &s);
+        REQUIRE(a.has_value());
+        REQUIRE(a.type() == typeid(std::string));
+        REQUIRE(shard::any_cast<int>(&a) == nullptr);
+        REQUIRE(shard::any_cast<std::string>(&a) != nullptr);
+        REQUIRE(shard::any_cast<std::string>(a) == s);
+        REQUIRE(shard::any_cast<std::string>(&a) != &s);
     }
 
-    TEST_CASE("copy assignment") {
+    SECTION("copy assignment") {
         std::string s = "foobar";
         shard::any original = s;
         shard::any copy;
         shard::any* result = &(copy = original);
 
-        CHECK(copy.has_value());
-        CHECK(original.type() == copy.type());
-        CHECK(shard::any_cast<std::string>(copy) == shard::any_cast<std::string>(original));
-        CHECK(shard::any_cast<std::string>(copy) == s);
-        CHECK(shard::any_cast<std::string>(&original) != shard::any_cast<std::string>(&copy));
-        CHECK(&copy == result);
+        REQUIRE(copy.has_value());
+        REQUIRE(original.type() == copy.type());
+        REQUIRE(shard::any_cast<std::string>(copy) == shard::any_cast<std::string>(original));
+        REQUIRE(shard::any_cast<std::string>(copy) == s);
+        REQUIRE(shard::any_cast<std::string>(&original) != shard::any_cast<std::string>(&copy));
+        REQUIRE(&copy == result);
     }
 
-    TEST_CASE("move assignment") {
+    SECTION("move assignment") {
         shard::any original = test::counter();
         shard::any moved_to;
         test::counter::reset();
         moved_to = std::move(original);
 
         CHECK_FALSE(original.has_value()); /* NOLINT */
-        CHECK(moved_to.has_value());
-        CHECK(moved_to.type() == typeid(test::counter));
-        CHECK(shard::any_cast<test::counter>(&moved_to) != nullptr);
-        CHECK(test::counter::copy_constructor == 0);
-        CHECK(test::counter::move_constructor == 0);
+        REQUIRE(moved_to.has_value());
+        REQUIRE(moved_to.type() == typeid(test::counter));
+        REQUIRE(shard::any_cast<test::counter>(&moved_to) != nullptr);
+        REQUIRE(test::counter::copy_constructor == 0);
+        REQUIRE(test::counter::move_constructor == 0);
 
         test::counter::reset();
     }
 
-    TEST_CASE("forwarding assignment") {
+    SECTION("forwarding assignment") {
         std::string s = "foobar";
         shard::any a;
         shard::any* result = &(a = s);
 
-        CHECK(a.has_value());
-        CHECK(a.type() == typeid(std::string));
-        CHECK(shard::any_cast<int>(&a) == nullptr);
-        CHECK(shard::any_cast<std::string>(&a) != nullptr);
-        CHECK(shard::any_cast<std::string>(a) == s);
-        CHECK(shard::any_cast<std::string>(&a) != &s);
-        CHECK(result == &a);
+        REQUIRE(a.has_value());
+        REQUIRE(a.type() == typeid(std::string));
+        REQUIRE(shard::any_cast<int>(&a) == nullptr);
+        REQUIRE(shard::any_cast<std::string>(&a) != nullptr);
+        REQUIRE(shard::any_cast<std::string>(a) == s);
+        REQUIRE(shard::any_cast<std::string>(&a) != &s);
+        REQUIRE(result == &a);
     }
 
-    TEST_CASE("emplace") {
+    SECTION("emplace") {
         shard::any a;
         auto& s = a.emplace<std::string>("foobar");
 
-        CHECK(a.has_value());
-        CHECK(a.type() == typeid(std::string));
-        CHECK(shard::any_cast<int>(&a) == nullptr);
-        CHECK(shard::any_cast<std::string>(&a) != nullptr);
-        CHECK(shard::any_cast<std::string>(a) == s);
-        CHECK(shard::any_cast<std::string>(&a) == &s);
+        REQUIRE(a.has_value());
+        REQUIRE(a.type() == typeid(std::string));
+        REQUIRE(shard::any_cast<int>(&a) == nullptr);
+        REQUIRE(shard::any_cast<std::string>(&a) != nullptr);
+        REQUIRE(shard::any_cast<std::string>(a) == s);
+        REQUIRE(shard::any_cast<std::string>(&a) == &s);
 
         // assign temporary
 
         test::counter::reset();
         {
             shard::any tmp = test::counter();
-            CHECK(test::counter::default_constructor == 1);
-            CHECK(test::counter::copy_constructor == 0);
-            CHECK(test::counter::move_constructor == 1);
+            REQUIRE(test::counter::default_constructor == 1);
+            REQUIRE(test::counter::copy_constructor == 0);
+            REQUIRE(test::counter::move_constructor == 1);
         }
-        CHECK(test::counter::destructor == 2);
+        REQUIRE(test::counter::destructor == 2);
 
         // emplace type
 
@@ -131,15 +131,15 @@ TEST_SUITE("any") {
         {
             shard::any tmp;
             tmp.emplace<test::counter>();
-            CHECK(test::counter::default_constructor == 1);
-            CHECK(test::counter::copy_constructor == 0);
-            CHECK(test::counter::move_constructor == 0);
+            REQUIRE(test::counter::default_constructor == 1);
+            REQUIRE(test::counter::copy_constructor == 0);
+            REQUIRE(test::counter::move_constructor == 0);
         }
-        CHECK(test::counter::destructor == 1);
+        REQUIRE(test::counter::destructor == 1);
         test::counter::reset();
     }
 
-    TEST_CASE("swap") {
+    SECTION("swap") {
         std::string s = "foobar";
         shard::any original = s;
         shard::any swapped;
@@ -148,12 +148,12 @@ TEST_SUITE("any") {
         shard::any* result = &original;
 
         CHECK_FALSE(original.has_value());
-        CHECK(swapped.has_value());
-        CHECK(swapped.type() == typeid(std::string));
-        CHECK(shard::any_cast<std::string>(swapped) == s);
-        CHECK(original_ptr != nullptr);
-        CHECK(original_ptr == shard::any_cast<std::string>(&swapped));
-        CHECK(result == &original);
+        REQUIRE(swapped.has_value());
+        REQUIRE(swapped.type() == typeid(std::string));
+        REQUIRE(shard::any_cast<std::string>(swapped) == s);
+        REQUIRE(original_ptr != nullptr);
+        REQUIRE(original_ptr == shard::any_cast<std::string>(&swapped));
+        REQUIRE(result == &original);
 
         test::counter::reset();
         {
@@ -161,44 +161,44 @@ TEST_SUITE("any") {
             shard::any copy2 = test::counter();
             auto count = test::counter::copy_constructor;
             swap(copy1, copy2);
-            CHECK(count == test::counter::copy_constructor);
+            REQUIRE(count == test::counter::copy_constructor);
         }
         test::counter::reset();
     }
 
-    TEST_CASE("cast to reference types") {
+    SECTION("cast to reference types") {
         shard::any a = 0;
         const shard::any b = a;
 
         int& a_ref = shard::any_cast<int&>(a);
         const int& a_cref = shard::any_cast<const int&>(a);
 
-        CHECK(&a_ref == &a_cref);
+        REQUIRE(&a_ref == &a_cref);
 
         const int& b_cref = shard::any_cast<const int&>(b);
 
-        CHECK(&a_ref != &b_cref);
+        REQUIRE(&a_ref != &b_cref);
 
         ++a_ref;
         int incremented = shard::any_cast<int>(a);
 
-        CHECK(incremented == 1);
+        REQUIRE(incremented == 1);
 
         CHECK_THROWS_AS(shard::any_cast<char&>(a), shard::bad_any_cast);
         CHECK_THROWS_AS(shard::any_cast<const char&>(b), shard::bad_any_cast);
     }
 
-    TEST_CASE("bad cast") {
+    SECTION("bad cast") {
         int i = 42;
         shard::any a = i;
 
         CHECK_THROWS_AS(shard::any_cast<float>(a), shard::bad_any_cast);
     }
 
-    TEST_CASE("reset method") {
+    SECTION("reset method") {
         shard::any value = "foobar";
 
-        CHECK(value.has_value());
+        REQUIRE(value.has_value());
 
         value.reset();
         CHECK_FALSE(value.has_value());
@@ -207,13 +207,13 @@ TEST_SUITE("any") {
         CHECK_FALSE(value.has_value());
 
         value = 42;
-        CHECK(value.has_value());
+        REQUIRE(value.has_value());
 
         value.reset();
         CHECK_FALSE(value.has_value());
     }
 
-    TEST_CASE("type with defined operator&") {
+    SECTION("type with defined operator&") {
         int i = 42;
         const auto ptr = &i;
         test::addresser<int> addrress(ptr);
@@ -221,7 +221,7 @@ TEST_SUITE("any") {
 
         auto returned = shard::any_cast<test::addresser<int>>(a);
 
-        CHECK(&i == returned.ptr);
-        CHECK(shard::any_cast<test::addresser<int>>(&a) != nullptr);
+        REQUIRE(&i == returned.ptr);
+        REQUIRE(shard::any_cast<test::addresser<int>>(&a) != nullptr);
     }
 }

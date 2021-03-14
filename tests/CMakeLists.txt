@@ -2,9 +2,9 @@
 # shard :: tests :: CMakeLists.txt
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-set(DOCTEST_ROOT_DIR ${PROJECT_SOURCE_DIR}/third_party/doctest)
-set(DOCTEST_INCLUDE_DIR ${DOCTEST_ROOT_DIR}/include)
-set(DOCTEST_CMAKE_DIR ${DOCTEST_ROOT_DIR}/cmake)
+set(CATCH_ROOT_DIR ${PROJECT_SOURCE_DIR}/third_party/catch)
+set(CATCH_INCLUDE_DIR ${CATCH_ROOT_DIR}/include)
+set(CATCH_CMAKE_DIR ${CATCH_ROOT_DIR}/cmake)
 
 set(SHARD_TEST_TARGET "tests")
 
@@ -41,9 +41,9 @@ target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
 
 target_include_directories(${SHARD_TEST_TARGET} PUBLIC
                            ${CMAKE_CURRENT_SOURCE_DIR}
-                           ${DOCTEST_INCLUDE_DIR}
+                           ${CATCH_INCLUDE_DIR}
                            )
 
 # add CTest compatibility
-include(${DOCTEST_CMAKE_DIR}/doctest.cmake)
-doctest_discover_tests(${SHARD_TEST_TARGET})
+include(${CATCH_CMAKE_DIR}/ParseAndAddCatchTests.cmake)
+parseandaddcatchtests(${SHARD_TEST_TARGET})

@@ -2,7 +2,7 @@
 
 #include <shard/signal.hpp>
 
-#include <doctest.h>
+#include <catch.hpp>
 
 static int g_last_i = 0;
 static bool g_handled = false;
@@ -24,83 +24,83 @@ struct event_handler {
     bool handled = false;
 };
 
-TEST_SUITE("signal") {
-    TEST_CASE("slots") {
+TEST_CASE("signal") {
+    SECTION("slots") {
         shard::signal<int> event;
 
-        SUBCASE("free function") {
+        SECTION("free function") {
             event.connect(on_event);
             event.connect(on_empty_event);
             event.emit(42);
-            CHECK(g_last_i == 42);
-            CHECK(g_handled);
+            REQUIRE(g_last_i == 42);
+            REQUIRE(g_handled);
         }
 
-        SUBCASE("lambda") {
+        SECTION("lambda") {
             int last_i = 0;
             event.connect([&last_i](int i) { last_i = i; });
             event.emit(42);
-            CHECK(last_i == 42);
+            REQUIRE(last_i == 42);
         }
 
-        SUBCASE("member function") {
+        SECTION("member function") {
             event_handler handler;
             event.connect(&event_handler::on_event, &handler);
             event.connect(&event_handler::on_empty_event, &handler);
             event.emit(42);
-            CHECK(handler.last_i == 42);
-            CHECK(handler.handled);
+            REQUIRE(handler.last_i == 42);
+            REQUIRE(handler.handled);
         }
     }
 
-    TEST_CASE("connections") {
+    SECTION("connections") {
         shard::signal<int> event;
 
-        SUBCASE("disable") {
+        SECTION("disable") {
             int last_i = 0;
             auto c = event.connect([&](int i) { last_i = i; });
-            CHECK(event.slot_count() == 1);
+            REQUIRE(event.slot_count() == 1);
 
             c.disable();
-            CHECK(event.slot_count() == 1);
+            REQUIRE(event.slot_count() == 1);
 
             event.emit(42);
-            CHECK(last_i == 0);
+            REQUIRE(last_i == 0);
 
             c.enable();
-            CHECK(event.slot_count() == 1);
+            REQUIRE(event.slot_count() == 1);
 
             event.emit(21);
-            CHECK(last_i == 21);
+            REQUIRE(last_i == 21);
         }
 
-        SUBCASE("disconnect") {
+        SECTION("disconnect") {
             int last_i = 0;
             auto c = event.connect([&](int i) { last_i = i; });
-            CHECK(event.slot_count() == 1);
+            REQUIRE(event.slot_count() == 1);
 
             c.disconnect();
-            CHECK(event.slot_count() == 0);
+            REQUIRE(event.slot_count() == 0);
 
             event.emit(42);
-            CHECK(last_i == 0);
+            REQUIRE(last_i == 0);
         }
 
-        SUBCASE("scoped") {
+        SECTION("scoped") {
             int last_i = 0;
 
-            CHECK(event.slot_count() == 0);
+            REQUIRE(event.slot_count() == 0);
             {
                 shard::scoped_connection c = event.connect([&](int i) { last_i = i; });
-                CHECK(event.slot_count() == 1);
+                REQUIRE(event.slot_count() == 1);
 
                 event.emit(42);
-                CHECK(last_i == 42);
+                REQUIRE(last_i == 42);
             }
-            CHECK(event.slot_count() == 0);
+            REQUIRE(event.slot_count() == 0);
 
             event.emit(21);
-            CHECK(last_i == 42);
+            REQUIRE(last_i == 42);
         }
     }
 }

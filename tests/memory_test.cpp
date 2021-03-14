@@ -4,7 +4,7 @@
 
 #include <shard/memory.hpp>
 
-#include <doctest.h>
+#include <catch.hpp>
 
 #include <string>
 
@@ -24,212 +24,212 @@ struct test_class : public shard::object {
     const char* name = "";
 };
 
-TEST_SUITE("memory") {
-    TEST_CASE("allocators") {
-        SUBCASE("free_list_allocator") {
+TEST_CASE("memory") {
+    SECTION("allocators") {
+        SECTION("free_list_allocator") {
             shard::free_list_allocator a(g_buffer, BUFFER_SIZE);
-            CHECK(a.size() == BUFFER_SIZE);
-            CHECK(a.used_memory() == 0);
-            CHECK(a.allocation_count() == 0);
+            REQUIRE(a.size() == BUFFER_SIZE);
+            REQUIRE(a.used_memory() == 0);
+            REQUIRE(a.allocation_count() == 0);
 
             auto w = shard::new_object<test::widget>(a, 3, 42);
             // 16 is the size of the allocation header
-            CHECK(a.used_memory() == sizeof(test::widget) + 16);
-            CHECK(a.allocation_count() == 1);
+            REQUIRE(a.used_memory() == sizeof(test::widget) + 16);
+            REQUIRE(a.allocation_count() == 1);
 
-            CHECK(w->a == 3);
-            CHECK(w->b == 42);
+            REQUIRE(w->a == 3);
+            REQUIRE(w->b == 42);
 
             shard::delete_object(a, w);
-            CHECK(a.used_memory() == 0);
-            CHECK(a.allocation_count() == 0);
+            REQUIRE(a.used_memory() == 0);
+            REQUIRE(a.allocation_count() == 0);
         }
 
-        SUBCASE("heap_allocator") {
+        SECTION("heap_allocator") {
             shard::heap_allocator a;
-            CHECK(a.size() == 0);
-            CHECK(a.used_memory() == 0);
-            CHECK(a.allocation_count() == 0);
+            REQUIRE(a.size() == 0);
+            REQUIRE(a.used_memory() == 0);
+            REQUIRE(a.allocation_count() == 0);
 
             auto w = shard::new_object<test::widget>(a, 3, 42);
             // 8 is the size of the allocation header
-            CHECK(a.used_memory() == sizeof(test::widget) + 8);
-            CHECK(a.allocation_count() == 1);
+            REQUIRE(a.used_memory() == sizeof(test::widget) + 8);
+            REQUIRE(a.allocation_count() == 1);
 
-            CHECK(w->a == 3);
-            CHECK(w->b == 42);
+            REQUIRE(w->a == 3);
+            REQUIRE(w->b == 42);
 
             shard::delete_object(a, w);
-            CHECK(a.used_memory() == 0);
-            CHECK(a.allocation_count() == 0);
+            REQUIRE(a.used_memory() == 0);
+            REQUIRE(a.allocation_count() == 0);
         }
 
-        SUBCASE("linear_allocator") {
+        SECTION("linear_allocator") {
             shard::linear_allocator a(g_buffer, BUFFER_SIZE);
-            CHECK(a.size() == BUFFER_SIZE);
-            CHECK(a.used_memory() == 0);
-            CHECK(a.allocation_count() == 0);
+            REQUIRE(a.size() == BUFFER_SIZE);
+            REQUIRE(a.used_memory() == 0);
+            REQUIRE(a.allocation_count() == 0);
 
             auto w = shard::new_object<test::widget>(a, 3, 42);
-            CHECK(a.used_memory() == sizeof(test::widget));
-            CHECK(a.allocation_count() == 1);
+            REQUIRE(a.used_memory() == sizeof(test::widget));
+            REQUIRE(a.allocation_count() == 1);
 
-            CHECK(w->a == 3);
-            CHECK(w->b == 42);
+            REQUIRE(w->a == 3);
+            REQUIRE(w->b == 42);
 
             {
                 using namespace test;
                 w->~widget();
             }
             a.clear();
-            CHECK(a.used_memory() == 0);
-            CHECK(a.allocation_count() == 0);
+            REQUIRE(a.used_memory() == 0);
+            REQUIRE(a.allocation_count() == 0);
         }
 
-        SUBCASE("pool_allocator") {
+        SECTION("pool_allocator") {
             shard::pool_allocator<test::widget> a(g_buffer, BUFFER_SIZE);
-            CHECK(a.size() == BUFFER_SIZE);
-            CHECK(a.used_memory() == 0);
-            CHECK(a.allocation_count() == 0);
+            REQUIRE(a.size() == BUFFER_SIZE);
+            REQUIRE(a.used_memory() == 0);
+            REQUIRE(a.allocation_count() == 0);
 
             auto w = shard::new_object<test::widget>(a, 3, 42);
-            CHECK(a.used_memory() == sizeof(test::widget));
-            CHECK(a.allocation_count() == 1);
+            REQUIRE(a.used_memory() == sizeof(test::widget));
+            REQUIRE(a.allocation_count() == 1);
 
-            CHECK(w->a == 3);
-            CHECK(w->b == 42);
+            REQUIRE(w->a == 3);
+            REQUIRE(w->b == 42);
 
             shard::delete_object(a, w);
-            CHECK(a.used_memory() == 0);
-            CHECK(a.allocation_count() == 0);
+            REQUIRE(a.used_memory() == 0);
+            REQUIRE(a.allocation_count() == 0);
         }
 
-        SUBCASE("proxy_allocator") {
+        SECTION("proxy_allocator") {
             shard::pool_allocator<test::widget> a(g_buffer, BUFFER_SIZE);
             shard::proxy_allocator proxy(a, "test");
-            CHECK(proxy.size() == BUFFER_SIZE);
-            CHECK(proxy.used_memory() == 0);
-            CHECK(proxy.allocation_count() == 0);
-            CHECK(proxy.name() == std::string("test"));
+            REQUIRE(proxy.size() == BUFFER_SIZE);
+            REQUIRE(proxy.used_memory() == 0);
+            REQUIRE(proxy.allocation_count() == 0);
+            CHECK_THAT(proxy.name(), Catch::Matches("test"));
 
             auto w = shard::new_object<test::widget>(proxy, 3, 42);
-            CHECK(proxy.used_memory() == sizeof(test::widget));
-            CHECK(proxy.allocation_count() == 1);
+            REQUIRE(proxy.used_memory() == sizeof(test::widget));
+            REQUIRE(proxy.allocation_count() == 1);
 
-            CHECK(w->a == 3);
-            CHECK(w->b == 42);
+            REQUIRE(w->a == 3);
+            REQUIRE(w->b == 42);
 
             shard::delete_object(proxy, w);
-            CHECK(proxy.used_memory() == 0);
-            CHECK(proxy.allocation_count() == 0);
+            REQUIRE(proxy.used_memory() == 0);
+            REQUIRE(proxy.allocation_count() == 0);
         }
 
-        SUBCASE("static_allocator") {
+        SECTION("static_allocator") {
             shard::static_allocator<BUFFER_SIZE> a;
-            CHECK(a.size() == BUFFER_SIZE);
-            CHECK(a.used_memory() == 0);
-            CHECK(a.allocation_count() == 0);
+            REQUIRE(a.size() == BUFFER_SIZE);
+            REQUIRE(a.used_memory() == 0);
+            REQUIRE(a.allocation_count() == 0);
 
             auto w = shard::new_object<test::widget>(a, 3, 42);
-            CHECK(a.used_memory() == sizeof(test::widget));
-            CHECK(a.allocation_count() == 1);
+            REQUIRE(a.used_memory() == sizeof(test::widget));
+            REQUIRE(a.allocation_count() == 1);
 
-            CHECK(w->a == 3);
-            CHECK(w->b == 42);
+            REQUIRE(w->a == 3);
+            REQUIRE(w->b == 42);
 
             {
                 using namespace test;
                 w->~widget();
             }
             a.clear();
-            CHECK(a.used_memory() == 0);
-            CHECK(a.allocation_count() == 0);
+            REQUIRE(a.used_memory() == 0);
+            REQUIRE(a.allocation_count() == 0);
         }
     }
 
-    TEST_CASE("object") {
-        SUBCASE("ref_count") {
+    SECTION("object") {
+        SECTION("ref_count") {
             auto o = new test_class(42);
-            CHECK(o->ref_count() == 0);
+            REQUIRE(o->ref_count() == 0);
             o->retain();
-            CHECK(o->ref_count() == 1);
+            REQUIRE(o->ref_count() == 1);
             o->release(false);
-            CHECK(o->ref_count() == 0);
+            REQUIRE(o->ref_count() == 0);
             delete o;
         }
 
-        SUBCASE("copy constructor") {
+        SECTION("copy constructor") {
             auto o = new test_class(42);
-            CHECK(o->ref_count() == 0);
+            REQUIRE(o->ref_count() == 0);
             o->retain();
-            CHECK(o->ref_count() == 1);
+            REQUIRE(o->ref_count() == 1);
 
             auto copy = *o;
-            CHECK(copy.ref_count() == 0);
+            REQUIRE(copy.ref_count() == 0);
             copy.retain();
-            CHECK(copy.ref_count() == 1);
+            REQUIRE(copy.ref_count() == 1);
 
             o->release();
-            CHECK(copy.ref_count() == 1);
+            REQUIRE(copy.ref_count() == 1);
 
             copy.release(false);
-            CHECK(copy.ref_count() == 0);
+            REQUIRE(copy.ref_count() == 0);
         }
 
-        SUBCASE("object_ptr") {
+        SECTION("object_ptr") {
             shard::object_ptr<test_class> o(new test_class(42, "foo"));
-            CHECK(o->ref_count() == 1);
-            CHECK(o->id == 42);
-            CHECK((*o).name == std::string("foo"));
-            CHECK((bool)(o));
+            REQUIRE(o->ref_count() == 1);
+            REQUIRE(o->id == 42);
+            CHECK_THAT((*o).name, Catch::Matches("foo"));
+            REQUIRE((bool)(o));
 
-            SUBCASE("copying") {
+            SECTION("copying") {
                 auto copied_to = o;
-                CHECK(copied_to->ref_count() == 2);
-                CHECK(o.get() != nullptr);
+                REQUIRE(copied_to->ref_count() == 2);
+                REQUIRE(o.get() != nullptr);
             }
 
-            SUBCASE("moving") {
+            SECTION("moving") {
                 auto moved_to = std::move(o);
-                CHECK(moved_to->ref_count() == 1);
-                CHECK(o.get() == nullptr); /* NOLINT */
+                REQUIRE(moved_to->ref_count() == 1);
+                REQUIRE(o.get() == nullptr); /* NOLINT */
             }
         }
 
-        SUBCASE("make_object") {
+        SECTION("make_object") {
             auto o = shard::make_object<test_class>(42, "foo");
-            CHECK(o->id == 42);
-            CHECK(o->name == std::string("foo"));
+            REQUIRE(o->id == 42);
+            CHECK_THAT(o->name, Catch::Matches("foo"));
         }
     }
 
-    TEST_CASE("utils") {
+    SECTION("utils") {
         auto p2 = shard::memory::add(g_buffer, 2);
-        CHECK(p2 == g_buffer + 2);
+        REQUIRE(p2 == g_buffer + 2);
 
         auto p1 = shard::memory::sub(p2, 1);
-        CHECK(p1 == g_buffer + 1);
+        REQUIRE(p1 == g_buffer + 1);
 
-        SUBCASE("padding") {
+        SECTION("padding") {
             auto padding = shard::memory::get_padding(p1, 4);
-            CHECK(padding == 3);
+            REQUIRE(padding == 3);
 
-            SUBCASE("with bigger header") {
+            SECTION("with bigger header") {
                 struct header {
                     std::size_t size = 0;
                 };
 
                 auto padding_with_header = shard::memory::get_padding<header>(p1, 4);
-                CHECK(padding_with_header == 15);
+                REQUIRE(padding_with_header == 15);
             }
 
-            SUBCASE("with smaller header") {
+            SECTION("with smaller header") {
                 struct header {
                     short size = 0;
                 };
 
                 auto padding_with_header = shard::memory::get_padding<header>(p1, 4);
-                CHECK(padding_with_header == 3);
+                REQUIRE(padding_with_header == 3);
             }
         }
     }
