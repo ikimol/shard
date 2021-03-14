@@ -40,18 +40,18 @@ TEST_CASE("meta") {
             REQUIRE(shard::is_integer<long long>::value);
             REQUIRE(shard::is_integer<unsigned long long>::value);
 
-            CHECK_FALSE(shard::is_integer<bool>::value);
-            CHECK_FALSE(shard::is_integer<float>::value);
-            CHECK_FALSE(shard::is_integer<double>::value);
-            CHECK_FALSE(shard::is_integer<void*>::value);
+            REQUIRE_FALSE(shard::is_integer<bool>::value);
+            REQUIRE_FALSE(shard::is_integer<float>::value);
+            REQUIRE_FALSE(shard::is_integer<double>::value);
+            REQUIRE_FALSE(shard::is_integer<void*>::value);
         }
 
         SECTION("is_bool") {
             REQUIRE(shard::is_bool<bool>::value);
 
-            CHECK_FALSE(shard::is_bool<int>::value);
-            CHECK_FALSE(shard::is_bool<void*>::value);
-            CHECK_FALSE(shard::is_bool<float>::value);
+            REQUIRE_FALSE(shard::is_bool<int>::value);
+            REQUIRE_FALSE(shard::is_bool<void*>::value);
+            REQUIRE_FALSE(shard::is_bool<float>::value);
         }
 
         SECTION("is_numeric") {
@@ -59,8 +59,8 @@ TEST_CASE("meta") {
             REQUIRE(shard::is_numeric<float>::value);
             REQUIRE(shard::is_numeric<double>::value);
 
-            CHECK_FALSE(shard::is_numeric<bool>::value);
-            CHECK_FALSE(shard::is_bool<void*>::value);
+            REQUIRE_FALSE(shard::is_numeric<bool>::value);
+            REQUIRE_FALSE(shard::is_bool<void*>::value);
         }
 
         SECTION("is_streamable") {
@@ -72,17 +72,17 @@ TEST_CASE("meta") {
 
             REQUIRE(shard::is_streamable<std::ostream, Widget>::value);
 
-            CHECK_FALSE(shard::is_streamable<std::ostream, Gizmo>::value);
+            REQUIRE_FALSE(shard::is_streamable<std::ostream, Gizmo>::value);
         }
 
         SECTION("are_same") {
             REQUIRE(shard::are_same<int, int, int>::value);
-            CHECK_FALSE(shard::are_same<int, float, int>::value);
+            REQUIRE_FALSE(shard::are_same<int, float, int>::value);
         }
 
         SECTION("not_type") {
             REQUIRE(shard::not_type<shard::is_bool<float>>::value);
-            CHECK_FALSE(shard::not_type<shard::is_bool<bool>>::value);
+            REQUIRE_FALSE(shard::not_type<shard::is_bool<bool>>::value);
         }
 
         SECTION("if_type") {
@@ -92,15 +92,15 @@ TEST_CASE("meta") {
 
         SECTION("and_type") {
             REQUIRE(shard::and_type<shard::is_bool<bool>, shard::is_integer<long>>::value);
-            CHECK_FALSE(shard::and_type<shard::is_bool<bool>, shard::is_numeric<void*>>::value);
-            CHECK_FALSE(shard::and_type<shard::is_bool<int>, shard::is_numeric<void*>>::value);
+            REQUIRE_FALSE(shard::and_type<shard::is_bool<bool>, shard::is_numeric<void*>>::value);
+            REQUIRE_FALSE(shard::and_type<shard::is_bool<int>, shard::is_numeric<void*>>::value);
         }
 
         SECTION("or_type") {
             REQUIRE(shard::or_type<shard::is_bool<bool>, shard::is_integer<long>>::value);
             REQUIRE(shard::or_type<shard::is_bool<bool>, shard::is_numeric<void*>>::value);
             REQUIRE(shard::or_type<shard::is_bool<int>, shard::is_bool<bool>>::value);
-            CHECK_FALSE(shard::or_type<shard::is_bool<int>, shard::is_numeric<void*>>::value);
+            REQUIRE_FALSE(shard::or_type<shard::is_bool<int>, shard::is_numeric<void*>>::value);
         }
 
         SECTION("result_of") {

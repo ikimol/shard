@@ -13,7 +13,7 @@ TEST_CASE("any") {
     SECTION("default constructor") {
         shard::any a;
 
-        CHECK_FALSE(a.has_value());
+        REQUIRE_FALSE(a.has_value());
         REQUIRE(shard::any_cast<int>(&a) == nullptr);
         REQUIRE(a.type() == typeid(void));
     }
@@ -36,7 +36,7 @@ TEST_CASE("any") {
 
         shard::any moved_to(std::move(original));
 
-        CHECK_FALSE(original.has_value()); /* NOLINT */
+        REQUIRE_FALSE(original.has_value()); /* NOLINT */
         REQUIRE(moved_to.has_value());
         REQUIRE(moved_to.type() == typeid(test::counter));
         REQUIRE(shard::any_cast<test::counter>(&original) == nullptr);
@@ -79,7 +79,7 @@ TEST_CASE("any") {
         test::counter::reset();
         moved_to = std::move(original);
 
-        CHECK_FALSE(original.has_value()); /* NOLINT */
+        REQUIRE_FALSE(original.has_value()); /* NOLINT */
         REQUIRE(moved_to.has_value());
         REQUIRE(moved_to.type() == typeid(test::counter));
         REQUIRE(shard::any_cast<test::counter>(&moved_to) != nullptr);
@@ -147,7 +147,7 @@ TEST_CASE("any") {
         original.swap(swapped);
         shard::any* result = &original;
 
-        CHECK_FALSE(original.has_value());
+        REQUIRE_FALSE(original.has_value());
         REQUIRE(swapped.has_value());
         REQUIRE(swapped.type() == typeid(std::string));
         REQUIRE(shard::any_cast<std::string>(swapped) == s);
@@ -184,15 +184,15 @@ TEST_CASE("any") {
 
         REQUIRE(incremented == 1);
 
-        CHECK_THROWS_AS(shard::any_cast<char&>(a), shard::bad_any_cast);
-        CHECK_THROWS_AS(shard::any_cast<const char&>(b), shard::bad_any_cast);
+        REQUIRE_THROWS_AS(shard::any_cast<char&>(a), shard::bad_any_cast);
+        REQUIRE_THROWS_AS(shard::any_cast<const char&>(b), shard::bad_any_cast);
     }
 
     SECTION("bad cast") {
         int i = 42;
         shard::any a = i;
 
-        CHECK_THROWS_AS(shard::any_cast<float>(a), shard::bad_any_cast);
+        REQUIRE_THROWS_AS(shard::any_cast<float>(a), shard::bad_any_cast);
     }
 
     SECTION("reset method") {
@@ -201,16 +201,16 @@ TEST_CASE("any") {
         REQUIRE(value.has_value());
 
         value.reset();
-        CHECK_FALSE(value.has_value());
+        REQUIRE_FALSE(value.has_value());
 
         value.reset();
-        CHECK_FALSE(value.has_value());
+        REQUIRE_FALSE(value.has_value());
 
         value = 42;
         REQUIRE(value.has_value());
 
         value.reset();
-        CHECK_FALSE(value.has_value());
+        REQUIRE_FALSE(value.has_value());
     }
 
     SECTION("type with defined operator&") {

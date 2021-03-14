@@ -20,8 +20,8 @@ TEST_CASE("enums") {
         REQUIRE(m.test(side::left));
         REQUIRE(m.test(side::right));
 
-        CHECK_FALSE(m.test(side::top));
-        CHECK_FALSE(m.test(side::bottom));
+        REQUIRE_FALSE(m.test(side::top));
+        REQUIRE_FALSE(m.test(side::bottom));
     }
 
     SECTION("operators") {

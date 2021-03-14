@@ -24,14 +24,14 @@ TEST_CASE("string") {
             REQUIRE(shard::ch::iequal('a', 'A'));
             REQUIRE(shard::ch::iequal('z', 'Z'));
             REQUIRE(shard::ch::iequal('1', '1'));
-            CHECK_FALSE(shard::ch::iequal('a', 'B'));
+            REQUIRE_FALSE(shard::ch::iequal('a', 'B'));
         }
 
         SECTION("iequals") {
             REQUIRE(shard::iequals("foo", "FoO"));
             REQUIRE(shard::iequals("foo", "foo"));
             REQUIRE(shard::iequals("foo", "FOO"));
-            CHECK_FALSE(shard::iequals("foo", "boo"));
+            REQUIRE_FALSE(shard::iequals("foo", "boo"));
         }
 
         SECTION("starts_with") {

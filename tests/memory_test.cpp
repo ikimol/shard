@@ -110,7 +110,7 @@ TEST_CASE("memory") {
             REQUIRE(proxy.size() == BUFFER_SIZE);
             REQUIRE(proxy.used_memory() == 0);
             REQUIRE(proxy.allocation_count() == 0);
-            CHECK_THAT(proxy.name(), Catch::Matches("test"));
+            REQUIRE_THAT(proxy.name(), Catch::Matches("test"));
 
             auto w = shard::new_object<test::widget>(proxy, 3, 42);
             REQUIRE(proxy.used_memory() == sizeof(test::widget));
@@ -180,7 +180,7 @@ TEST_CASE("memory") {
             shard::object_ptr<test_class> o(new test_class(42, "foo"));
             REQUIRE(o->ref_count() == 1);
             REQUIRE(o->id == 42);
-            CHECK_THAT((*o).name, Catch::Matches("foo"));
+            REQUIRE_THAT((*o).name, Catch::Matches("foo"));
             REQUIRE((bool)(o));
 
             SECTION("copying") {
@@ -199,7 +199,7 @@ TEST_CASE("memory") {
         SECTION("make_object") {
             auto o = shard::make_object<test_class>(42, "foo");
             REQUIRE(o->id == 42);
-            CHECK_THAT(o->name, Catch::Matches("foo"));
+            REQUIRE_THAT(o->name, Catch::Matches("foo"));
         }
     }
 

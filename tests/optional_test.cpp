@@ -16,13 +16,13 @@ TEST_CASE("optional") {
 
     SECTION("storing class with no default constructor") {
         shard::optional<test::no_default> o;
-        CHECK_FALSE(o.has_value());
+        REQUIRE_FALSE(o.has_value());
 
         o.emplace(10, 20);
         REQUIRE(o.has_value());
 
         o.reset();
-        CHECK_FALSE(o.has_value());
+        REQUIRE_FALSE(o.has_value());
     }
 
     SECTION("emplacing values") {
@@ -39,7 +39,7 @@ TEST_CASE("optional") {
 
     SECTION("optional string") {
         shard::optional<std::string> o;
-        CHECK_FALSE(o.has_value());
+        REQUIRE_FALSE(o.has_value());
 
         o = "foo";
         REQUIRE(o.has_value());
@@ -50,7 +50,7 @@ TEST_CASE("optional") {
         // default constructed
         {
             shard::optional<const int> o;
-            CHECK_FALSE(o.has_value());
+            REQUIRE_FALSE(o.has_value());
 
             o.emplace(4);
             REQUIRE(o.value() == 4);
@@ -59,7 +59,7 @@ TEST_CASE("optional") {
             REQUIRE(o.value() == 5);
 
             o.reset();
-            CHECK_FALSE(o.has_value());
+            REQUIRE_FALSE(o.has_value());
         }
 
         // copy-constructed
@@ -81,7 +81,7 @@ TEST_CASE("optional") {
     SECTION("specifying default values") {
         shard::optional<int> o;
 
-        CHECK_FALSE(o.has_value());
+        REQUIRE_FALSE(o.has_value());
         REQUIRE(o.value_or(42) == 42);
 
         o = 4;
@@ -95,16 +95,16 @@ TEST_CASE("optional") {
         shard::optional<std::string> b;
 
         swap(a, b);
-        CHECK_FALSE(a.has_value());
-        CHECK_FALSE(b.has_value());
+        REQUIRE_FALSE(a.has_value());
+        REQUIRE_FALSE(b.has_value());
 
         a = "hello";
         REQUIRE(a.has_value());
-        CHECK_FALSE(b.has_value());
+        REQUIRE_FALSE(b.has_value());
         REQUIRE(a.value() == "hello");
 
         swap(a, b);
-        CHECK_FALSE(a.has_value());
+        REQUIRE_FALSE(a.has_value());
         REQUIRE(b.has_value());
         REQUIRE(b.value() == "hello");
 
@@ -183,11 +183,11 @@ TEST_CASE("optional") {
         REQUIRE(shard::nullopt == shard::optional<int> {});
 
         REQUIRE(shard::nullopt < shard::make_optional(1));
-        CHECK_FALSE(shard::nullopt < shard::optional<int> {});
-        CHECK_FALSE(shard::optional<int> {} < shard::nullopt);
+        REQUIRE_FALSE(shard::nullopt < shard::optional<int> {});
+        REQUIRE_FALSE(shard::optional<int> {} < shard::nullopt);
         REQUIRE(shard::make_optional(1) > shard::nullopt);
-        CHECK_FALSE(shard::nullopt > shard::optional<int> {});
-        CHECK_FALSE(shard::optional<int> {} > shard::nullopt);
+        REQUIRE_FALSE(shard::nullopt > shard::optional<int> {});
+        REQUIRE_FALSE(shard::optional<int> {} > shard::nullopt);
 
         REQUIRE(shard::nullopt <= shard::make_optional(1));
         REQUIRE(shard::nullopt <= shard::optional<int> {});

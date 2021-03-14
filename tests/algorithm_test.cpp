@@ -57,11 +57,11 @@ TEST_CASE("algorithm") {
         SECTION("has_key") {
             std::map<std::string, int> map = {{"one", 1}, {"two", 2}, {"three", 3}};
             REQUIRE(shard::has_key(map, "one"));
-            CHECK_FALSE(shard::has_key(map, "four"));
+            REQUIRE_FALSE(shard::has_key(map, "four"));
 
             std::set<std::string> set = {"foo", "bar", "baz"};
             REQUIRE(shard::has_key(set, "bar"));
-            CHECK_FALSE(shard::has_key(set, "quack"));
+            REQUIRE_FALSE(shard::has_key(set, "quack"));
         }
 
         SECTION("keys_of") {
