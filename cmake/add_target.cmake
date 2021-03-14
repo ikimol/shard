@@ -8,7 +8,7 @@ set(SHARD_CONFIG_EXPORT_NAME "shard_config_export")
 include(GNUInstallDirs)
 
 # include cmake utilities
-include(${CMAKE_SOURCE_DIR}/cmake/utility.cmake)
+include(${PROJECT_SOURCE_DIR}/cmake/utility.cmake)
 
 # add a new static library target
 #
