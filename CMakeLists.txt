@@ -17,6 +17,13 @@ message(STATUS "${PROJECT_NAME} version ${PROJECT_VERSION}")
 set(CMAKE_CXX_STANDARD 14)
 
 # ------------------------------------------------------------------------------
+# system information
+# ------------------------------------------------------------------------------
+
+math(EXPR SHARD_SYSTEM_ARCH "${CMAKE_SIZEOF_VOID_P} * 8")
+message(STATUS "Building on ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_VERSION} (${SHARD_SYSTEM_ARCH}-bit)")
+
+# ------------------------------------------------------------------------------
 # build options
 # ------------------------------------------------------------------------------
 

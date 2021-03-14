@@ -42,7 +42,7 @@ target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
 include(${PROJECT_SOURCE_DIR}/cmake/os.cmake)
 
 # link pthreads if building on Linux
-if (SHAD_OS_LINUX)
+if (SHARD_OS_LINUX)
     find_package(Threads REQUIRED)
     target_link_libraries(${SHARD_TEST_TARGET} PRIVATE Threads::Threads)
 endif ()
