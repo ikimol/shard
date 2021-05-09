@@ -5,6 +5,7 @@
 
 #include "shard/math/degrees.hpp"
 #include "shard/math/percentage.hpp"
+#include "shard/math/prime.hpp"
 #include "shard/math/utils.hpp"
 
 #endif // SHARD_MATH_HPP

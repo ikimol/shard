@@ -24,6 +24,41 @@ TEST_CASE("math") {
         REQUIRE(p.to_value(1.2f) == 14.f);
     }
 
+    SECTION("prime") {
+        SECTION("is_prime") {
+            REQUIRE_FALSE(shard::is_prime(0));
+            REQUIRE_FALSE(shard::is_prime(1));
+            REQUIRE(shard::is_prime(2));
+            REQUIRE(shard::is_prime(3));
+            REQUIRE_FALSE(shard::is_prime(4));
+            REQUIRE(shard::is_prime(5));
+            REQUIRE_FALSE(shard::is_prime(6));
+            REQUIRE(shard::is_prime(7));
+            REQUIRE_FALSE(shard::is_prime(8));
+            REQUIRE_FALSE(shard::is_prime(9));
+            REQUIRE_FALSE(shard::is_prime(10));
+            REQUIRE(shard::is_prime(11));
+            REQUIRE_FALSE(shard::is_prime(12));
+            REQUIRE(shard::is_prime(13));
+            REQUIRE_FALSE(shard::is_prime(14));
+            REQUIRE_FALSE(shard::is_prime(15));
+            REQUIRE_FALSE(shard::is_prime(16));
+            REQUIRE(shard::is_prime(17));
+            REQUIRE_FALSE(shard::is_prime(18));
+            REQUIRE(shard::is_prime(19));
+        }
+
+        SECTION("next_prime") {
+            REQUIRE(shard::next_prime(0) == 2);
+            REQUIRE(shard::next_prime(4) == 5);
+            REQUIRE(shard::next_prime(10) == 11);
+            REQUIRE(shard::next_prime(22) == 23);
+            REQUIRE(shard::next_prime(46) == 47);
+            REQUIRE(shard::next_prime(95) == 97);
+            REQUIRE(shard::next_prime(194) == 197);
+        }
+    }
+
     SECTION("utils") {
         REQUIRE(shard::min(0, 0) == 0);
         REQUIRE(shard::min(0, 5) == 0);
