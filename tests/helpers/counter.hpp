@@ -10,22 +10,22 @@ namespace test {
 struct counter {
     counter() {
         ++default_constructor;
-        ++instaces;
+        ++instances;
     }
 
     counter(const counter&) {
         ++copy_constructor;
-        ++instaces;
+        ++instances;
     }
 
     counter(counter&&) noexcept {
         ++move_constructor;
-        ++instaces;
+        ++instances;
     }
 
     ~counter() {
         ++destructor;
-        --instaces;
+        --instances;
     }
 
     counter& operator=(const counter&) {
@@ -39,7 +39,7 @@ struct counter {
     }
 
     static void reset() {
-        instaces = 0;
+        instances = 0;
         default_constructor = 0;
         copy_constructor = 0;
         move_constructor = 0;
@@ -48,7 +48,7 @@ struct counter {
         move_assignment_op = 0;
     }
 
-    static std::size_t instaces; // the number of object instances
+    static std::size_t instances; // the number of object instances
 
     static std::size_t default_constructor;
     static std::size_t copy_constructor;
@@ -57,14 +57,6 @@ struct counter {
     static std::size_t copy_assignment_op;
     static std::size_t move_assignment_op;
 };
-
-std::size_t counter::instaces = 0;
-std::size_t counter::default_constructor = 0;
-std::size_t counter::copy_constructor = 0;
-std::size_t counter::move_constructor = 0;
-std::size_t counter::destructor = 0;
-std::size_t counter::copy_assignment_op = 0;
-std::size_t counter::move_assignment_op = 0;
 
 } // namespace test
 

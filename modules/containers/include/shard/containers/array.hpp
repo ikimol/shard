@@ -6,6 +6,7 @@
 #include <shard/memory/allocator.hpp>
 
 #include <algorithm>
+#include <cstddef>
 #include <iterator>
 #include <stdexcept>
 #include <utility>
@@ -30,13 +31,8 @@ public:
 
 public:
     explicit array(allocator& a, size_type capacity = 0) : m_allocator(&a), m_capacity(capacity) {
-        if (capacity > 0) {
-            auto data = static_cast<pointer>(a.allocate(value_size * capacity, value_align));
-            // throw an exception if the allocation failed
-            if (!data) {
-                throw std::bad_alloc();
-            }
-            m_data = data;
+        if (m_capacity > 0) {
+            m_data = allocate(capacity);
         }
     }
 
@@ -44,7 +40,7 @@ public:
     array(allocator& a, Iterator begin, Iterator end) : m_allocator(&a), m_capacity(0) {
         auto size = std::distance(begin, end);
         if (size > 0) {
-            m_data = static_cast<pointer>(a.allocate(value_size * size, value_align));
+            m_data = allocate(size);
             m_size = size;
             m_capacity = size;
             std::copy(begin, end, m_data);
@@ -53,9 +49,74 @@ public:
 
     array(allocator& a, std::initializer_list<value_type> il) : array(a, il.begin(), il.end()) {}
 
-    // TODO: Add copy and move constructors
+    /// Copy constructor
+    array(const array& other) : m_allocator(other.m_allocator), m_size(other.m_size), m_capacity(other.m_capacity) {
+        if (m_capacity > 0) {
+            auto data = allocate(m_capacity);
+            m_data = static_cast<pointer>(std::memcpy(data, other.m_data, m_capacity * value_size));
+        }
+    }
+
+    /// Move constructor
+    array(array&& other) noexcept :
+    m_allocator(other.m_allocator),
+    m_data(other.m_data),
+    m_size(other.m_size),
+    m_capacity(other.m_capacity) {
+        // invalidate "moved-from" object
+        other.m_allocator = nullptr;
+        other.m_data = nullptr;
+        other.m_size = 0;
+        other.m_capacity = 0;
+    }
 
     ~array() { deallocate(); }
+
+    /// Copy assignment operator
+    array& operator=(const array& other) {
+        if (this != &other) {
+            // destroy elements and deallocate memory
+            deallocate();
+
+            // allocate new memory
+            m_allocator = other.m_allocator;
+            if (other.m_capacity > 0) {
+                auto data = allocate(other.m_capacity);
+                m_data = static_cast<pointer>(std::memcpy(data, other.m_data, other.m_capacity * value_size));
+            }
+            m_size = other.m_size;
+            m_capacity = other.m_capacity;
+        }
+        return *this;
+    }
+
+    /// Move assignment operator
+    array& operator=(array&& other) noexcept {
+        // destroy elements and deallocate memory
+        deallocate();
+
+        // allocate new memory
+        m_allocator = other.m_allocator;
+        if (other.m_capacity > 0) {
+            m_data = allocate(other.m_capacity);
+            for (std::size_t i = 0; i < other.m_size; ++i) {
+                m_data[i] = std::move(other.m_data[i]);
+            }
+        }
+        m_size = other.m_size;
+        m_capacity = other.m_capacity;
+
+        // deallocate "moved-from" memory
+        other.m_allocator->deallocate(other.m_data);
+
+        // invalidate "moved-from" object
+        other.m_allocator = nullptr;
+        other.m_data = nullptr;
+        other.m_size = 0;
+        other.m_capacity = 0;
+
+        return *this;
+    }
 
     // modifiers
 
@@ -80,35 +141,38 @@ public:
     /// Add a new element at the specified position
     iterator insert(const_iterator pos, const_reference value) {
         ensure_element_fits();
-        auto i = pos - cbegin();
+        auto i = pos ? pos - cbegin() : 0;
         auto p = m_data + i;
         // move the elements in the range [p, end) to start at 'p + 1'
-        std::move(p, m_data + m_size, p + 1);
+        std::move_backward(p, m_data + m_size, m_data + m_size + 1);
         m_data[i] = value;
         ++m_size;
+        return m_data + i;
     }
 
     /// Add a new element at the specified position
     iterator insert(const_iterator pos, value_type&& value) {
         ensure_element_fits();
-        auto i = pos - cbegin();
+        auto i = pos ? pos - cbegin() : 0;
         auto p = m_data + i;
         // move the elements in the range [p, end) to start at 'p + 1'
-        std::move(p, m_data + m_size, p + 1);
+        std::move_backward(p, m_data + m_size, m_data + m_size + 1);
         m_data[i] = std::move(value);
         ++m_size;
+        return m_data + i;
     }
 
     /// Create a new element in-place at the specified position
     template <typename... Args>
-    void emplace(const_iterator pos, Args&&... args) {
+    iterator emplace(const_iterator pos, Args&&... args) {
         ensure_element_fits();
-        auto i = pos - cbegin();
+        auto i = pos ? pos - cbegin() : 0;
         auto p = m_data + i;
         // move the elements in the range [p, end) to start at 'p + 1'
-        std::move(p, m_data + m_size, p + 1);
+        std::move_backward(p, m_data + m_size, m_data + m_size + 1);
         new (m_data + i) value_type(std::forward<Args>(args)...);
         ++m_size;
+        return m_data + i;
     }
 
     /// Create a new element in-place at the end
@@ -163,7 +227,6 @@ public:
         destruct_after(m_data);
 
         // reset the information
-        m_data = nullptr;
         m_size = 0;
     }
 
@@ -247,16 +310,16 @@ public:
     // size & capacity
 
     /// Get the number of elements in the array
-    size_type size() const { return m_size; }
+    size_type size() const noexcept { return m_size; }
 
     /// Check if the array is empty
-    bool is_empty() const { return m_size == 0; }
+    bool is_empty() const noexcept { return m_size == 0; }
 
     // for STL compatibility
-    bool empty() const { return is_empty(); }
+    bool empty() const noexcept { return is_empty(); }
 
     /// Get the number of elements memory is reserved for
-    size_type capacity() const { return m_capacity; }
+    size_type capacity() const noexcept { return m_capacity; }
 
     /// Reserve memory if (needed) for more elements
     void reserve(size_type new_capacity) {
@@ -279,7 +342,7 @@ public:
         } else if (new_size > m_size) {
             // default construct elements in-place
             for (auto i = m_size; i < new_size; ++i) {
-                new (m_data + i) value_type;
+                new (m_data + i) value_type();
             }
         }
         m_size = new_size;
@@ -315,6 +378,15 @@ public:
     const_reverse_iterator crend() const noexcept { return rend(); }
 
 private:
+    pointer allocate(size_type size) {
+        auto data = static_cast<pointer>(m_allocator->allocate(value_size * size, value_align));
+        // throw an exception if the allocation failed
+        if (!data) {
+            throw std::bad_alloc();
+        }
+        return data;
+    }
+
     void ensure_element_fits() {
         if (m_size + 1 > m_capacity) {
             grow(m_size + 1);
