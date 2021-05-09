@@ -9,6 +9,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/export.cmake)
 
 add_subdirectory(algorithm)
 add_subdirectory(any)
+add_subdirectory(bit)
 add_subdirectory(concurrency)
 add_subdirectory(containers)
 add_subdirectory(core)
