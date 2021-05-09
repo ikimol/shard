@@ -33,7 +33,7 @@ class stream_test {
     static auto test(int) -> decltype(std::declval<S2&>() << std::declval<T2>(), std::true_type());
 
     template <typename, typename>
-    static auto test(...) -> std::false_type;
+    static auto test(long) -> std::false_type;
 
 public:
     static const bool value = decltype(test<S, T>(0))::value;
