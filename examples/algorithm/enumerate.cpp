@@ -10,7 +10,7 @@
 int main(int argc, char* argv[]) {
     std::list<int> list = {0, 1, 2, 3, 4};
 
-    for (const auto& p : shard::ipairs(list)) {
+    for (const auto& p : shard::enumerate(list)) {
         std::cout << "list[" << p.index() << "]: " << p.value() << '\n';
     }
 
@@ -24,8 +24,9 @@ int main(int argc, char* argv[]) {
     // clang-format on
     };
 
-    for (const auto& p : shard::pairs(map)) {
-        std::cout << '(' << p.index() << ") map['" << p.key() << "']: " << p.value() << '\n';
+    for (const auto& p : shard::enumerate(map)) {
+        auto& pair = p.value();
+        std::cout << '(' << p.index() << ") map['" << pair.first << "']: " << pair.second << '\n';
     }
 
     return 0;
