@@ -4,7 +4,7 @@
 #define SHARD_ALGORITHM_HPP
 
 #include "shard/algorithm/container_utils.hpp"
-#include "shard/algorithm/pairs.hpp"
+#include "shard/algorithm/enumerate.hpp"
 #include "shard/algorithm/stl_wrappers.hpp"
 
 #endif // SHARD_ALGORITHM_HPP

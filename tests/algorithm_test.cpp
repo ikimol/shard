@@ -95,74 +95,38 @@ TEST_CASE("algorithm") {
         }
     }
 
-    SECTION("ipairs") {
+    SECTION("enumerate") {
         int array[5];
         for (int i = 0; i < 5; ++i) {
             array[i] = i * 2;
         }
 
         SECTION("array") {
-            for (auto& item : shard::ipairs(array)) {
+            for (auto& item : shard::enumerate(array)) {
                 CHECK(item.value() == item.index() * 2);
             }
         }
 
         SECTION("initializer_list") {
             auto il = {0, 2, 4, 6, 8};
-            for (auto& item : shard::ipairs(il)) {
+            for (auto& item : shard::enumerate(il)) {
                 CHECK(item.value() == item.index() * 2);
             }
         }
 
         SECTION("rvalue") {
-            for (auto& item : shard::ipairs(std::vector<int> {0, 2, 4, 6, 8, 10})) {
+            for (auto& item : shard::enumerate(std::vector<int> {0, 2, 4, 6, 8, 10})) {
                 CHECK(item.value() == item.index() * 2);
             }
         }
 
         SECTION("changing values") {
-            for (auto& item : shard::ipairs(array)) {
+            for (auto& item : shard::enumerate(array)) {
                 item.value() *= 2;
             }
 
             for (int i = 0; i < 5; ++i) {
                 CHECK(array[i] == i * 4);
-            }
-        }
-    }
-
-    SECTION("pairs") {
-        SECTION("map") {
-            std::map<int, int> map = {
-            // clang-format off
-                    {0, 0},
-                    {1, 2},
-                    {2, 4},
-                    {3, 6},
-                    {4, 8},
-            // clang-format on
-            };
-
-            for (auto& p : shard::pairs(map)) {
-                CHECK(p.key() == p.index());
-                CHECK(p.value() == p.key() * 2);
-            }
-        }
-
-        SECTION("vector of pairs") {
-            std::vector<std::pair<int, int>> vector = {
-            // clang-format off
-                    {0, 0},
-                    {1, 2},
-                    {2, 4},
-                    {3, 6},
-                    {4, 8},
-            // clang-format on
-            };
-
-            for (auto& p : shard::pairs(vector)) {
-                CHECK(p.key() == p.index());
-                CHECK(p.value() == p.key() * 2);
             }
         }
     }

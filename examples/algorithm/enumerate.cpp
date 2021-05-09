@@ -1,6 +1,6 @@
 // Copyright (c) 2021 Miklos Molnar. All rights reserved.
 
-#include <shard/algorithm/pairs.hpp>
+#include <shard/algorithm/enumerate.hpp>
 
 #include <iostream>
 #include <list>
