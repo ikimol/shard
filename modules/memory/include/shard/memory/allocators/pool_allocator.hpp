@@ -4,6 +4,7 @@
 #define SHARD_MEMORY_POOL_ALLOCATOR_HPP
 
 #include "shard/memory/allocator.hpp"
+#include "shard/memory/utils.hpp"
 
 namespace shard {
 namespace memory {
