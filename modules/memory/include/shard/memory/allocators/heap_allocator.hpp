@@ -7,8 +7,8 @@
 #include "shard/memory/utils.hpp"
 
 #include <cstdio>
-
 #include <cstdlib>
+#include <cstring>
 #include <limits>
 
 namespace shard {
