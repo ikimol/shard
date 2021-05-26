@@ -9,6 +9,7 @@
 #include <catch.hpp>
 
 #include <initializer_list>
+#include <string>
 #include <vector>
 
 TEST_CASE("array", "[containers]") {
@@ -32,7 +33,6 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(array.capacity() == 5);
 
         // verify underlying memory allocations
-        // allocation header is a size_t
         REQUIRE(allocator.used_memory() == 5 * sizeof(int) + sizeof(std::size_t));
         REQUIRE(allocator.allocation_count() == 1);
     }
@@ -55,18 +55,17 @@ TEST_CASE("array", "[containers]") {
     }
 
     SECTION("constructor with initializer list") {
-        shard::array<int> array(allocator, {0, 1, 2, 3, 4});
+        shard::array<std::string> array(allocator, {"foo", "bar", "baz", "qux"});
 
-        REQUIRE(array.size() == 5);
+        REQUIRE(array.size() == 4);
 
-        REQUIRE(array.at(0) == 0);
-        REQUIRE(array.at(1) == 1);
-        REQUIRE(array.at(2) == 2);
-        REQUIRE(array.at(3) == 3);
-        REQUIRE(array.at(4) == 4);
+        REQUIRE(array.at(0) == "foo");
+        REQUIRE(array.at(1) == "bar");
+        REQUIRE(array.at(2) == "baz");
+        REQUIRE(array.at(3) == "qux");
 
         // verify underlying memory allocations
-        REQUIRE(allocator.used_memory() == 5 * sizeof(int) + sizeof(std::size_t));
+        REQUIRE(allocator.used_memory() == 4 * sizeof(std::string) + sizeof(std::size_t));
         REQUIRE(allocator.allocation_count() == 1);
     }
 

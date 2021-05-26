@@ -48,7 +48,21 @@ public:
         }
     }
 
-    array(allocator& a, std::initializer_list<value_type> il) : array(a, il.begin(), il.end()) {}
+    array(allocator& a, std::initializer_list<value_type> il) : m_allocator(&a) {
+        if (il.size() > 0) {
+            m_data = allocate(il.size());
+            m_size = il.size();
+            m_capacity = il.size();
+            auto p = m_data;
+            for (auto it = il.begin(); it != il.end(); ++it, ++p) {
+                *p = *it;
+            }
+        } else {
+            m_data = nullptr;
+            m_size = 0;
+            m_capacity = 0;
+        }
+    }
 
     /// Copy constructor
     array(const array& other) : m_allocator(other.m_allocator), m_size(other.m_size), m_capacity(other.m_capacity) {

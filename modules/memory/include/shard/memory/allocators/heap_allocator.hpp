@@ -29,6 +29,9 @@ public:
             return nullptr;
         }
 
+        // clear the bytes in the allocated memory block
+        std::memset(ptr, '\0', total_size);
+
         // padding includes the size of the allocation header, hence it is
         // subtracted from the aligned address
         auto header = reinterpret_cast<allocation_header*>(ptr);
