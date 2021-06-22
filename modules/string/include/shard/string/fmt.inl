@@ -35,5 +35,20 @@ inline std::string fmt(const char* format, ...) {
     return result;
 }
 
+inline std::string fmt(const char* format, va_list ap) {
+    std::va_list args_copy;
+    va_copy(args_copy, ap);
+    const auto size = std::vsnprintf(nullptr, 0, format, args_copy);
+    va_end(args_copy);
+    assert(size > 0);
+    // create a ch buffer with the correct size (+1 for null terminator)
+    auto buffer = new char[size + 1];
+    std::vsnprintf(buffer, size + 1, format, ap);
+    // construct the string and destroy the buffer
+    std::string result(buffer, buffer + size);
+    delete[] buffer;
+    return result;
+}
+
 } // namespace string
 } // namespace shard

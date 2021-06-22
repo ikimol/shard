@@ -10,6 +10,14 @@
 #include <set>
 #include <vector>
 
+static std::string format_helper(const char* format, ...) {
+    va_list ap;
+    va_start(ap, format);
+    auto message = shard::fmt(format, ap);
+    va_end(ap);
+    return message;
+}
+
 TEST_CASE("string") {
     SECTION("case conversion") {
         REQUIRE(shard::to_lower_copy("FooBAR") == "foobar");
@@ -72,6 +80,12 @@ TEST_CASE("string") {
             REQUIRE(shard::fmt("%d", 42) == "42");
             REQUIRE(shard::fmt("%.3f", 3.1415) == "3.142");
             REQUIRE(shard::fmt("%s", "foo") == "foo");
+        }
+
+        SECTION("va_list") {
+            REQUIRE(format_helper("%d", 42) == "42");
+            REQUIRE(format_helper("%.3f", 3.1415) == "3.142");
+            REQUIRE(format_helper("%s", "foo") == "foo");
         }
 
         SECTION("generator") {

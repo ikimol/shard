@@ -22,6 +22,9 @@ std::string sfmt(char* buffer, std::size_t size, const char* format, ...) SHARD_
 /// Create a string using a format and a number of arguments
 std::string fmt(const char* format, ...) SHARD_PRINTF_STYLE(1);
 
+/// Create a string using a format and a number of arguments
+std::string fmt(const char* format, va_list ap);
+
 } // namespace string
 
 // bring symbols into parent namespace
