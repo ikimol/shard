@@ -49,12 +49,12 @@ int main(int argc, char* argv[]) {
         widget w("foo");
 
         // bind a function that takes no arguments
-        auto b = [obj = &w](int) {
+        auto lambda = [obj = &w] {
             obj->foo();
         };
 
         // the slot will be disconnected at the end of the scope
-        shard::scoped_connection sc = event.connect(b);
+        shard::scoped_connection sc = event.connect(lambda);
         event.emit(3);
     }
 

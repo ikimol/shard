@@ -163,7 +163,7 @@ public:
     /// Connect a function object taking no arguments as a slot
     template <meta::disable_if_t<meta::is_empty<Args...>::value>* = nullptr>
     connection connect(function_type_noarg function) /* NOLINT */ {
-        auto wrapper = [=](Args&&... args) -> void {
+        auto wrapper = [=](Args&&...) -> void {
             function();
         };
         m_slots.push_back(std::make_shared<slot_type>(wrapper));
