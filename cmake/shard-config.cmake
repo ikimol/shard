@@ -5,13 +5,14 @@
 if (NOT shard_FIND_COMPONENTS)
     # request all components if none were provided
     set(shard_FIND_COMPONENTS
-        algorithm any concurrency containers core enums math memory meta
+        algorithm any bit concurrency containers core enums math memory meta
         optional random signal string system
         )
 endif ()
 
 set(FIND_SHARD_ALGORITHM_DEPENDENCIES "")
 set(FIND_SHARD_ANY_DEPENDENCIES meta)
+set(FIND_SHARD_BIT_DEPENDENCIES "")
 set(FIND_SHARD_CONCURRENCY_DEPENDENCIES core meta optional)
 set(FIND_SHARD_CONTAINERS_DEPENDENCIES memory)
 set(FIND_SHARD_CORE_DEPENDENCIES "")
