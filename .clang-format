@@ -3,13 +3,14 @@
 Language:        Cpp
 BasedOnStyle:  WebKit
 # AccessModifierOffset: -4
-# AlignAfterOpenBracket: DontAlign
-# AlignConsecutiveMacros: false
-# AlignConsecutiveAssignments: false
-AlignConsecutiveBitFields: true
-# AlignConsecutiveDeclarations: false
+AlignAfterOpenBracket: Align
+AlignArrayOfStructures: Left
+# AlignConsecutiveMacros: None
+# AlignConsecutiveAssignments: None
+AlignConsecutiveBitFields: Consecutive
+# AlignConsecutiveDeclarations: None
 # AlignEscapedNewlines: Right
-AlignOperands:   Align
+AlignOperands:   AlignAfterOperator
 AlignTrailingComments: true
 AllowAllArgumentsOnNextLine: false
 AllowAllConstructorInitializersOnNextLine: false
@@ -25,6 +26,8 @@ AllowShortLambdasOnASingleLine: Inline
 # AlwaysBreakAfterReturnType: None
 AlwaysBreakBeforeMultilineStrings: true
 AlwaysBreakTemplateDeclarations: Yes
+# AttributeMacros:
+  # - __capability
 # BinPackArguments: true
 # BinPackParameters: true
 BraceWrapping:
@@ -46,7 +49,8 @@ BraceWrapping:
   SplitEmptyFunction: false
   SplitEmptyRecord: false
   SplitEmptyNamespace: false
-BreakBeforeBinaryOperators: None
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeConceptDeclarations: true
 BreakBeforeBraces: Attach
 # BreakBeforeInheritanceComma: false
 BreakInheritanceList: AfterColon
@@ -65,36 +69,46 @@ Cpp11BracedListStyle: true
 # DeriveLineEnding: true
 # DerivePointerAlignment: false
 # DisableFormat:   false
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: LogicalBlock
 # ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: true
 # ForEachMacros:
   # - foreach
   # - Q_FOREACH
   # - BOOST_FOREACH
+# IfMacros:
+  # - KJ_IF_MAYBE
 # IncludeBlocks:   Preserve
 # IncludeCategories:
   # - Regex:           '^"(llvm|llvm-c|clang|clang-c)/'
     # Priority:        2
     # SortPriority:    0
+    # CaseSensitive:   false
   # - Regex:           '^(<|"(gtest|gmock|isl|json)/)'
     # Priority:        3
     # SortPriority:    0
+    # CaseSensitive:   false
   # - Regex:           '.*'
     # Priority:        1
     # SortPriority:    0
+    # CaseSensitive:   false
 IncludeIsMainRegex: '$'
 # IncludeIsMainSourceRegex: ''
+IndentAccessModifiers: false
 # IndentCaseLabels: false
 # IndentCaseBlocks: false
 # IndentGotoLabels: true
 # IndentPPDirectives: None
 # IndentExternBlock: AfterExternBlock
+# IndentRequires:  false
 # IndentWidth:     4
 # IndentWrappedFunctionNames: false
 # InsertTrailingCommas: None
 # JavaScriptQuotes: Leave
 # JavaScriptWrapImports: true
 KeepEmptyLinesAtTheStartOfBlocks: false
+LambdaBodyIndentation: Signature
 # MacroBlockBegin: ''
 # MacroBlockEnd:   ''
 # MaxEmptyLinesToKeep: 1
@@ -112,30 +126,43 @@ NamespaceIndentation: None
 # PenaltyBreakTemplateDeclaration: 10
 # PenaltyExcessCharacter: 1000000
 # PenaltyReturnTypeOnItsOwnLine: 60
+# PenaltyIndentedWhitespace: 0
 # PointerAlignment: Left
+# PPIndentWidth:   -1
+# ReferenceAlignment: Pointer
 # ReflowComments:  true
+ShortNamespaceLines: 0
 # SortIncludes:    true
+# SortJavaStaticImport: Before
 # SortUsingDeclarations: true
 # SpaceAfterCStyleCast: false
 # SpaceAfterLogicalNot: false
 # SpaceAfterTemplateKeyword: true
 # SpaceBeforeAssignmentOperators: true
+# SpaceBeforeCaseColon: false
 # SpaceBeforeCpp11BracedList: true
 # SpaceBeforeCtorInitializerColon: true
 # SpaceBeforeInheritanceColon: true
 # SpaceBeforeParens: ControlStatements
+# SpaceAroundPointerQualifiers: Default
 # SpaceBeforeRangeBasedForLoopColon: true
 SpaceInEmptyBlock: false
 # SpaceInEmptyParentheses: false
 # SpacesBeforeTrailingComments: 1
-# SpacesInAngles:  false
+# SpacesInAngles:  Never
 # SpacesInConditionalStatement: false
 # SpacesInContainerLiterals: true
 # SpacesInCStyleCastParentheses: false
+# SpacesInLineCommentPrefix:
+  # Minimum:         1
+  # Maximum:         -1
 # SpacesInParentheses: false
 # SpacesInSquareBrackets: false
 # SpaceBeforeSquareBrackets: false
+# BitFieldColonSpacing: Both
 Standard:        c++14
+# StatementAttributeLikeMacros:
+  # - Q_EMIT
 # StatementMacros:
   # - Q_UNUSED
   # - QT_REQUIRE_VERSION
@@ -146,5 +173,7 @@ TabWidth:        4
   # - STRINGIZE
   # - PP_STRINGIZE
   # - BOOST_PP_STRINGIZE
+  # - NS_SWIFT_NAME
+  # - CF_SWIFT_NAME
 ...
 
