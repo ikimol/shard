@@ -24,7 +24,7 @@ public:
 
     /// Perfect forwarding constructor
     template <typename T, meta::disable_if_t<std::is_same<any&, T>::value>* = nullptr,
-    meta::disable_if_t<std::is_const<T>::value>* = nullptr>
+              meta::disable_if_t<std::is_const<T>::value>* = nullptr>
     any(T&& value) /* NOLINT */ : m_holder(new holder<std::decay_t<T>>(std::forward<T>(value))) {}
 
     /// Destructor

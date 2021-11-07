@@ -14,15 +14,7 @@ int main(int argc, char* argv[]) {
         std::cout << "list[" << p.index() << "]: " << p.value() << '\n';
     }
 
-    std::unordered_map<std::string, int> map = {
-    // clang-format off
-        {"zero", 0},
-        {"one", 1},
-        {"two", 2},
-        {"three", 3},
-        {"four", 4}
-    // clang-format on
-    };
+    std::unordered_map<std::string, int> map = {{"zero", 0}, {"one", 1}, {"two", 2}, {"three", 3}, {"four", 4}};
 
     for (const auto& p : shard::enumerate(map)) {
         auto& pair = p.value();

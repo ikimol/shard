@@ -44,8 +44,8 @@ private:
     /// RAII locked access wrapper to a pointer
     template <template <typename> class Lock, access_mode M>
     class access {
-        static_assert(
-        !(lock_traits<Lock>::is_read_only && M == access_mode::read_write), "read-only lock with read-write access");
+        static_assert(!(lock_traits<Lock>::is_read_only && M == access_mode::read_write),
+                      "read-only lock with read-write access");
 
         using const_correct_value_type = std::conditional_t<M == access_mode::read_only, const value_type, value_type>;
 
@@ -74,7 +74,7 @@ private:
         access(access<OtherLock, OtherMode>& other, LockArgs&&... lock_args) /* NOLINT */ :
         access(*other, *other.lock.release(), std::adopt_lock, std::forward<LockArgs>(lock_args)...) {
             static_assert(OtherMode == access_mode::read_write || OtherMode == M,
-            "cannot construct read-write access from read-only");
+                          "cannot construct read-write access from read-only");
         }
 
         pointer operator->() noexcept { return m_pointer; }

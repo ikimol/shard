@@ -24,13 +24,9 @@ public:
     template <typename... Args>
     explicit random_base(Args&&... args) : m_seed(engine_type::default_seed), m_dist(std::forward<Args>(args)...) {}
 
-    value_type next() {
-        return m_dist(m_engine);
-    }
+    value_type next() { return m_dist(m_engine); }
 
-    dist_param_type dist_param() const {
-        return m_dist.param();
-    }
+    dist_param_type dist_param() const { return m_dist.param(); }
 
     void reseed() {
         std::random_device rd;
@@ -42,9 +38,7 @@ public:
         m_engine.seed(seed);
     }
 
-    seed_type seed() const {
-        return m_seed;
-    }
+    seed_type seed() const { return m_seed; }
 
 private:
     engine_type m_engine;

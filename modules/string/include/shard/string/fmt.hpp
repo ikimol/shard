@@ -34,11 +34,12 @@ using string::sfmt;
 
 } // namespace shard
 
-#define SHARD_MAKE_FMT(length, format) [](auto&&... args) {                                 \
-    static char buffer[length];                                                             \
-    std::snprintf(buffer, sizeof(buffer), (format), std::forward<decltype(args)>(args)...); \
-    return std::string(buffer);                                                             \
-}
+#define SHARD_MAKE_FMT(length, format)                                                                                 \
+    [](auto&&... args) {                                                                                               \
+        static char buffer[length];                                                                                    \
+        std::snprintf(buffer, sizeof(buffer), (format), std::forward<decltype(args)>(args)...);                        \
+        return std::string(buffer);                                                                                    \
+    }
 
 #undef SHARD_PRINTF_STYLE
 

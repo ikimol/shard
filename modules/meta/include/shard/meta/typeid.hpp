@@ -18,10 +18,12 @@ struct default_typespace {};
 using typeid_t = std::size_t;
 
 /// Represents a family of type ids
-template <typename> class typespace {
+template <typename>
+class typespace {
 public:
     /// Get the unique id
-    template <typename> static typeid_t id() {
+    template <typename>
+    static typeid_t id() {
         static const auto id = s_counter++;
         return id;
     }
@@ -30,7 +32,8 @@ private:
     static std::atomic<typeid_t> s_counter;
 };
 
-template <typename T> std::atomic<typeid_t> typespace<T>::s_counter = ATOMIC_VAR_INIT(0);
+template <typename T>
+std::atomic<typeid_t> typespace<T>::s_counter = ATOMIC_VAR_INIT(0);
 
 } // namespace meta
 } // namespace shard

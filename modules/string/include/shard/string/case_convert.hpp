@@ -63,12 +63,12 @@ inline std::string to_snake_case_copy(std::string s) {
 
 // bring symbols into parent namespace
 
+using string::to_capitalized;
+using string::to_capitalized_copy;
 using string::to_lower;
 using string::to_lower_copy;
 using string::to_upper;
 using string::to_upper_copy;
-using string::to_capitalized;
-using string::to_capitalized_copy;
 
 } // namespace shard
 

@@ -12,9 +12,7 @@ struct widget {
 
     explicit widget(int n) : a(n), b(n) {}
 
-    bool test(int x, int y) const {
-        return x == a && y == b;
-    }
+    bool test(int x, int y) const { return x == a && y == b; }
 
     int a = 0;
     int b = 0;
