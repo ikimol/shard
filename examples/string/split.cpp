@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     std::string s("foo,bar,baz,quack");
 
     std::vector<std::string> v;

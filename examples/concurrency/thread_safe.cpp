@@ -21,7 +21,7 @@ void thread_write(int id) {
     }
 }
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     rw_string string;
     g_string = &string;
 

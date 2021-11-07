@@ -24,7 +24,7 @@ struct widget {
 };
 
 template <typename A>
-void print_divider(const A& a) {
+void print_divider(const A&) {
     static const std::string divider(25, '~');
     std::cout << divider << '\n';
 }
@@ -44,7 +44,7 @@ void print_allocator_stats(const A& a) {
     std::cout << "allocation_count: " << a.allocation_count() << '\n';
 }
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     std::cout << "sizeof(widget): " << sizeof(widget) << '\n';
 
     // free list allocator

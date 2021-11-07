@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* argv[]) {
     std::cout << shard::fmt("%s, %d, %.2f", "foo", 42, 3.141592) << '\n';
 
     char buffer[32];

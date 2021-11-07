@@ -6,7 +6,7 @@
 #include <set>
 #include <vector>
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     std::vector<const char*> v = {"foo", "bar", "baz"};
     std::set<int> s {1, 2, 3};
 

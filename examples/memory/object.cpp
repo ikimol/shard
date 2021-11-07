@@ -18,7 +18,7 @@ private:
     int m_id = 0;
 };
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     widget* raw;
 
     {

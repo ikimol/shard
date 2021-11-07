@@ -19,7 +19,7 @@ struct receiver {
     bool received = false;
 };
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     // create a signal with the list of argument types
     shard::signal<int> event;
 

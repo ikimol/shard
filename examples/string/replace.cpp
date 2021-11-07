@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     std::string s("foo bar baz quack");
 
     shard::replace_all(s, "o", "0");

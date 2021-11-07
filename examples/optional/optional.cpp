@@ -21,7 +21,7 @@ inline shard::optional<int> to_int(const std::string& str) {
     return shard::nullopt;
 }
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
 #if __cplusplus >= 201703L
     static_assert(sizeof(std::optional<char>) == sizeof(shard::optional<char>));
     static_assert(sizeof(std::optional<int>) == sizeof(shard::optional<int>));

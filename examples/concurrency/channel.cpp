@@ -12,7 +12,7 @@ static void thread_fn() {
     g_channel.put(42);
 }
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     g_channel.put(1);
     g_channel.put(2);
     g_channel.put(3);

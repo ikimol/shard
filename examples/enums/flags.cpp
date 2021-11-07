@@ -29,7 +29,7 @@ public:
 
 SHARD_DECLARE_FLAG_OPERATORS(file::open_mode)
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     file f;
     f.open(file::append | file::read_write);
 

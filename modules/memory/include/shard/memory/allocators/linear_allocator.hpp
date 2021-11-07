@@ -32,8 +32,9 @@ public:
         return as_ptr(aligned_address);
     }
 
-    void deallocate(void* ptr) override {
+    void deallocate(void* /* ptr */) override {
         // no-op, use 'rewind()' or 'clear()'
+        assert(false);
     }
 
     /// Reset the next pointer to the provided one

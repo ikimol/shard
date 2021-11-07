@@ -6,7 +6,7 @@
 
 using namespace shard;
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     std::cout << math::deg(M_PI) << '\n';
     std::cout << math::rad(180.0) << '\n';
 

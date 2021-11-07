@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     if (auto home = shard::env::get("HOME")) {
         std::cout << "home directory: " << *home << '\n';
     }

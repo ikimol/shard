@@ -4,7 +4,7 @@
 
 using namespace shard;
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     static_assert(math::clamp(15, 0, 10) == 10, "clamp");
     static_assert(math::clamp(-5, 0, 10) == 0, "clamp");
     static_assert(math::clamp(5, 0, 10) == 5, "clamp");

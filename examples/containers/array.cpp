@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     shard::heap_allocator allocator;
     {
         shard::array<int> a(allocator);

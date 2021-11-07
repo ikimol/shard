@@ -6,7 +6,7 @@
 #include <iostream>
 #include <map>
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     shard::random<int> r_int(0, 10);
     std::cout << r_int.next() << '\n';
 

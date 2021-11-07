@@ -15,7 +15,7 @@ static std::ostream& operator<<(std::ostream& os, const widget& w) {
     return os;
 }
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     std::cout << shard::to_string(nullptr) << '\n';
     std::cout << shard::to_string('a') << '\n';
     std::cout << shard::to_string(false) << '\n';

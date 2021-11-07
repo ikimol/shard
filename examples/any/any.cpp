@@ -5,7 +5,7 @@
 #include <iostream>
 #include <string>
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     shard::any a;
     std::cout << std::boolalpha << a.has_value() << '\n';
 

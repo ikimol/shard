@@ -6,7 +6,7 @@
 
 using namespace shard;
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     math::percentage<int> p(2, 10);
 
     std::cout << p.from_value(12) << '\n';

@@ -7,7 +7,7 @@
 #include <string>
 #include <unordered_map>
 
-int main(int argc, char* argv[]) {
+int main(int /* argc */, char* /* argv */[]) {
     std::list<int> list = {0, 1, 2, 3, 4};
 
     for (const auto& p : shard::enumerate(list)) {

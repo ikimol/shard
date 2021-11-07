@@ -29,7 +29,7 @@ void split(const std::string& s, OutputIt out, char delim) {
 template <typename OutputIt, typename UnaryPredicate>
 void split(const std::string& s, OutputIt out, UnaryPredicate p) {
     auto pos = 0;
-    for (auto i = 0; i < s.length(); ++i) {
+    for (auto i = 0ul; i < s.length(); ++i) {
         if (p(s[i])) {
             *out = s.substr(pos, (i - pos));
             pos = i + 1;
