@@ -164,22 +164,22 @@ using thread_safe = basic_thread_safe<T, std::mutex>;
 
 #if __cplusplus >= 201703L
 template <typename T>
-using shared_sync = basic_sync<T, std::shared_mutex>;
+using rw_thread_safe = basic_thread_safe<T, std::shared_mutex>;
 #else
 template <typename T>
 using rw_thread_safe = basic_thread_safe<T, std::shared_timed_mutex>;
 #endif
 
 #if __cplusplus >= 201402L
-template <typename Sync, template <typename> class Lock = std::shared_lock>
-using read_access = typename Sync::template read_access<Lock>;
+template <typename ThreadSafe, template <typename> class Lock = std::shared_lock>
+using read_access = typename ThreadSafe::template read_access<Lock>;
 #else
-template <typename Sync, template <typename> class Lock = std::lock_guard>
-using read_access = typename Sync::template read_access<Lock>;
+template <typename ThreadSafe, template <typename> class Lock = std::lock_guard>
+using read_access = typename ThreadSafe::template read_access<Lock>;
 #endif
 
-template <typename Sync, template <typename> class Lock = std::lock_guard>
-using write_access = typename Sync::template write_access<Lock>;
+template <typename ThreadSafe, template <typename> class Lock = std::lock_guard>
+using write_access = typename ThreadSafe::template write_access<Lock>;
 
 } // namespace concurrency
 
