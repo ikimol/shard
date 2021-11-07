@@ -8,6 +8,11 @@ set(CATCH_CMAKE_DIR ${CATCH_ROOT_DIR}/cmake)
 
 set(SHARD_TEST_TARGET "tests")
 
+if (POLICY CMP0110)
+    # https://cmake.org/cmake/help/latest/policy/CMP0110.html
+    cmake_policy(SET CMP0110 NEW)
+endif ()
+
 add_executable(${SHARD_TEST_TARGET}
                # main test runner
                ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
