@@ -7,21 +7,31 @@
 
 #if defined(SHARD_WINDOWS)
 extern char** _environ;
-#define g_environ _environ
+#define shard_environ _environ
 #else
 extern char** environ;
-#define g_environ environ
+#define shard_environ environ
 #endif
 
 namespace shard {
 namespace system {
 namespace env {
+namespace detail {
 
-static std::mutex g_mutex;
-static std::map<std::string, std::string> g_variables;
+inline std::mutex& env_mutex() {
+    static std::mutex mutex;
+    return mutex;
+}
 
-bool has(const std::string& key) {
-    std::lock_guard<std::mutex> lock(g_mutex);
+inline std::map<std::string, std::string>& env_variables() {
+    static std::map<std::string, std::string> variables;
+    return variables;
+}
+
+} // namespace detail
+
+inline bool has(const std::string& key) {
+    std::lock_guard<std::mutex> lock(detail::env_mutex());
     try {
 #if defined(SHARD_WINDOWS)
         std::size_t size;
@@ -36,8 +46,8 @@ bool has(const std::string& key) {
     } catch (...) { return false; }
 }
 
-optional<std::string> get(const std::string& key) {
-    std::lock_guard<std::mutex> lock(g_mutex);
+inline optional<std::string> get(const std::string& key) {
+    std::lock_guard<std::mutex> lock(detail::env_mutex());
     try {
 #if defined(SHARD_WINDOWS)
         std::size_t size;
@@ -56,13 +66,13 @@ optional<std::string> get(const std::string& key) {
     return nullopt;
 }
 
-bool set(const std::string& key, const std::string& value, std::string* old_value) {
+inline bool set(const std::string& key, const std::string& value, std::string* old_value) {
     if (old_value) {
         if (auto v = get(key)) {
             *old_value = *v;
         }
     }
-    std::lock_guard<std::mutex> lock(g_mutex);
+    std::lock_guard<std::mutex> lock(detail::env_mutex());
     try {
 #if defined(SHARD_WINDOWS)
         return ::_putenv_s(key.c_str(), value.c_str()) == 0;
@@ -72,13 +82,13 @@ bool set(const std::string& key, const std::string& value, std::string* old_valu
     } catch (...) { return false; }
 }
 
-bool unset(const std::string& key, std::string* old_value) {
+inline bool unset(const std::string& key, std::string* old_value) {
     if (old_value) {
         if (auto v = get(key)) {
             *old_value = *v;
         }
     }
-    std::lock_guard<std::mutex> lock(g_mutex);
+    std::lock_guard<std::mutex> lock(detail::env_mutex());
     try {
 #if defined(SHARD_WINDOWS)
         return ::_putenv_s(key.c_str(), "") == 0;
@@ -88,21 +98,21 @@ bool unset(const std::string& key, std::string* old_value) {
     } catch (...) { return false; }
 }
 
-const std::map<std::string, std::string>& vars() {
+inline const std::map<std::string, std::string>& vars() {
     auto i = 1;
-    auto s = *g_environ;
-    g_variables.clear();
+    auto s = *shard_environ;
+    detail::env_variables().clear();
     for (; s; i++) {
         std::string str(s);
         auto eq = str.find_first_of('=');
         if (eq == std::string::npos) {
             continue;
         }
-        g_variables[str.substr(0, eq)] = str.substr(eq + 1);
+        detail::env_variables()[str.substr(0, eq)] = str.substr(eq + 1);
         // get the next line
-        s = *(g_environ + i);
+        s = *(shard_environ + i);
     }
-    return g_variables;
+    return detail::env_variables();
 }
 
 } // namespace env
