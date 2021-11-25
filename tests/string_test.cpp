@@ -138,6 +138,28 @@ TEST_CASE("string") {
         REQUIRE(v[2] == "baz");
     }
 
+    SECTION("to_number") {
+        REQUIRE(shard::to_int("42") == 42);
+        REQUIRE(shard::to_int("-42") == -42);
+        REQUIRE(shard::to_int("42.2") == shard::nullopt);
+        REQUIRE(shard::to_int("foo") == shard::nullopt);
+
+        REQUIRE(shard::to_unsigned("42") == 42);
+        REQUIRE(shard::to_unsigned("-42") == shard::nullopt);
+        REQUIRE(shard::to_unsigned("42.2") == shard::nullopt);
+        REQUIRE(shard::to_unsigned("foo") == shard::nullopt);
+
+        REQUIRE(shard::to_float("42") == 42);
+        REQUIRE(shard::to_float("-42") == -42);
+        REQUIRE(shard::to_float("42.2") == 42.2f);
+        REQUIRE(shard::to_float("foo") == shard::nullopt);
+
+        REQUIRE(shard::to_double("42") == 42);
+        REQUIRE(shard::to_double("-42") == -42);
+        REQUIRE(shard::to_double("42.2") == 42.2);
+        REQUIRE(shard::to_double("foo") == shard::nullopt);
+    }
+
     SECTION("to_string") {
         REQUIRE(shard::to_string(nullptr) == "(null)");
         REQUIRE(shard::to_string('a') == "a");

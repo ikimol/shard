@@ -9,6 +9,7 @@
 #include "shard/string/join.hpp"
 #include "shard/string/replace.hpp"
 #include "shard/string/split.hpp"
+#include "shard/string/to_number.hpp"
 #include "shard/string/to_string.hpp"
 #include "shard/string/trim.hpp"
 
