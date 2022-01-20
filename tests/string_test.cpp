@@ -89,9 +89,22 @@ TEST_CASE("string") {
         }
 
         SECTION("generator") {
-            auto fmt = SHARD_MAKE_FMT(16, "x = %.2f");
-            REQUIRE(fmt(3.1415f) == "x = 3.14");
-            REQUIRE(fmt(1.4142f) == "x = 1.41");
+            SECTION("same length") {
+                auto fmt = SHARD_MAKE_FMT(16, "x = %.2f");
+                REQUIRE(fmt(3.1415f) == "x = 3.14");
+                REQUIRE(fmt(1.4142f) == "x = 1.41");
+            }
+
+            SECTION("variable length") {
+                auto fmt = SHARD_MAKE_FMT(16, "s = %s");
+                REQUIRE(fmt("foobar") == "s = foobar");
+                REQUIRE(fmt("baz") == "s = baz");
+            }
+
+            SECTION("overflow") {
+                auto fmt = SHARD_MAKE_FMT(4, "%s");
+                REQUIRE(fmt("1234") == "123");
+            }
         }
     }
 
