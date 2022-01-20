@@ -24,14 +24,14 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/array_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/bit_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/concurrency_test.cpp
-               ${CMAKE_CURRENT_SOURCE_DIR}/core_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/enums_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/math_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/memory_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/meta_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/optional_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/signal_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/string_test.cpp
-               ${CMAKE_CURRENT_SOURCE_DIR}/optional_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/utility_test.cpp
                )
 
 target_link_libraries(${SHARD_TEST_TARGET} PRIVATE

@@ -14,7 +14,7 @@ static std::size_t buffer_manipulator(unsigned char* buffer, std::size_t size) {
     return count * sizeof(int);
 }
 
-TEST_CASE("core") {
+TEST_CASE("utility") {
     SECTION("defer") {
         bool called = false;
         {
