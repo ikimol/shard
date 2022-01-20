@@ -40,7 +40,6 @@ target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
                       shard::bit
                       shard::concurrency
                       shard::containers
-                      shard::core
                       shard::enums
                       shard::math
                       shard::memory
@@ -48,6 +47,7 @@ target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
                       shard::optional
                       shard::signal
                       shard::string
+                      shard::utility
                       )
 
 include(${PROJECT_SOURCE_DIR}/cmake/os.cmake)

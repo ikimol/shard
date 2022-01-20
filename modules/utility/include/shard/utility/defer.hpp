@@ -1,9 +1,9 @@
 // Copyright (c) 2021 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CORE_DEFER_HPP
-#define SHARD_CORE_DEFER_HPP
+#ifndef SHARD_UTILITY_DEFER_HPP
+#define SHARD_UTILITY_DEFER_HPP
 
-#include <shard/core/non_copyable.hpp>
+#include "non_copyable.hpp"
 
 #include <utility>
 
@@ -48,4 +48,4 @@ using core::defer;
 
 } // namespace shard
 
-#endif // SHARD_CORE_DEFER_HPP
+#endif // SHARD_UTILITY_DEFER_HPP

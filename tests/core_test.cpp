@@ -1,7 +1,7 @@
 // Copyright (c) 2021 Miklos Molnar. All rights reserved.
 
-#include <shard/core/byte.hpp>
-#include <shard/core/defer.hpp>
+#include <shard/utility/byte.hpp>
+#include <shard/utility/defer.hpp>
 
 #include <catch.hpp>
 

@@ -3,7 +3,7 @@
 #ifndef SHARD_CONCURRENCY_NULL_MUTEX_HPP
 #define SHARD_CONCURRENCY_NULL_MUTEX_HPP
 
-#include <shard/core/non_copyable.hpp>
+#include <shard/utility/non_copyable.hpp>
 
 namespace shard {
 namespace concurrency {

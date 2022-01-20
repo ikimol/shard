@@ -3,7 +3,7 @@
 #ifndef SHARD_CONCURRENCY_CHANNEL_HPP
 #define SHARD_CONCURRENCY_CHANNEL_HPP
 
-#include <shard/core/non_copyable.hpp>
+#include <shard/utility/non_copyable.hpp>
 #include <shard/optional.hpp>
 
 #include <atomic>

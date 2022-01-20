@@ -1,7 +1,7 @@
 // Copyright (c) 2021 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CORE_BYTE_HPP
-#define SHARD_CORE_BYTE_HPP
+#ifndef SHARD_UTILITY_BYTE_HPP
+#define SHARD_UTILITY_BYTE_HPP
 
 #include <type_traits>
 
@@ -78,4 +78,4 @@ using core::to_integer;
 
 } // namespace shard
 
-#endif // SHARD_CORE_BYTE_HPP
+#endif // SHARD_UTILITY_BYTE_HPP

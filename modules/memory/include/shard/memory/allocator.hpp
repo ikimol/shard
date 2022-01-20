@@ -3,7 +3,7 @@
 #ifndef SHARD_MEMORY_ALLOCATOR_HPP
 #define SHARD_MEMORY_ALLOCATOR_HPP
 
-#include <shard/core/non_copyable.hpp>
+#include <shard/utility/non_copyable.hpp>
 
 #include <cassert>
 #include <cstddef>

@@ -1,7 +1,7 @@
 // Copyright (c) 2021 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CORE_NON_COPYABLE_HPP
-#define SHARD_CORE_NON_COPYABLE_HPP
+#ifndef SHARD_UTILITY_NON_COPYABLE_HPP
+#define SHARD_UTILITY_NON_COPYABLE_HPP
 
 namespace shard {
 namespace core {
@@ -24,4 +24,4 @@ using core::non_copyable;
 
 } // namespace shard
 
-#endif // SHARD_CORE_NON_COPYABLE_HPP
+#endif // SHARD_UTILITY_NON_COPYABLE_HPP
