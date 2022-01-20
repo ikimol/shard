@@ -6,7 +6,7 @@
 #include <type_traits>
 
 namespace shard {
-namespace core {
+namespace utility {
 
 enum class byte : unsigned char {};
 
@@ -68,13 +68,13 @@ constexpr byte operator~(byte b) noexcept {
     return byte(~static_cast<unsigned int>(b));
 }
 
-} // namespace core
+} // namespace utility
 
 // bring symbols into parent namespace
 
-using core::byte;
-using core::to_byte;
-using core::to_integer;
+using utility::byte;
+using utility::to_byte;
+using utility::to_integer;
 
 } // namespace shard
 

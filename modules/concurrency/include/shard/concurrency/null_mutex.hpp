@@ -8,7 +8,7 @@
 namespace shard {
 namespace concurrency {
 
-struct null_mutex : private core::non_copyable {
+struct null_mutex : private utility::non_copyable {
     null_mutex() = default;
 
     null_mutex(null_mutex&&) = delete;

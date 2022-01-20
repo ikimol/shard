@@ -8,10 +8,10 @@
 #include <utility>
 
 namespace shard {
-namespace core {
+namespace utility {
 
 template <typename F>
-class deferred_function : private core::non_copyable {
+class deferred_function : private utility::non_copyable {
 public:
     using function_type = F;
 
@@ -40,11 +40,11 @@ deferred_function<F> defer(F&& func) noexcept {
     return deferred_function<F>(std::forward<F>(func));
 }
 
-} // namespace core
+} // namespace utility
 
 // bring symbols into parent namespace
 
-using core::defer;
+using utility::defer;
 
 } // namespace shard
 

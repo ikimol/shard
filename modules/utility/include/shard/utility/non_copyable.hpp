@@ -4,7 +4,7 @@
 #define SHARD_UTILITY_NON_COPYABLE_HPP
 
 namespace shard {
-namespace core {
+namespace utility {
 
 class non_copyable {
 public:
@@ -16,11 +16,11 @@ protected:
     ~non_copyable() = default;
 };
 
-} // namespace core
+} // namespace utility
 
 // bring symbols into parent namespace
 
-using core::non_copyable;
+using utility::non_copyable;
 
 } // namespace shard
 

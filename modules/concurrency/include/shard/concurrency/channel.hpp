@@ -16,7 +16,7 @@ namespace shard {
 namespace concurrency {
 
 template <typename T>
-class channel : private core::non_copyable {
+class channel : private utility::non_copyable {
 public:
     using value_type = T;
     using size_type = std::size_t;
