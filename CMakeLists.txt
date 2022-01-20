@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 # project options
 # ------------------------------------------------------------------------------
 
-set(SHARD_VERSION 1.2.0)
+set(SHARD_VERSION 1.2.1)
 
 project(shard VERSION ${SHARD_VERSION})
 
