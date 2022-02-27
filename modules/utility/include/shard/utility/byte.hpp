@@ -20,6 +20,10 @@ constexpr T to_integer(byte b) noexcept {
     return static_cast<T>(b);
 }
 
+constexpr byte operator~(byte b) noexcept {
+    return byte(~static_cast<unsigned int>(b));
+}
+
 template <typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
 constexpr byte& operator<<=(byte& b, T shift) noexcept {
     return b = b << shift;
@@ -62,10 +66,6 @@ constexpr byte& operator&=(byte& lhs, byte rhs) noexcept {
 
 constexpr byte& operator^=(byte& lhs, byte rhs) noexcept {
     return lhs = lhs ^ rhs;
-}
-
-constexpr byte operator~(byte b) noexcept {
-    return byte(~static_cast<unsigned int>(b));
 }
 
 } // namespace utility

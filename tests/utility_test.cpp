@@ -35,9 +35,15 @@ TEST_CASE("utility") {
             REQUIRE(shard::to_integer<int>(b2) == 10);
         }
 
-        SECTION("binary operations") {
-            REQUIRE(shard::to_integer<int>(b1 | b2) == 11);
-            REQUIRE(shard::to_integer<int>(b1 & b2) == 2);
+        SECTION("operators") {
+            REQUIRE(shard::to_integer<int>(~b1) == 0b11111100);
+
+            REQUIRE(shard::to_integer<int>(b1 | b2) == 0b1011);
+            REQUIRE(shard::to_integer<int>(b1 & b2) == 0b0010);
+            REQUIRE(shard::to_integer<int>(b1 ^ b2) == 0b1001);
+
+            REQUIRE(shard::to_integer<int>(b1 << 1) == 0b0110);
+            REQUIRE(shard::to_integer<int>(b2 >> 2) == 0b0010);
         }
 
         SECTION("usage as buffer") {
