@@ -100,11 +100,6 @@ TEST_CASE("string") {
                 REQUIRE(fmt("foobar") == "s = foobar");
                 REQUIRE(fmt("baz") == "s = baz");
             }
-
-            SECTION("overflow") {
-                auto fmt = SHARD_MAKE_FMT(4, "%s");
-                REQUIRE(fmt("1234") == "123");
-            }
         }
     }
 
