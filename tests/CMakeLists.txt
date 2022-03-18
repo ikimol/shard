@@ -29,6 +29,7 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/memory_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/meta_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/optional_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/property_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/signal_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/string_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/utility_test.cpp
@@ -45,6 +46,7 @@ target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
                       shard::memory
                       shard::meta
                       shard::optional
+                      shard::property
                       shard::signal
                       shard::string
                       shard::utility
