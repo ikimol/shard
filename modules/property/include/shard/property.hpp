@@ -141,13 +141,19 @@ public:
     }
 
     /// Get the value of the property
-    const T& get() const {
+    const T& value() const {
         const_cast<property*>(this)->accessed();
         return m_value;
     }
 
     /// Value conversion operator
-    operator const T&() const /* NOLINT */ { return get(); }
+    operator const T&() const /* NOLINT */ { return value(); }
+
+    /// Member access operator
+    constexpr const T* operator->() const { return &value(); }
+
+    /// Indirection operator
+    constexpr const T& operator*() const { return value(); }
 
 protected:
     // evaluate the value of the property

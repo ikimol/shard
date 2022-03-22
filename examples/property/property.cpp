@@ -10,13 +10,13 @@ public:
     widget() = default;
 
 private:
-    void update() const { std::cout << "updated: " << name.get() << '\n'; }
+    void update() const { std::cout << "updated: " << *name << '\n'; }
 
 public:
     shard::observed_property<int> id {[this] { update(); }, 0};
 
-    shard::property<std::string> name {[this] {
-        return "w." + std::to_string(id.get());
+    const shard::property<std::string> name {[this] {
+        return "w." + std::to_string(*id);
     }};
 };
 
