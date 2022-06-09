@@ -14,9 +14,6 @@ namespace algorithm {
 namespace detail {
 
 template <typename T>
-using range_iter_type = decltype(std::begin(std::declval<T&>()));
-
-template <typename T>
 class enumerator;
 
 template <typename T>
@@ -24,12 +21,14 @@ class enumerator_proxy {
     friend class enumerator<T>;
 
 public:
-    using iterator = range_iter_type<T>;
+    using iterator = decltype(std::begin(std::declval<T&>()));
     using value_type = std::remove_reference_t<decltype(*std::begin(std::declval<T&>()))>;
 
     enumerator_proxy() = default;
 
     enumerator_proxy(std::size_t index, iterator iterator) : m_index(index), m_iterator(iterator) {}
+
+    enumerator_proxy(const enumerator_proxy<T>& other) : m_index(other.m_index), m_iterator(other.m_iterator) {}
 
     enumerator_proxy<T>& operator=(const enumerator_proxy<T>& other) {
         if (this != &other) {
@@ -54,11 +53,21 @@ template <typename T>
 class enumerator : public std::iterator<std::forward_iterator_tag, enumerator_proxy<T>> {
 public:
     using result_type = enumerator_proxy<T>;
+    using iterator_type = typename result_type::iterator;
 
 public:
-    explicit enumerator(range_iter_type<T> end) : m_result(std::numeric_limits<size_t>::max(), end) {}
+    explicit enumerator(iterator_type end) : m_result(std::numeric_limits<size_t>::max(), end) {}
 
-    enumerator(std::size_t index, range_iter_type<T> iterator) : m_result(index, iterator) {}
+    enumerator(std::size_t index, iterator_type iterator) : m_result(index, iterator) {}
+
+    enumerator(const enumerator<T>& other) : m_result(other.m_result) {}
+
+    enumerator<T>& operator=(const enumerator<T>& other) {
+        if (this != &other) {
+            m_result = other.m_result;
+        }
+        return *this;
+    }
 
     result_type& operator*() { return m_result; }
 
@@ -79,13 +88,6 @@ public:
     }
 
     bool operator!=(const enumerator<T>& other) const { return !this->operator==(other); }
-
-    enumerator<T>& operator=(const enumerator<T>& other) {
-        if (this != &other) {
-            m_result = other.m_result;
-        }
-        return *this;
-    }
 
 private:
     result_type m_result;
