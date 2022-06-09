@@ -18,7 +18,7 @@ constexpr T max(T a, T b) noexcept {
     return a > b ? a : b;
 }
 
-/// Calmp a value between 'low' and 'high'
+/// Clamp a value between 'low' and 'high'
 template <typename T>
 constexpr T clamp(T x, T low, T high) noexcept {
     return max(low, min(x, high));
