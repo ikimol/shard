@@ -128,7 +128,7 @@ using enums::flags;
 
 } // namespace shard
 
-#define SHARD_DECLARE_FLAGS(T, E) using T = shard::flags<E>
+#define SHARD_DECLARE_FLAGS(T, E) using T = shard::flags<E>; // NOLINT
 
 #define SHARD_DECLARE_FLAG_OPERATORS(T)                                                                                \
     constexpr inline shard::flags<T::enum_type> operator|(T::enum_type lhs, T::enum_type rhs) noexcept {               \

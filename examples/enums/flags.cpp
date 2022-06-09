@@ -15,23 +15,28 @@ public:
         append = 1 << 3,
         binary = 1 << 4
     };
-    SHARD_DECLARE_FLAGS(open_mode, open_mode_flags);
+    SHARD_DECLARE_FLAGS(open_mode, open_mode_flags)
 
 public:
-    void open(open_mode mode) {
-        std::cout << "read_only:  " << std::boolalpha << mode.test(open_mode_flags::read_only) << '\n';
-        std::cout << "read_write: " << std::boolalpha << mode.test(open_mode_flags::read_write) << '\n';
-        std::cout << "truncate:   " << std::boolalpha << mode.test(open_mode_flags::truncate) << '\n';
-        std::cout << "append:     " << std::boolalpha << mode.test(open_mode_flags::append) << '\n';
-        std::cout << "binary:     " << std::boolalpha << mode.test(open_mode_flags::binary) << '\n';
+    explicit file(open_mode mode) : m_mode(mode) {}
+
+    void open() {
+        std::cout << "read_only:  " << std::boolalpha << m_mode.test(open_mode_flags::read_only) << '\n';
+        std::cout << "read_write: " << std::boolalpha << m_mode.test(open_mode_flags::read_write) << '\n';
+        std::cout << "truncate:   " << std::boolalpha << m_mode.test(open_mode_flags::truncate) << '\n';
+        std::cout << "append:     " << std::boolalpha << m_mode.test(open_mode_flags::append) << '\n';
+        std::cout << "binary:     " << std::boolalpha << m_mode.test(open_mode_flags::binary) << '\n';
     }
+
+private:
+    open_mode m_mode;
 };
 
 SHARD_DECLARE_FLAG_OPERATORS(file::open_mode)
 
 int main(int /* argc */, char* /* argv */[]) {
-    file f;
-    f.open(file::append | file::read_write);
+    file f(file::binary | file::read_only);
+    f.open();
 
     file::open_mode flags(file::truncate);
     flags |= file::write_only;
