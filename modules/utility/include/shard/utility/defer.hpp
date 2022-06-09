@@ -3,7 +3,7 @@
 #ifndef SHARD_UTILITY_DEFER_HPP
 #define SHARD_UTILITY_DEFER_HPP
 
-#include "non_copyable.hpp"
+#include "shard/utility/non_copyable.hpp"
 
 #include <utility>
 
