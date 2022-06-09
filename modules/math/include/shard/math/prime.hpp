@@ -32,7 +32,7 @@ inline bool is_prime(std::size_t n) {
 }
 
 /// Get the next prime number greater than the given number
-inline int next_prime(std::size_t n) {
+inline std::size_t next_prime(std::size_t n) {
     if (n <= 1) {
         return 2;
     }
