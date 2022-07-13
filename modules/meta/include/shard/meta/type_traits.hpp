@@ -28,12 +28,13 @@ template <> struct is_integer_impl<unsigned long long> : std::true_type {};
 // clang-format on
 
 template <typename S, typename T>
-class stream_test {
-    template <typename S2, typename T2>
-    static auto test(int) -> decltype(std::declval<S2&>() << std::declval<T2>(), std::true_type());
+class is_streamable_impl {
+private:
+    template <typename S1, typename T1>
+    static auto test(int) -> decltype(std::declval<S1&>() << std::declval<T1>(), std::true_type());
 
     template <typename, typename>
-    static auto test(long) -> std::false_type;
+    static auto test(...) -> std::false_type;
 
 public:
     static const bool value = decltype(test<S, T>(0))::value;
@@ -53,7 +54,7 @@ template <typename T>
 struct is_numeric : std::bool_constant<is_integer<T>::value || std::is_floating_point<T>::value> {};
 
 template <typename S, typename T>
-struct is_streamable : std::bool_constant<detail::stream_test<S, T>::value> {};
+struct is_streamable : std::bool_constant<detail::is_streamable_impl<S, T>::value> {};
 
 // is_empty
 
