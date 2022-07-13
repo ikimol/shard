@@ -149,23 +149,23 @@ TEST_CASE("string") {
     SECTION("to_number") {
         REQUIRE(shard::to_int("42") == 42);
         REQUIRE(shard::to_int("-42") == -42);
-        REQUIRE(shard::to_int("42.2") == shard::nullopt);
-        REQUIRE(shard::to_int("foo") == shard::nullopt);
+        REQUIRE_FALSE(shard::to_int("42.2").has_value());
+        REQUIRE_FALSE(shard::to_int("foo").has_value());
 
         REQUIRE(shard::to_unsigned("42") == 42);
-        REQUIRE(shard::to_unsigned("-42") == shard::nullopt);
-        REQUIRE(shard::to_unsigned("42.2") == shard::nullopt);
-        REQUIRE(shard::to_unsigned("foo") == shard::nullopt);
+        REQUIRE_FALSE(shard::to_unsigned("-42").has_value());
+        REQUIRE_FALSE(shard::to_unsigned("42.2").has_value());
+        REQUIRE_FALSE(shard::to_unsigned("foo").has_value());
 
         REQUIRE(shard::to_float("42") == 42);
         REQUIRE(shard::to_float("-42") == -42);
         REQUIRE(shard::to_float("42.2") == 42.2f);
-        REQUIRE(shard::to_float("foo") == shard::nullopt);
+        REQUIRE_FALSE(shard::to_float("foo").has_value());
 
         REQUIRE(shard::to_double("42") == 42);
         REQUIRE(shard::to_double("-42") == -42);
         REQUIRE(shard::to_double("42.2") == 42.2);
-        REQUIRE(shard::to_double("foo") == shard::nullopt);
+        REQUIRE_FALSE(shard::to_double("foo").has_value());
     }
 
     SECTION("to_string") {

@@ -3,8 +3,7 @@
 #include <cassert>
 #include <cstdio>
 
-namespace shard {
-namespace string {
+namespace shard::string {
 
 inline std::string sfmt(char* buffer, std::size_t size, const char* format, ...) {
     assert(size > 0);
@@ -50,5 +49,4 @@ inline std::string fmt(const char* format, va_list ap) {
     return result;
 }
 
-} // namespace string
-} // namespace shard
+} // namespace shard::string

@@ -14,7 +14,7 @@ project(shard VERSION ${SHARD_VERSION})
 
 message(STATUS "${PROJECT_NAME} version ${PROJECT_VERSION}")
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 # ------------------------------------------------------------------------------
 # system information

@@ -6,8 +6,7 @@
 #include <atomic>
 #include <cstddef>
 
-namespace shard {
-namespace meta {
+namespace shard::meta {
 namespace detail {
 
 struct default_typespace {};
@@ -35,8 +34,7 @@ private:
 template <typename T>
 std::atomic<typeid_t> typespace<T>::s_counter = ATOMIC_VAR_INIT(0);
 
-} // namespace meta
-} // namespace shard
+} // namespace shard::meta
 
 #define __SHARD_TYPEID_1(T) shard::meta::typespace<shard::meta::detail::default_typespace>::id<T>()
 #define __SHARD_TYPEID_2(T, N) shard::meta::typespace<T>::id<N>()

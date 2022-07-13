@@ -3,14 +3,12 @@
 #ifndef SHARD_SYSTEM_ENV_HPP
 #define SHARD_SYSTEM_ENV_HPP
 
-#include <shard/optional.hpp>
-
 #include <map>
+#include <optional>
 #include <string>
 
 namespace shard {
-namespace system {
-namespace env {
+namespace system::env {
 
 /// Check if an environment variable is set
 ///
@@ -20,7 +18,7 @@ namespace env {
 bool has(const std::string& key);
 
 /// Get the value of an environment variable or nullopt if it is not set
-optional<std::string> get(const std::string& key);
+std::optional<std::string> get(const std::string& key);
 
 /// Set the value of an environment variable or override it if it is already set
 bool set(const std::string& key, const std::string& value, std::string* old_value = nullptr);
@@ -31,8 +29,7 @@ bool unset(const std::string& key, std::string* old_value = nullptr);
 /// Get the environment variables as key-value pairs
 const std::map<std::string, std::string>& vars();
 
-} // namespace env
-} // namespace system
+} // namespace system::env
 
 // bring symbols into main namespace
 

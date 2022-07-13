@@ -60,8 +60,8 @@ bool has_key(Container&& c, const T& key) {
 /// \note Supports: map, unordered_map
 template <typename Map, typename OutputIt>
 void keys_of(const Map& m, OutputIt it) {
-    for (typename Map::const_reference pair : m) {
-        *it = pair.first;
+    for ([[maybe_unused]] auto& [key, _] : m) {
+        *it = key;
     }
 }
 
@@ -80,8 +80,8 @@ std::set<typename Map::key_type> keys_of(const Map& m) {
 /// \note Supports: map, unordered_map
 template <typename Map, typename OutputIt>
 void values_of(const Map& m, OutputIt it) {
-    for (typename Map::const_reference pair : m) {
-        *it = pair.second;
+    for ([[maybe_unused]] auto& [_, value] : m) {
+        *it = value;
     }
 }
 

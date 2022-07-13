@@ -39,8 +39,7 @@ public:
 
     template <typename Iterator>
     array(allocator& a, Iterator begin, Iterator end) : m_allocator(&a), m_capacity(0) {
-        auto size = std::distance(begin, end);
-        if (size > 0) {
+        if (auto size = std::distance(begin, end); size > 0) {
             m_data = allocate(size);
             m_size = size;
             m_capacity = size;
@@ -292,7 +291,7 @@ public:
     ///
     /// \note Will check if the index is in range
     reference at(size_type index) {
-        auto& const_this = static_cast<const array&>(*this);
+        auto& const_this = std::as_const(*this);
         return const_cast<reference>(const_this.at(index));
     }
 

@@ -20,7 +20,6 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/helpers/counter.cpp
                # modules
                ${CMAKE_CURRENT_SOURCE_DIR}/algorithm_test.cpp
-               ${CMAKE_CURRENT_SOURCE_DIR}/any_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/array_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/bit_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/concurrency_test.cpp
@@ -28,7 +27,6 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/math_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/memory_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/meta_test.cpp
-               ${CMAKE_CURRENT_SOURCE_DIR}/optional_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/property_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/signal_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/string_test.cpp
@@ -37,7 +35,6 @@ add_executable(${SHARD_TEST_TARGET}
 
 target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
                       shard::algorithm
-                      shard::any
                       shard::bit
                       shard::concurrency
                       shard::containers
@@ -45,7 +42,6 @@ target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
                       shard::math
                       shard::memory
                       shard::meta
-                      shard::optional
                       shard::property
                       shard::signal
                       shard::string

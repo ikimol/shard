@@ -5,12 +5,11 @@
 
 #include <type_traits>
 
-namespace shard {
-namespace bit {
+namespace shard::bit {
 namespace detail {
 
 template <typename T>
-using can_store_bits = std::integral_constant<bool, std::is_integral<T>::value && std::is_unsigned<T>::value>;
+using can_store_bits = std::bool_constant<std::is_integral<T>::value && std::is_unsigned<T>::value>;
 
 } // namespace detail
 
@@ -61,7 +60,6 @@ unsigned int count(T n) {
     return count;
 }
 
-} // namespace bit
-} // namespace shard
+} // namespace shard::bit
 
 #endif // SHARD_BIT_HPP

@@ -5,8 +5,7 @@
 
 #include "shard/math/utils.hpp"
 
-namespace shard {
-namespace math {
+namespace shard::math {
 
 template <typename T>
 class percentage {
@@ -25,7 +24,6 @@ private:
     T m_end = 0;
 };
 
-} // namespace math
-} // namespace shard
+} // namespace shard::math
 
 #endif // SHARD_MATH_PERCENTAGE_HPP

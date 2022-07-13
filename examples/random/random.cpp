@@ -28,8 +28,8 @@ int main(int /* argc */, char* /* argv */[]) {
     for (int n = 0; n < 10000; ++n) {
         ++histogram[r_bool.next()];
     }
-    for (auto p : histogram) {
-        std::cout << p.first << ' ' << std::string(p.second / 500, '*') << '\n';
+    for (auto [value, count] : histogram) {
+        std::cout << value << ' ' << std::string(count / 500, '*') << '\n';
     }
 
     // generates a random number using a faster method than the above

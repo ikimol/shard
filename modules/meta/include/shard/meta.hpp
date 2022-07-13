@@ -3,7 +3,6 @@
 #ifndef SHARD_META_HPP
 #define SHARD_META_HPP
 
-#include "shard/meta/in_place.hpp"
 #include "shard/meta/type_traits.hpp"
 #include "shard/meta/typeid.hpp"
 

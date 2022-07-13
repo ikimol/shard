@@ -50,15 +50,15 @@ template <typename T>
 struct is_bool : std::is_same<std::remove_cv_t<T>, bool> {};
 
 template <typename T>
-struct is_numeric : std::integral_constant<bool, is_integer<T>::value || std::is_floating_point<T>::value> {};
+struct is_numeric : std::bool_constant<is_integer<T>::value || std::is_floating_point<T>::value> {};
 
 template <typename S, typename T>
-struct is_streamable : std::integral_constant<bool, detail::stream_test<S, T>::value> {};
+struct is_streamable : std::bool_constant<detail::stream_test<S, T>::value> {};
 
 // is_empty
 
 template <typename... Args>
-struct is_empty : std::integral_constant<bool, sizeof...(Args) == 0> {};
+struct is_empty : std::bool_constant<sizeof...(Args) == 0> {};
 
 // are_same
 
@@ -67,27 +67,27 @@ struct are_same : std::true_type {};
 
 template <typename T, typename U, typename... Args>
 struct are_same<T, U, Args...> :
-std::integral_constant<bool, std::is_same<T, U>::value && are_same<T, Args...>::value> {};
+std::bool_constant<std::is_same<T, U>::value && are_same<T, Args...>::value> {};
 
 // operators
 
 template <typename T>
-using not_type = std::integral_constant<bool, !T::value>;
+using not_type = std::bool_constant<!T::value>;
 
 template <typename Condition, typename Then, typename Else>
 using if_type = std::conditional_t<Condition::value, Then, Else>;
 
 template <typename... Args>
-struct and_type : std::integral_constant<bool, true> {};
+struct and_type : std::bool_constant<true> {};
 
 template <typename T, typename... Args>
-struct and_type<T, Args...> : if_type<T, and_type<Args...>, std::integral_constant<bool, false>> {};
+struct and_type<T, Args...> : if_type<T, and_type<Args...>, std::bool_constant<false>> {};
 
 template <typename... Args>
-struct or_type : std::integral_constant<bool, false> {};
+struct or_type : std::bool_constant<false> {};
 
 template <typename T, typename... Args>
-struct or_type<T, Args...> : if_type<T, std::integral_constant<bool, true>, or_type<Args...>> {};
+struct or_type<T, Args...> : if_type<T, std::bool_constant<true>, or_type<Args...>> {};
 
 template <typename... Args>
 using enable_if_all_t = std::enable_if_t<and_type<Args...>::value, int>;
@@ -116,13 +116,6 @@ template <typename R, typename... Args> struct result_of<R(*)(Args...)> { using 
 template <typename T>
 using result_of_t = typename result_of<T>::type;
 
-// void_t
-
-// clang-format off
-template <typename...> struct make_void { using type = void; };
-template <typename... Ts> using void_t = typename make_void<Ts...>::type;
-// clang-format on
-
 } // namespace meta
 
 using meta::is_bool;
@@ -145,7 +138,6 @@ using meta::disable_if;
 using meta::disable_if_t;
 
 using meta::result_of_t;
-using meta::void_t;
 
 } // namespace shard
 

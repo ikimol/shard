@@ -5,68 +5,63 @@
 
 #include "shard/string/trim.hpp"
 
-#include <shard/optional.hpp>
-
+#include <optional>
 #include <string>
 
 namespace shard {
 namespace string {
 
-inline shard::optional<int> to_int(const std::string& str) {
+inline std::optional<int> to_int(const std::string& str) {
     try {
         std::size_t idx;
-        auto value = std::stoi(str, &idx, 10);
-        if (idx == str.length()) {
+        if (auto value = std::stoi(str, &idx, 10); idx == str.length()) {
             return value;
         }
     } catch (...) {
         // not an integer
     }
-    return shard::nullopt;
+    return std::nullopt;
 }
 
-inline shard::optional<unsigned long> to_unsigned(const std::string& str) {
+inline std::optional<unsigned long> to_unsigned(const std::string& str) {
     auto str_trimmed = ltrim_copy(str);
     if (!str_trimmed.empty() && str_trimmed[0] == '-') {
-        return shard::nullopt;
+        return std::nullopt;
     }
 
     try {
         std::size_t idx;
-        auto value = std::stoul(str, &idx, 10);
-        if (idx == str.length()) {
+        if (auto value = std::stoul(str, &idx, 10); idx == str.length()) {
             return value;
         }
     } catch (...) {
         // not an unsigned
     }
-    return shard::nullopt;
+    return std::nullopt;
 }
 
-inline shard::optional<float> to_float(const std::string& str) {
+inline std::optional<float> to_float(const std::string& str) {
     try {
         std::size_t idx;
-        auto value = std::stof(str, &idx);
-        if (idx == str.length()) {
+        if (auto value = std::stof(str, &idx); idx == str.length()) {
             return value;
         }
     } catch (...) {
         // not a float
     }
-    return shard::nullopt;
+    return std::nullopt;
 }
 
-inline shard::optional<double> to_double(const std::string& str) {
+inline std::optional<double> to_double(const std::string& str) {
     try {
         std::size_t idx;
-        auto value = std::stod(str, &idx);
-        if (idx == str.length()) {
+        if (auto value = std::stod(str, &idx); idx == str.length()) {
             return value;
         }
     } catch (...) {
         // not a double
     }
-    return shard::nullopt;
+    return std::nullopt;
 }
 
 } // namespace string

@@ -53,12 +53,11 @@ inline std::size_t get_padding(const void* ptr, std::size_t align) {
     // because the most significant bits, that do not affect the alignment, are
     // simply masked out
     // only the log2(align) least significant bits affect the alignment
-    auto padding = align - (as_uint(ptr) & (align - 1));
-    // already aligned
-    if (padding == align) {
-        return 0;
+    if (auto padding = align - (as_uint(ptr) & (align - 1)); padding != align) {
+        return padding;
     }
-    return padding;
+    // already aligned
+    return 0;
 }
 
 template <typename T>

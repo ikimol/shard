@@ -5,8 +5,7 @@
 
 #include <cctype>
 
-namespace shard {
-namespace ch {
+namespace shard::ch {
 
 /// Check if the ch is an alphanumeric ch
 ///
@@ -125,7 +124,6 @@ inline bool iequal(char lhs, char rhs) {
     return to_lower(lhs) == to_lower(rhs);
 }
 
-} // namespace ch
-} // namespace shard
+} // namespace shard::ch
 
 #endif // SHARD_STRING_CTYPE_HPP

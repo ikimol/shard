@@ -3,9 +3,8 @@
 #ifndef SHARD_MEMORY_DATA_HPP
 #define SHARD_MEMORY_DATA_HPP
 
-#include <shard/utility/byte.hpp>
-
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace shard {
@@ -13,7 +12,7 @@ namespace memory {
 
 class data {
 public:
-    using buffer_type = std::vector<shard::byte>;
+    using buffer_type = std::vector<std::byte>;
     using size_type = buffer_type::size_type;
 
 public:
@@ -21,7 +20,7 @@ public:
 
     explicit data(std::size_t size) : m_buffer(size) {}
 
-    data(const shard::byte* data, std::size_t size) : m_buffer(data, data + size) {}
+    data(const std::byte* data, std::size_t size) : m_buffer(data, data + size) {}
 
     /// Get the number of bytes in the buffer
     size_type size() const { return m_buffer.size(); }
@@ -32,7 +31,7 @@ public:
     // access
 
     /// Get the raw bytes
-    shard::byte* bytes() { return m_buffer.data(); }
+    std::byte* bytes() { return m_buffer.data(); }
 
     /// Get the byte array
     buffer_type& buffer() { return m_buffer; }

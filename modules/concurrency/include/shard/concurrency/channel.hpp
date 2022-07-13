@@ -4,11 +4,11 @@
 #define SHARD_CONCURRENCY_CHANNEL_HPP
 
 #include <shard/utility/non_copyable.hpp>
-#include <shard/optional.hpp>
 
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
+#include <optional>
 #include <queue>
 #include <utility>
 
@@ -95,12 +95,12 @@ public:
     ///
     /// \return An optional value with the result if a value was retrieved from
     /// the queue, nullopt otherwise
-    shard::optional<T> try_get_optional() {
+    std::optional<T> try_get_optional() {
         std::lock_guard<std::mutex> lock(m_mutex);
         if (!m_open || m_queue.empty()) {
-            return shard::nullopt;
+            return std::nullopt;
         }
-        auto result = make_optional(std::move(m_queue.front()));
+        auto result = std::make_optional(std::move(m_queue.front()));
         m_queue.pop();
         return result;
     }
@@ -132,12 +132,12 @@ public:
     ///
     /// \return An optional value with the result if a value was retrieved from
     /// the queue, nullopt otherwise
-    shard::optional<T> wait_get_optional() {
+    std::optional<T> wait_get_optional() {
         std::unique_lock<std::mutex> lock(m_mutex);
         // unblock if closed or there's something new on the queue
         m_cv.wait(lock, [this] { return !m_open || !m_queue.empty(); });
         if (!m_open) {
-            return shard::nullopt;
+            return std::nullopt;
         }
         auto result = make_optional(std::move(m_queue.front()));
         m_queue.pop();

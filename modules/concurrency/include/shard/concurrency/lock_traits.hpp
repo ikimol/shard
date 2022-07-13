@@ -4,10 +4,7 @@
 #define SHARD_CONCURRENCY_LOCK_TRAITS_HPP
 
 #include <mutex>
-
-#if __cplusplus >= 201402L
 #include <shared_mutex>
-#endif
 
 namespace shard {
 namespace concurrency {
@@ -25,12 +22,10 @@ struct lock_traits<std::unique_lock> {
     static constexpr bool is_read_only = false;
 };
 
-#if __cplusplus >= 201402L
 template <>
 struct lock_traits<std::shared_lock> {
     static constexpr bool is_read_only = true;
 };
-#endif
 
 } // namespace concurrency
 

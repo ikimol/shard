@@ -5,9 +5,7 @@
 
 #include "shard/enums/traits.hpp"
 
-namespace shard {
-namespace enums {
-namespace operators {
+namespace shard::enums::operators {
 
 // implements lhs != rhs
 template <typename E, typename = std::enable_if_t<std::is_enum<E>::value>>
@@ -32,8 +30,6 @@ constexpr bool operator==(const std::underlying_type_t<E>& lhs, const E& rhs) no
     return lhs == to_underlying(rhs);
 }
 
-} // namespace operators
-} // namespace enums
-} // namespace shard
+} // namespace shard::enums::operators
 
 #endif // SHARD_ENUMS_OPERATORS_HPP

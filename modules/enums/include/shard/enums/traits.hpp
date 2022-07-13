@@ -16,7 +16,7 @@ template <typename T>
 struct are_enum<T> : std::is_enum<T> {};
 
 template <typename T, typename... Args>
-struct are_enum<T, Args...> : std::integral_constant<bool, std::is_enum<T>::value && are_enum<Args...>::value> {};
+struct are_enum<T, Args...> : std::bool_constant<std::is_enum<T>::value && are_enum<Args...>::value> {};
 
 template <typename... Args>
 using enable_if_enum = std::enable_if_t<are_enum<std::remove_reference_t<Args>...>::value>;

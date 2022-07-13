@@ -17,8 +17,8 @@ int main(int /* argc */, char* /* argv */[]) {
     std::unordered_map<std::string, int> map = {{"zero", 0}, {"one", 1}, {"two", 2}, {"three", 3}, {"four", 4}};
 
     for (const auto& p : shard::enumerate(map)) {
-        auto& pair = p.value();
-        std::cout << '(' << p.index() << ") map['" << pair.first << "']: " << pair.second << '\n';
+        auto& [name, value] = p.value();
+        std::cout << '(' << p.index() << ") map['" << name << "']: " << value << '\n';
     }
 
     return 0;
