@@ -9,17 +9,17 @@ static shard::channel<int> g_channel;
 
 static void thread_fn() {
     std::this_thread::sleep_for(std::chrono::seconds(2));
-    g_channel.put(42);
+    g_channel.push(42);
 }
 
 int main(int /* argc */, char* /* argv */[]) {
-    g_channel.put(1);
-    g_channel.put(2);
-    g_channel.put(3);
+    g_channel.push(1);
+    g_channel.push(2);
+    g_channel.push(3);
 
     for (int i = 0; i < 3; ++i) {
         // non-blocking read
-        if (auto n = g_channel.try_get_optional()) {
+        if (auto n = g_channel.try_pop()) {
             std::cout << *n << '\n';
         }
     }
@@ -28,7 +28,7 @@ int main(int /* argc */, char* /* argv */[]) {
     std::thread t(thread_fn);
 
     int n = -1;
-    g_channel.wait_get(n); // blocking read
+    g_channel.pop(n); // blocking read
     std::cout << n << '\n';
 
     t.join();

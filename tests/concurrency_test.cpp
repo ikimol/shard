@@ -11,25 +11,25 @@
 
 static void channel_writer(shard::channel<int>* channel, int i) {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    channel->put(i);
+    channel->push(i);
 }
 
 TEST_CASE("concurrency") {
     SECTION("channel") {
         shard::channel<int> channel;
 
-        SECTION("try_get") {
-            channel.put(42);
+        SECTION("try_pop") {
+            channel.push(42);
             int n = -1;
-            REQUIRE(channel.try_get(n));
+            REQUIRE(channel.try_pop(n));
             REQUIRE(n == 42);
         }
 
-        SECTION("wait_get") {
+        SECTION("pop") {
             std::thread thread(channel_writer, &channel, 42);
             int n = -1;
             auto start = std::chrono::high_resolution_clock::now();
-            auto success = channel.wait_get(n);
+            auto success = channel.pop(n);
             auto duration = std::chrono::high_resolution_clock::now() - start;
             REQUIRE(success);
             REQUIRE(n == 42);
@@ -44,7 +44,7 @@ TEST_CASE("concurrency") {
             shard::channel<test::no_default> no_default_channel;
             no_default_channel.emplace(42, 21);
 
-            auto n = no_default_channel.try_get_optional();
+            auto n = no_default_channel.try_pop();
             REQUIRE(n);
             REQUIRE(n->a == 42);
             REQUIRE(n->b == 21);

@@ -16,7 +16,7 @@ namespace shard {
 namespace concurrency {
 
 template <typename T>
-class channel : private utility::non_copyable {
+class channel {
 public:
     using value_type = T;
     using size_type = std::size_t;
@@ -25,11 +25,11 @@ public:
     /// Default constructor
     channel() = default;
 
-    /// Destructor that closes the channel and thus notifies waiting threads
+    /// Destructor that closes the channel and notifies all waiting threads
     ~channel() { close(); }
 
     /// Add a new item to the channel by copying it
-    void put(const value_type& value) {
+    void push(const value_type& value) {
         if (!m_open) {
             return;
         }
@@ -43,7 +43,7 @@ public:
     }
 
     /// Add a new item to the channel by moving it
-    void put(value_type&& value) {
+    void push(value_type&& value) {
         if (!m_open) {
             return;
         }
@@ -77,9 +77,9 @@ public:
     ///
     /// \param out The reference to be assigned the value
     ///
-    /// \return True if a value was retrieved, false if the channel was closed
+    /// \return true if a value was retrieved, false if the channel was closed
     /// or if the queue is empty
-    bool try_get(value_type& out) {
+    bool try_pop(value_type& out) {
         std::lock_guard<std::mutex> lock(m_mutex);
         if (!m_open || m_queue.empty()) {
             return false;
@@ -95,7 +95,7 @@ public:
     ///
     /// \return An optional value with the result if a value was retrieved from
     /// the queue, nullopt otherwise
-    std::optional<T> try_get_optional() {
+    std::optional<T> try_pop() {
         std::lock_guard<std::mutex> lock(m_mutex);
         if (!m_open || m_queue.empty()) {
             return std::nullopt;
@@ -112,8 +112,8 @@ public:
     ///
     /// \param out The reference to be assigned the value
     ///
-    /// \return True if a value was retrieved, false if the channel was closed
-    bool wait_get(value_type& out) {
+    /// \return true if a value was retrieved, false if the channel was closed
+    bool pop(value_type& out) {
         std::unique_lock<std::mutex> lock(m_mutex);
         // unblock if closed or there's something new on the queue
         m_cv.wait(lock, [this] { return !m_open || !m_queue.empty(); });
@@ -132,7 +132,7 @@ public:
     ///
     /// \return An optional value with the result if a value was retrieved from
     /// the queue, nullopt otherwise
-    std::optional<T> wait_get_optional() {
+    std::optional<T> pop() {
         std::unique_lock<std::mutex> lock(m_mutex);
         // unblock if closed or there's something new on the queue
         m_cv.wait(lock, [this] { return !m_open || !m_queue.empty(); });
@@ -173,8 +173,7 @@ public:
     /// This will open the channel and notify threads only if it was closed
     /// before.
     void open() {
-        bool was_open = m_open;
-        m_open = true;
+        auto was_open = m_open.exchange(true);
         if (!was_open) {
             m_cv.notify_all();
         }
@@ -187,21 +186,20 @@ public:
     ///
     /// \note This will *NOT* clear the channel.
     void close() {
-        bool was_open = m_open;
-        m_open = false;
+        auto was_open = m_open.exchange(false);
         if (was_open) {
             m_cv.notify_all();
         }
     }
 
     /// Check if the channel is open
-    bool is_open() const { return m_open; }
+    bool is_open() const { return m_open.load(std::memory_order_relaxed); }
 
     /// Notify all waiting threads
     ///
     /// Useful in cases where the channel is populated before any threads are
     /// spawned. Once the threads are created, the channel can notify them that
-    /// there are items to processed.
+    /// there are items to be processed.
     ///
     /// \note Will only notify if the channel is open.
     void notify() {
