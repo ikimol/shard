@@ -221,20 +221,20 @@ private:
     std::vector<std::shared_ptr<slot_type>> m_slots;
 };
 
-void connection::disconnect() {
+inline void connection::disconnect() {
     if (auto slot = m_slot.lock()) {
         m_signal->disconnect(slot);
     }
 }
 
-bool connection::is_enabled() const {
+inline bool connection::is_enabled() const {
     if (auto slot = m_slot.lock()) {
         return (*slot).enabled;
     }
     return false;
 }
 
-void connection::set_enabled(bool enabled) {
+inline void connection::set_enabled(bool enabled) {
     if (auto slot = m_slot.lock()) {
         (*slot).enabled = enabled;
     }
