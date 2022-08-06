@@ -5,6 +5,7 @@
 
 #include "shard/concurrency/channel.hpp"
 #include "shard/concurrency/lock_traits.hpp"
+#include "shard/concurrency/mpsc_queue.hpp"
 #include "shard/concurrency/null_mutex.hpp"
 #include "shard/concurrency/thread_safe.hpp"
 

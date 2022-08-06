@@ -51,6 +51,42 @@ TEST_CASE("concurrency") {
         }
     }
 
+    SECTION("mpsc_queue") {
+        shard::mpsc_queue<test::widget, 8> queue;
+
+        SECTION("size") {
+            REQUIRE(queue.is_empty());
+            REQUIRE(queue.size() == 0);
+            REQUIRE(queue.capacity() == 8);
+        }
+
+        SECTION("push") {
+            queue.push(test::widget {1});
+            queue.push(test::widget {2});
+            REQUIRE(queue.size() == 2);
+        }
+
+        SECTION("emplace") {
+            queue.emplace(1);
+            queue.emplace(2);
+            REQUIRE(queue.size() == 2);
+        }
+
+        SECTION("pop") {
+            queue.emplace(1);
+            queue.emplace(2);
+            queue.emplace(3);
+            REQUIRE(queue.size() == 3);
+            int expected[] = {1, 2, 3};
+            for (auto i : expected) {
+                auto value = queue.pop();
+                REQUIRE(value.has_value());
+                REQUIRE(value->a == i);
+            }
+            REQUIRE(queue.is_empty());
+        }
+    }
+
     SECTION("thread_safe") {
         using thread_safe_widget = shard::rw_thread_safe<test::widget>;
         thread_safe_widget widget(42, 21);
