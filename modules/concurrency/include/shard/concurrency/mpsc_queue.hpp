@@ -4,6 +4,7 @@
 #define SHARD_CONCURRENCY_MPSC_QUEUE_HPP
 
 #include <atomic>
+#include <cassert>
 #include <cstddef>
 #include <new>
 #include <optional>
