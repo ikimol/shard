@@ -3,51 +3,28 @@
 #ifndef SHARD_MEMORY_DATA_HPP
 #define SHARD_MEMORY_DATA_HPP
 
-#include <string>
+#include <string_view>
 #include <utility>
-#include <vector>
 
 namespace shard {
 namespace memory {
 
-class data {
-public:
-    using buffer_type = std::vector<std::byte>;
-    using size_type = buffer_type::size_type;
-
-public:
+struct data {
+    /// Create empty data
     data() = default;
 
-    explicit data(std::size_t size) : m_buffer(size) {}
+    /// Create data with the given bytes and size
+    data(std::byte* bytes, std::size_t size) : bytes(bytes), size(size) {}
 
-    data(const std::byte* data, std::size_t size) : m_buffer(data, data + size) {}
-
-    /// Get the number of bytes in the buffer
-    size_type size() const { return m_buffer.size(); }
-
-    /// Check if the buffer is empty
-    bool is_empty() const { return m_buffer.empty(); }
-
-    // access
-
-    /// Get the raw bytes
-    std::byte* bytes() { return m_buffer.data(); }
-
-    /// Get the byte array
-    buffer_type& buffer() { return m_buffer; }
-
-    /// Get the byte array
-    const buffer_type& buffer() const { return m_buffer; }
-
-    /// Get the contents of the byte array as a string
-    std::string string() const {
-        auto c_str = reinterpret_cast<const unsigned char*>(m_buffer.data());
-        return {c_str, c_str + m_buffer.size()};
-    }
-
-private:
-    buffer_type m_buffer;
+    std::byte* bytes = nullptr;
+    std::size_t size = 0;
 };
+
+/// Get the contents of the buffer as a string view
+std::string_view to_string_view(const data& data) {
+    auto c_str = reinterpret_cast<const char*>(data.bytes);
+    return std::string_view {c_str, data.size};
+}
 
 } // namespace memory
 
