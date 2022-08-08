@@ -139,7 +139,7 @@ public:
         if (!m_open) {
             return std::nullopt;
         }
-        auto result = make_optional(std::move(m_queue.front()));
+        auto result = std::make_optional(std::move(m_queue.front()));
         m_queue.pop();
         return result;
     }
