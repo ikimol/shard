@@ -3,6 +3,7 @@
 #ifndef SHARD_META_TYPE_TRAITS_HPP
 #define SHARD_META_TYPE_TRAITS_HPP
 
+#include <tuple>
 #include <type_traits>
 
 namespace shard {
@@ -67,8 +68,7 @@ template <typename T, typename...>
 struct are_same : std::true_type {};
 
 template <typename T, typename U, typename... Args>
-struct are_same<T, U, Args...> :
-std::bool_constant<std::is_same<T, U>::value && are_same<T, Args...>::value> {};
+struct are_same<T, U, Args...> : std::bool_constant<std::is_same<T, U>::value && are_same<T, Args...>::value> {};
 
 // operators
 
@@ -106,13 +106,27 @@ template <typename T> struct disable_if<false, T> { using type = T; };
 template <bool Bool, typename T = void>
 using disable_if_t = typename disable_if<Bool, T>::type;
 
-// function result
+// function traits
 
 // clang-format off
 template <typename> struct result_of;
 template <class R, class... Args> struct result_of<R(Args...)> { using type = R; };
 template <typename R, typename... Args> struct result_of<R(*)(Args...)> { using type = R; };
 // clang-format on
+
+template <typename T>
+struct functor_traits : public functor_traits<decltype(&T::operator())> {};
+
+template <typename T, typename R, typename... Args>
+struct functor_traits<R (T::*)(Args...) const> {
+    static constexpr auto arity = sizeof...(Args);
+
+    typedef R result_type;
+    using args_type = std::tuple<Args...>;
+
+    template <std::size_t N>
+    using arg_type = typename std::tuple_element<N, args_type>::type;
+};
 
 template <typename T>
 using result_of_t = typename result_of<T>::type;
@@ -138,6 +152,7 @@ using meta::enable_if_any_t;
 using meta::disable_if;
 using meta::disable_if_t;
 
+using meta::functor_traits;
 using meta::result_of_t;
 
 } // namespace shard
