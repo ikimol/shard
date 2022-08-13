@@ -33,6 +33,12 @@ option(SHARD_BUILD_BENCHMARKS "Enable to build the benchmarks" OFF)
 option(SHARD_BUILD_DOCS "Enable to build the documentation" OFF)
 
 # ------------------------------------------------------------------------------
+# optional module building
+# ------------------------------------------------------------------------------
+
+option(SHARD_BUILD_NET_MODULE "Enable to build the 'net' module" ON)
+
+# ------------------------------------------------------------------------------
 # create targets
 # ------------------------------------------------------------------------------
 

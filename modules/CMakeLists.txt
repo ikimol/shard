@@ -22,6 +22,12 @@ add_subdirectory(string)
 add_subdirectory(system)
 add_subdirectory(utility)
 
+# optional modules
+
+if (SHARD_BUILD_NET_MODULE)
+    add_subdirectory(net)
+endif ()
+
 # export all the targets
 
 shard_export_targets()
