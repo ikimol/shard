@@ -37,6 +37,7 @@ option(SHARD_BUILD_DOCS "Enable to build the documentation" OFF)
 # ------------------------------------------------------------------------------
 
 option(SHARD_BUILD_NET_MODULE "Enable to build the 'net' module" ON)
+option(SHARD_BUILD_SQLITE_MODULE "Enable to build the 'sqlite' module" ON)
 
 # ------------------------------------------------------------------------------
 # create targets

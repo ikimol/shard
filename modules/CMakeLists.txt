@@ -28,6 +28,10 @@ if (SHARD_BUILD_NET_MODULE)
     add_subdirectory(net)
 endif ()
 
+if (SHARD_BUILD_SQLITE_MODULE)
+    add_subdirectory(sqlite)
+endif ()
+
 # export all the targets
 
 shard_export_targets()
