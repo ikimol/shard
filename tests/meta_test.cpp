@@ -4,8 +4,17 @@
 
 #include <catch.hpp>
 
+#include <array>
 #include <cstddef>
+#include <deque>
+#include <list>
+#include <map>
 #include <ostream>
+#include <queue>
+#include <set>
+#include <stack>
+#include <unordered_map>
+#include <vector>
 
 struct Widget {
     const char* name = "?";
@@ -73,6 +82,26 @@ TEST_CASE("meta") {
             REQUIRE(shard::is_streamable<std::ostream, Widget>::value);
 
             REQUIRE_FALSE(shard::is_streamable<std::ostream, Gizmo>::value);
+        }
+
+        SECTION("has_begin_end") {
+            REQUIRE(shard::has_begin_end<std::array<int, 3>>::value);
+            REQUIRE(shard::has_begin_end<std::vector<int>>::value);
+            REQUIRE(shard::has_begin_end<std::list<int>>::value);
+            REQUIRE(shard::has_begin_end<std::deque<int>>::value);
+            REQUIRE(shard::has_begin_end<std::set<int>>::value);
+            REQUIRE(shard::has_begin_end<std::unordered_map<int, int>>::value);
+
+            REQUIRE_FALSE(shard::has_begin_end<std::queue<int>>::value);
+            REQUIRE_FALSE(shard::has_begin_end<std::stack<int>>::value);
+        }
+
+        SECTION("has_key_value_pair") {
+            REQUIRE(shard::has_key_value_pair<std::map<int, int>>::value);
+            REQUIRE(shard::has_key_value_pair<std::unordered_map<int, int>>::value);
+
+            REQUIRE_FALSE(shard::has_key_value_pair<std::vector<int>>::value);
+            REQUIRE_FALSE(shard::has_key_value_pair<std::set<int>>::value);
         }
 
         SECTION("are_same") {

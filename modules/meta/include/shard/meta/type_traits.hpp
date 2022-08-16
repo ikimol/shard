@@ -41,6 +41,34 @@ public:
     static const bool value = decltype(test<S, T>(0))::value;
 };
 
+template <typename T>
+class has_begin_end_impl {
+private:
+    template <typename U = std::decay_t<T>, typename B = decltype(std::declval<U&>().begin()),
+    typename E = decltype(std::declval<U&>().end())>
+    static std::true_type test(int);
+
+    template <typename...>
+    static auto test(...) -> std::false_type;
+
+public:
+    static const bool value = decltype(test<T>(0))::value;
+};
+
+template <typename T>
+class has_key_value_pair_impl {
+private:
+    template <typename U = std::decay_t<T>, typename V = typename U::value_type,
+    typename F = decltype(std::declval<V&>().first), typename S = decltype(std::declval<V&>().second)>
+    static std::true_type test(int);
+
+    template <typename...>
+    static auto test(...) -> std::false_type;
+
+public:
+    static const bool value = decltype(test<T>(0))::value;
+};
+
 } // namespace detail
 
 // is_<type> structs
@@ -56,6 +84,12 @@ struct is_numeric : std::bool_constant<is_integer<T>::value || std::is_floating_
 
 template <typename S, typename T>
 struct is_streamable : std::bool_constant<detail::is_streamable_impl<S, T>::value> {};
+
+template <typename T>
+struct has_begin_end : std::bool_constant<detail::has_begin_end_impl<T>::value> {};
+
+template <typename T>
+struct has_key_value_pair : std::bool_constant<detail::has_key_value_pair_impl<T>::value> {};
 
 // is_empty
 
@@ -137,6 +171,9 @@ using meta::is_bool;
 using meta::is_integer;
 using meta::is_numeric;
 using meta::is_streamable;
+
+using meta::has_begin_end;
+using meta::has_key_value_pair;
 
 using meta::are_same;
 using meta::is_empty;
