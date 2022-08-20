@@ -172,8 +172,8 @@ public:
     ///
     /// This will open the channel and notify threads only if it was closed
     /// before.
-    void open() {
-        auto was_open = m_open.exchange(true);
+    void open() noexcept {
+        auto was_open = m_open.exchange(true, std::memory_order_acq_rel);
         if (!was_open) {
             m_cv.notify_all();
         }
@@ -185,15 +185,15 @@ public:
     /// before. The channel can later be reopened using open().
     ///
     /// \note This will *NOT* clear the channel.
-    void close() {
-        auto was_open = m_open.exchange(false);
+    void close() noexcept {
+        auto was_open = m_open.exchange(false, std::memory_order_acq_rel);
         if (was_open) {
             m_cv.notify_all();
         }
     }
 
     /// Check if the channel is open
-    bool is_open() const { return m_open.load(std::memory_order_relaxed); }
+    bool is_open() const noexcept { return m_open.load(std::memory_order_relaxed); }
 
     /// Notify all waiting threads
     ///
@@ -202,8 +202,8 @@ public:
     /// there are items to be processed.
     ///
     /// \note Will only notify if the channel is open.
-    void notify() {
-        if (m_open) {
+    void notify() noexcept {
+        if (m_open.load(std::memory_order_relaxed)) {
             m_cv.notify_all();
         }
     }
