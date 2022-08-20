@@ -13,16 +13,16 @@
 namespace shard {
 namespace concurrency {
 
-template <typename T, std::size_t t_index>
+template <typename T, std::size_t t_capacity>
 class mpsc_queue {
 public:
     using value_type = T;
     using size_type = std::size_t;
 
 public:
-    mpsc_queue() : m_capacity(t_index) {
-        m_data = new std::byte[sizeof(value_type) * t_index];
-        m_states = new std::atomic<bool>[t_index];
+    mpsc_queue() : m_capacity(t_capacity) {
+        m_data = new std::byte[sizeof(value_type) * t_capacity];
+        m_states = new std::atomic<bool>[t_capacity];
     }
 
     /// Add a new item to the queue by copying it
