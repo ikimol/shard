@@ -50,7 +50,14 @@ private:
 };
 
 template <typename T>
-class enumerator : public std::iterator<std::forward_iterator_tag, enumerator_proxy<T>> {
+class enumerator {
+public: // std::iterator conformance
+    using iterator_category = std::forward_iterator_tag;
+    using value_type = enumerator_proxy<T>;
+    using difference_type = std::ptrdiff_t;
+    using pointer = value_type*;
+    using reference = value_type&;
+
 public:
     using result_type = enumerator_proxy<T>;
     using iterator_type = typename result_type::iterator;
