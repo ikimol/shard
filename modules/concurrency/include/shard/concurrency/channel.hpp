@@ -116,7 +116,9 @@ public:
     bool pop(value_type& out) {
         std::unique_lock<std::mutex> lock(m_mutex);
         // unblock if closed or there's something new on the queue
-        m_cv.wait(lock, [this] { return !m_open || !m_queue.empty(); });
+        m_cv.wait(lock, [this] {
+            return !m_open || !m_queue.empty();
+        });
         if (!m_open) {
             return false;
         }
@@ -135,7 +137,9 @@ public:
     std::optional<T> pop() {
         std::unique_lock<std::mutex> lock(m_mutex);
         // unblock if closed or there's something new on the queue
-        m_cv.wait(lock, [this] { return !m_open || !m_queue.empty(); });
+        m_cv.wait(lock, [this] {
+            return !m_open || !m_queue.empty();
+        });
         if (!m_open) {
             return std::nullopt;
         }

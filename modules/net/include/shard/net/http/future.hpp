@@ -18,7 +18,9 @@ public:
     const http::response& get() {
         std::unique_lock<std::mutex> lock(m_state->mutex);
         // unblock when the state has the response
-        m_state->cv.wait(lock, [this] { return m_state->response != nullptr; });
+        m_state->cv.wait(lock, [this] {
+            return m_state->response != nullptr;
+        });
         return *(m_state->response);
     }
 

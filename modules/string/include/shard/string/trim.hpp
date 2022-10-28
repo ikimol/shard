@@ -12,7 +12,9 @@ namespace string {
 
 /// Left-trim a string in-place, removing all whitespaces from the start
 inline void ltrim(std::string& s) {
-    auto it = std::find_if(s.begin(), s.end(), [](int ch) { return !::isspace(ch); });
+    auto it = std::find_if(s.begin(), s.end(), [](int ch) {
+        return !::isspace(ch);
+    });
     s.erase(s.begin(), it);
 }
 
@@ -24,7 +26,9 @@ inline std::string ltrim_copy(std::string s) {
 
 /// Right-trim a string in-place, removing all whitespaces from the end
 inline void rtrim(std::string& s) {
-    auto it = std::find_if(s.rbegin(), s.rend(), [](int ch) { return !::isspace(ch); });
+    auto it = std::find_if(s.rbegin(), s.rend(), [](int ch) {
+        return !::isspace(ch);
+    });
     s.erase(it.base(), s.end());
 }
 

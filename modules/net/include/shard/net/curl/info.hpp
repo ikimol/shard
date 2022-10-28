@@ -76,6 +76,6 @@ template <> struct info<CURLINFO_REQUEST_SIZE> { using type = long; };
 template <CURLINFO Info>
 using info_t = typename info<Info>::type;
 
-} // namespace shard
+} // namespace shard::net::curl
 
 #endif // SHARD_NET_CURL_INFO_HPP
