@@ -29,8 +29,8 @@ std::optional<user> fetch_user(sqlite::statement& stmt) {
 
 int main(int /* argc */, char* /* argv */[]) {
     sqlite::database db("test.db", sqlite::database::open_read_write);
-    std::cout << "has 'users' table: " << db.does_table_exist("users") << '\n';
-    std::cout << "has 'comments' table: " << db.does_table_exist("comments") << '\n';
+    std::cout << "has 'users' table: " << db.contains_table("users") << '\n';
+    std::cout << "has 'comments' table: " << db.contains_table("comments") << '\n';
     std::cout << divider << '\n';
 
     sqlite::statement stmt(db, "SELECT * FROM users WHERE id>?");

@@ -171,9 +171,10 @@ private:
         sqlite3_stmt* statement;
         sqlite3_prepare_v2(m_db.handle(), m_sql.c_str(), static_cast<int>(m_sql.size()), &statement, nullptr);
         // TODO: Handle possible error
-        return {statement, [](sqlite3_stmt* statement) {
-                    sqlite3_finalize(statement);
-                }};
+        auto deleter = [](sqlite3_stmt* statement) {
+            sqlite3_finalize(statement);
+        };
+        return {statement, deleter};
     }
 
     int do_step() {
@@ -266,7 +267,7 @@ void bind(statement& stmt, const std::tuple<Args...>& values, std::index_sequenc
 
 // implementation
 
-bool database::does_table_exist(const std::string& name) {
+bool database::contains_table(const std::string& name) {
     statement stmt(*this, "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?");
     stmt.bind(1, name);
     stmt.step();

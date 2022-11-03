@@ -42,7 +42,7 @@ public:
     }
 
     /// Check if a table with the given name exists
-    bool does_table_exist(const std::string& name);
+    bool contains_table(const std::string& name);
 
     /// Get the underlying handle
     sqlite3* handle() const { return m_handle.get(); }
