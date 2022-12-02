@@ -8,14 +8,18 @@
 
 #include <shard/string/fmt.hpp>
 #include <shard/string/join.hpp>
+#include <shard/utility/preprocessor.hpp>
 
+#include <memory>
 #include <optional>
+#include <unordered_map>
+#include <vector>
 
 namespace shard::net::http {
 
 class client;
 
-class request : public std::enable_shared_from_this<request> {
+class request {
     friend class client;
 
 public:
@@ -30,6 +34,12 @@ public:
     };
 
 public:
+    /// Create a new HTTP request
+    static request::ptr create(url url, method_t method = method_get) {
+        auto r = new request(std::move(url), method);
+        return request::ptr {r};
+    }
+
     /// Set the URL
     void set_url(url url) { m_url = std::move(url); }
 
@@ -49,22 +59,23 @@ public:
 
     /// Add a single post field
     template <typename T>
-    void set_post_field(const std::string& key, T&& value);
-
-    /// Send this request
-    future send();
+    void set_post_field(const std::string& key, T&& value) {
+        if (key.empty()) {
+            return;
+        }
+        m_post_fields[key] = shard::to_string(SHARD_FWD(value));
+    }
 
 private:
-    explicit request(client& client) : m_client(client) {}
+    // create an HTTP request with a URL and an HTTP method
+    request(url&& url, method_t method) : m_url(std::move(url)), m_method(method) {}
 
 private:
-    client& m_client;
-
     url m_url;
-    method_t m_method = method_t::method_get;
+    method_t m_method;
 
     std::vector<std::string> m_headers;
-    std::vector<std::string> m_post_fields;
+    std::unordered_map<std::string, std::string> m_post_fields;
 
     detail::shared_state::ptr m_state;
 };

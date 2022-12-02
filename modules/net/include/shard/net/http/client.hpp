@@ -18,8 +18,6 @@
 namespace shard::net::http {
 
 class client {
-    friend class request;
-
 public:
     /// Default constructor that starts the worker thread
     explicit client(version_t version = version_t::http_2) : m_thread(&client::worker_thread, this) {
@@ -44,12 +42,19 @@ public:
     /// Set the connection timeout
     void set_connection_timeout(std::size_t value) { m_connection_timeout = value; }
 
-    /// Create an HTTP request
-    request::ptr create_request(url url, request::method_t method = request::method_get) {
-        auto r = request::ptr(new request(*this));
-        r->set_url(std::move(url));
-        r->set_method(method);
-        return r;
+    /// Send the HTTP request
+    ///
+    /// \note This does not guarantee that the request is sent immediately.
+    ///       The request is placed in a queue that is processed by the
+    ///       background thread(s).
+    ///
+    /// \return A future object to add a callback to the request or block until
+    ///         the response is available or the request times out.
+    future send_request(request::ptr request) {
+        auto state = std::make_shared<detail::shared_state>();
+        request->m_state = state;
+        m_requests.push(std::move(request));
+        return future {std::move(state)};
     }
 
 private:
@@ -65,15 +70,17 @@ private:
         return result;
     }
 
-    bool restore_curl_handle() {
-        m_curl.set_option<CURLOPT_HTTPGET>(true);
+    void reset_curl_handle() {
+        m_curl.set_option<CURLOPT_HTTPGET>(false);
         m_curl.set_option<CURLOPT_FOLLOWLOCATION>(true);
         m_curl.set_option<CURLOPT_POST>(false);
         m_curl.set_option<CURLOPT_PUT>(false);
-        m_curl.set_option_raw(CURLOPT_POSTFIELDSIZE, 0);
-        m_curl.set_option_raw(CURLOPT_POSTFIELDS, nullptr);
-        m_curl.set_option_raw(CURLOPT_CUSTOMREQUEST, nullptr);
-        m_curl.set_option_raw(CURLOPT_HTTPHEADER, nullptr);
+        m_curl.set_option<CURLOPT_NOBODY>(false);
+        m_curl.set_option<CURLOPT_POSTFIELDSIZE>(0);
+        m_curl.set_option<CURLOPT_POSTFIELDS>(std::nullopt);
+        m_curl.set_option<CURLOPT_COPYPOSTFIELDS>(std::nullopt);
+        m_curl.set_option<CURLOPT_CUSTOMREQUEST>(std::nullopt);
+        m_curl.set_option<CURLOPT_HTTPHEADER>(curl::slist {});
     }
 
     void worker_thread() {
@@ -82,7 +89,7 @@ private:
         }
     }
 
-    void perform_request(request::ptr request) {
+    void perform_request(request::ptr&& request) {
         auto response = std::make_unique<http::response>();
 
         std::lock_guard<std::mutex> curl_lock(m_mutex);
@@ -98,7 +105,7 @@ private:
             m_curl.set_option<CURLOPT_FOLLOWLOCATION>(true);
         } else if (request->m_method == http::request::method_post) {
             m_curl.set_option<CURLOPT_POST>(true);
-            auto post_fields = shard::join(request->m_post_fields, "&");
+            auto post_fields = make_post_fields_string(request);
             m_curl.set_option<CURLOPT_POSTFIELDSIZE>(post_fields.size());
             m_curl.set_option<CURLOPT_COPYPOSTFIELDS>(post_fields);
         } else if (request->m_method == http::request::method_head) {
@@ -146,14 +153,7 @@ private:
         state->cv.notify_all();
 
         // reset some request specific options
-        restore_curl_handle();
-    }
-
-    future send_request(request::ptr&& request) {
-        auto state = std::make_shared<detail::shared_state>();
-        request->m_state = state;
-        m_requests.push(std::move(request));
-        return future {std::move(state)};
+        reset_curl_handle();
     }
 
     // callback function used by libcurl to collect response & header data
@@ -170,6 +170,17 @@ private:
         return total_size;
     }
 
+    std::string make_post_fields_string(const request::ptr& request) {
+        std::vector<std::string> post_fields;
+        post_fields.reserve(request->m_post_fields.size());
+        for (auto& [key, value] : request->m_post_fields) {
+            auto encoded_value = m_curl.escape(value);
+            auto entry = shard::fmt("%s=%s", key.c_str(), encoded_value.c_str());
+            post_fields.push_back(entry);
+        }
+        return shard::join(post_fields, "&");
+    }
+
 private:
     curl::handle m_curl;
     curl::slist m_headers;
@@ -182,23 +193,6 @@ private:
 
     std::thread m_thread;
 };
-
-// implementation
-
-template <typename T>
-void request::set_post_field(const std::string& key, T&& value) {
-    if (key.empty()) {
-        return;
-    }
-    auto value_as_str = shard::to_string(std::forward<T>(value));
-    auto encoded_str = m_client.m_curl.escape(value_as_str);
-    auto entry = shard::fmt("%s=%s", key.c_str(), encoded_str.c_str());
-    m_post_fields.push_back(entry);
-}
-
-future request::send() {
-    return m_client.send_request(shared_from_this());
-}
 
 } // namespace shard::net::http
 

@@ -52,6 +52,7 @@ public:
     curl_slist* get() const { return m_list; }
 
 private:
+    // deep copy the contents of the argument
     void copy(curl_slist* slist) {
         while (slist) {
             m_list = curl_slist_append(m_list, slist->data);

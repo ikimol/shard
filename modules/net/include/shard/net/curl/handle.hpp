@@ -46,10 +46,10 @@ public:
     void reset() { curl_easy_reset(m_curl); }
 
     /// Set a curl option in a type-safe manner
-    template <CURLoption Option>
-    bool set_option(const option_t<Option>& value) {
-        auto tmp = detail::type_converter<option_t<Option>>::to_curl(value);
-        auto code = curl_easy_setopt(m_curl, Option, tmp);
+    template <CURLoption t_option>
+    bool set_option(const option_t<t_option>& value) {
+        auto tmp = detail::type_converter<option_t<t_option>>::to_curl(value);
+        auto code = curl_easy_setopt(m_curl, t_option, tmp);
         return code == CURLE_OK;
     }
 
@@ -60,19 +60,19 @@ public:
     }
 
     /// Get a piece of curl info in a type-safe manner
-    template <CURLINFO Info>
-    bool get_info(info_t<Info>& out) {
-        detail::curl_t<info_t<Info>> tmp;
-        auto code = curl_easy_getinfo(m_curl, Info, &tmp);
+    template <CURLINFO t_info>
+    bool get_info(info_t<t_info>& out) {
+        detail::curl_t<info_t<t_info>> tmp;
+        auto code = curl_easy_getinfo(m_curl, t_info, &tmp);
         out = tmp;
         return code == CURLE_OK;
     }
 
     /// Get a piece of curl info in a type-safe manner
-    template <CURLINFO Info>
-    std::optional<info_t<Info>> get_info() {
-        info_t<Info> value {};
-        if (get_info<Info>(value)) {
+    template <CURLINFO t_info>
+    std::optional<info_t<t_info>> get_info() {
+        info_t<t_info> value {};
+        if (get_info<t_info>(value)) {
             return value;
         }
         return std::nullopt;

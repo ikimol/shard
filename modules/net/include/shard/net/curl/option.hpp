@@ -34,9 +34,9 @@ template <> struct option<CURLOPT_HTTPGET> { using type = bool; };
 
 // HTTP POST request
 template <> struct option<CURLOPT_POST> { using type = bool; };
-template <> struct option<CURLOPT_POSTFIELDS> { using type = std::string; };
 template <> struct option<CURLOPT_POSTFIELDSIZE> { using type = std::size_t; };
-template <> struct option<CURLOPT_COPYPOSTFIELDS> { using type = std::string; };
+template <> struct option<CURLOPT_POSTFIELDS> { using type = std::optional<std::string>; };
+template <> struct option<CURLOPT_COPYPOSTFIELDS> { using type = std::optional<std::string>; };
 
 // HTTP HEAD request
 template <> struct option<CURLOPT_NOBODY> { using type = bool; };

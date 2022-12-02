@@ -18,11 +18,11 @@ std::optional<std::string> data_to_string(const shard::memory::data& data) {
 
 int main(int /* argc */, char* /* argv */[]) {
     http::client client;
-    auto request = client.create_request("https://www.example.com");
-    auto future = request->send();
+    auto request = http::request::create("https://www.example.com", http::request::method_get);
+    auto future = client.send_request(request);
     auto& response = future.get();
     if (auto headers = data_to_string(response.header())) {
-        std::cout << *headers;
+        std::cout << *headers << '\n';
     }
     return 0;
 }

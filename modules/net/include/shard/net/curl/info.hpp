@@ -73,8 +73,8 @@ template <> struct info<CURLINFO_REQUEST_SIZE> { using type = long; };
 
 // convenience typedef
 
-template <CURLINFO Info>
-using info_t = typename info<Info>::type;
+template <CURLINFO t_info>
+using info_t = typename info<t_info>::type;
 
 } // namespace shard::net::curl
 
