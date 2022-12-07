@@ -2,18 +2,18 @@
 
 #include <shard/math.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("math") {
-    SECTION("degrees") {
-        REQUIRE(shard::deg(M_PI) == Approx(180.0));
-        REQUIRE(shard::deg(M_PI / 2.0) == Approx(90.0));
+    SUBCASE("degrees") {
+        REQUIRE(shard::deg(M_PI) == doctest::Approx(180.0));
+        REQUIRE(shard::deg(M_PI / 2.0) == doctest::Approx(90.0));
 
-        REQUIRE(shard::rad(180.0) == Approx(3.14159));
-        REQUIRE(shard::rad(90.0) == Approx(1.570795));
+        REQUIRE(shard::rad(180.0) == doctest::Approx(3.14159));
+        REQUIRE(shard::rad(90.0) == doctest::Approx(1.570795));
     }
 
-    SECTION("percentage") {
+    SUBCASE("percentage") {
         shard::math::percentage<float> p(2, 12);
 
         REQUIRE(p.from_value(7) == 0.5f);
@@ -24,8 +24,8 @@ TEST_CASE("math") {
         REQUIRE(p.to_value(1.2f) == 14.f);
     }
 
-    SECTION("prime") {
-        SECTION("is_prime") {
+    SUBCASE("prime") {
+        SUBCASE("is_prime") {
             REQUIRE_FALSE(shard::is_prime(0));
             REQUIRE_FALSE(shard::is_prime(1));
             REQUIRE(shard::is_prime(2));
@@ -48,7 +48,7 @@ TEST_CASE("math") {
             REQUIRE(shard::is_prime(19));
         }
 
-        SECTION("next_prime") {
+        SUBCASE("next_prime") {
             REQUIRE(shard::next_prime(0) == 2);
             REQUIRE(shard::next_prime(4) == 5);
             REQUIRE(shard::next_prime(10) == 11);
@@ -59,7 +59,7 @@ TEST_CASE("math") {
         }
     }
 
-    SECTION("utils") {
+    SUBCASE("utils") {
         REQUIRE(shard::min(0, 0) == 0);
         REQUIRE(shard::min(0, 5) == 0);
         REQUIRE(shard::min(0, -5) == -5);

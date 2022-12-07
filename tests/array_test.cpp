@@ -6,16 +6,16 @@
 #include <shard/containers/array.hpp>
 #include <shard/memory/allocators/heap_allocator.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <initializer_list>
 #include <string>
 #include <vector>
 
-TEST_CASE("array", "[containers]") {
+TEST_CASE("array") {
     shard::heap_allocator allocator;
 
-    SECTION("constructor") {
+    SUBCASE("constructor") {
         shard::array<int> array(allocator);
 
         REQUIRE(array.is_empty());
@@ -26,7 +26,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(allocator.allocation_count() == 0);
     }
 
-    SECTION("constructor with capacity") {
+    SUBCASE("constructor with capacity") {
         shard::array<int> array(allocator, 5);
 
         REQUIRE(array.is_empty());
@@ -37,7 +37,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(allocator.allocation_count() == 1);
     }
 
-    SECTION("constructor with iterators") {
+    SUBCASE("constructor with iterators") {
         std::vector<int> vector = {0, 1, 2, 3, 4};
         shard::array<int> array(allocator, std::begin(vector), std::end(vector));
 
@@ -54,7 +54,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(allocator.allocation_count() == 1);
     }
 
-    SECTION("constructor with initializer list") {
+    SUBCASE("constructor with initializer list") {
         shard::array<std::string> array(allocator, {"foo", "bar", "baz", "qux"});
 
         REQUIRE(array.size() == 4);
@@ -69,7 +69,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(allocator.allocation_count() == 1);
     }
 
-    SECTION("copy constructor") {
+    SUBCASE("copy constructor") {
         shard::array<int> array(allocator, {0, 1, 2});
         auto copy = array;
 
@@ -87,7 +87,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(allocator.allocation_count() == 2);
     }
 
-    SECTION("move constructor") {
+    SUBCASE("move constructor") {
         shard::array<int> array(allocator, {0, 1, 2});
         auto moved_to = std::move(array);
 
@@ -103,7 +103,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(allocator.allocation_count() == 1);
     }
 
-    SECTION("destructor") {
+    SUBCASE("destructor") {
         {
             shard::array<test::counter> array(allocator);
             array.emplace_back();
@@ -116,7 +116,7 @@ TEST_CASE("array", "[containers]") {
         test::counter::reset();
     }
 
-    SECTION("copy assignment") {
+    SUBCASE("copy assignment") {
         shard::array<int> copy(allocator);
         shard::array<int> array(allocator, {0, 1, 2});
 
@@ -136,7 +136,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(allocator.allocation_count() == 2);
     }
 
-    SECTION("move assignment") {
+    SUBCASE("move assignment") {
         shard::array<int> moved_to(allocator);
         shard::array<int> array(allocator, {0, 1, 2});
 
@@ -154,7 +154,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(allocator.allocation_count() == 1);
     }
 
-    SECTION("append") {
+    SUBCASE("append") {
         shard::array<int> array(allocator);
 
         int value = 42;
@@ -167,7 +167,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(array[1] == 21);
     }
 
-    SECTION("insert") {
+    SUBCASE("insert") {
         shard::array<int> array(allocator);
 
         int value = 42;
@@ -179,7 +179,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(array[1] == 42);
     }
 
-    SECTION("emplace") {
+    SUBCASE("emplace") {
         shard::array<test::widget> array(allocator);
 
         array.emplace(std::begin(array), 3, 4);
@@ -190,7 +190,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(array[1].test(3, 4));
     }
 
-    SECTION("emplace_back") {
+    SUBCASE("emplace_back") {
         shard::array<test::widget> array(allocator);
 
         array.emplace_back(3, 4);
@@ -200,8 +200,8 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(array[1].test(42, 42));
     }
 
-    SECTION("remove") {
-        SECTION("trivially destructible") {
+    SUBCASE("remove") {
+        SUBCASE("trivially destructible") {
             shard::array<int> array(allocator, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
             array.remove(array.begin() + 1);
@@ -217,7 +217,7 @@ TEST_CASE("array", "[containers]") {
             REQUIRE(array[3] == 9);
         }
 
-        SECTION("non-trivially destructible") {
+        SUBCASE("non-trivially destructible") {
             shard::array<test::counter> array(allocator);
             array.resize(10);
             REQUIRE(test::counter::default_constructor == 10);
@@ -228,7 +228,7 @@ TEST_CASE("array", "[containers]") {
         test::counter::reset();
     }
 
-    SECTION("remove_last") {
+    SUBCASE("remove_last") {
         shard::array<test::counter> array(allocator);
         array.emplace_back();
         REQUIRE_FALSE(array.is_empty());
@@ -239,7 +239,7 @@ TEST_CASE("array", "[containers]") {
         test::counter::reset();
     }
 
-    SECTION("clear") {
+    SUBCASE("clear") {
         shard::array<int> array(allocator, {0, 1, 2, 3, 4});
 
         REQUIRE(array.size() == 5);
@@ -249,7 +249,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(array.capacity() == 5);
     }
 
-    SECTION("swap") {
+    SUBCASE("swap") {
         shard::array<int> lhs(allocator, {0, 1, 2});
         shard::array<int> rhs(allocator, {5, 6, 7});
 
@@ -269,7 +269,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(rhs[2] == 2);
     }
 
-    SECTION("first and last") {
+    SUBCASE("first and last") {
         shard::array<int> array(allocator, {0, 1, 2, 3, 4});
 
         REQUIRE(array.first() == 0);
@@ -280,7 +280,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE_THROWS_AS(array.first(), std::out_of_range);
     }
 
-    SECTION("at") {
+    SUBCASE("at") {
         shard::array<int> array(allocator);
 
         REQUIRE_THROWS_AS(array.at(0), std::out_of_range);
@@ -288,7 +288,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE_NOTHROW(array.at(0));
     }
 
-    SECTION("operator[]") {
+    SUBCASE("operator[]") {
         shard::array<int> array(allocator);
 
         REQUIRE_NOTHROW(array[0]);
@@ -296,7 +296,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE_NOTHROW(array[0]);
     }
 
-    SECTION("reserve") {
+    SUBCASE("reserve") {
         shard::array<int> array(allocator);
 
         REQUIRE(array.capacity() == 0);
@@ -308,7 +308,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(allocator.allocation_count() == 1);
     }
 
-    SECTION("resize") {
+    SUBCASE("resize") {
         shard::array<int> array(allocator);
 
         REQUIRE(array.is_empty());
@@ -321,7 +321,7 @@ TEST_CASE("array", "[containers]") {
         REQUIRE(allocator.allocation_count() == 1);
     }
 
-    SECTION("shrink_to_fit") {
+    SUBCASE("shrink_to_fit") {
         shard::array<int> array(allocator);
 
         array.resize(10);

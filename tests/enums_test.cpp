@@ -2,7 +2,7 @@
 
 #include <shard/enums.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 enum class side : unsigned int {
     left = 0x1,
@@ -14,7 +14,7 @@ SHARD_DECLARE_FLAGS(margin, side);
 SHARD_DECLARE_FLAG_OPERATORS(margin)
 
 TEST_CASE("enums") {
-    SECTION("flags") {
+    SUBCASE("flags") {
         margin m = (side::left | side::right);
 
         REQUIRE(m.test(side::left));
@@ -24,7 +24,7 @@ TEST_CASE("enums") {
         REQUIRE_FALSE(m.test(side::bottom));
     }
 
-    SECTION("operators") {
+    SUBCASE("operators") {
         using namespace shard::enums::operators;
         REQUIRE((side::left == 1));
         REQUIRE((4 == side::right));
@@ -32,7 +32,7 @@ TEST_CASE("enums") {
         REQUIRE((1 != side::bottom));
     }
 
-    SECTION("traits") {
+    SUBCASE("traits") {
         REQUIRE(shard::to_underlying(side::left) == 1);
         REQUIRE(shard::to_underlying(side::top) == 2);
         REQUIRE(shard::to_underlying(side::right) == 4);

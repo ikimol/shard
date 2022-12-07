@@ -2,7 +2,7 @@
 
 #include <shard/algorithm.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <list>
 #include <map>
@@ -11,7 +11,7 @@
 #include <vector>
 
 TEST_CASE("algorithm") {
-    SECTION("container_utils") {
+    SUBCASE("container_utils") {
         std::list<int> list;
         std::vector<int> vector;
         vector.reserve(5);
@@ -20,7 +20,7 @@ TEST_CASE("algorithm") {
             vector.emplace_back(i);
         }
 
-        SECTION("insert_ordered") {
+        SUBCASE("insert_ordered") {
             int expected[] = {0, 1, 2, 2, 3, 4};
 
             shard::insert_ordered(list, 2);
@@ -37,7 +37,7 @@ TEST_CASE("algorithm") {
             }
         }
 
-        SECTION("remove_unordered") {
+        SUBCASE("remove_unordered") {
             int expected[] = {0, 4, 2, 3};
 
             shard::remove_unordered(list, ++list.begin());
@@ -54,7 +54,7 @@ TEST_CASE("algorithm") {
             }
         }
 
-        SECTION("has_key") {
+        SUBCASE("has_key") {
             std::map<std::string, int> map = {{"one", 1}, {"two", 2}, {"three", 3}};
             REQUIRE(shard::has_key(map, "one"));
             REQUIRE_FALSE(shard::has_key(map, "four"));
@@ -64,7 +64,7 @@ TEST_CASE("algorithm") {
             REQUIRE_FALSE(shard::has_key(set, "quack"));
         }
 
-        SECTION("keys_of") {
+        SUBCASE("keys_of") {
             std::map<std::string, int> map = {{"one", 1}, {"two", 2}, {"three", 3}};
             std::set<std::string> keys;
             shard::keys_of(map, std::inserter(keys, keys.end()));
@@ -75,7 +75,7 @@ TEST_CASE("algorithm") {
             REQUIRE(shard::has_key(keys, "three"));
         }
 
-        SECTION("values_of") {
+        SUBCASE("values_of") {
             std::map<std::string, int> map = {{"one", 1}, {"two", 2}, {"three", 3}};
             std::vector<int> values;
             shard::values_of(map, std::back_inserter(values));
@@ -86,7 +86,7 @@ TEST_CASE("algorithm") {
             REQUIRE(shard::contains(values, 3));
         }
 
-        SECTION("erase") {
+        SUBCASE("erase") {
             shard::erase(list, 3);
             shard::erase(vector, 3);
 
@@ -95,32 +95,32 @@ TEST_CASE("algorithm") {
         }
     }
 
-    SECTION("enumerate") {
+    SUBCASE("enumerate") {
         int array[5];
         for (int i = 0; i < 5; ++i) {
             array[i] = i * 2;
         }
 
-        SECTION("array") {
+        SUBCASE("array") {
             for (auto& item : shard::enumerate(array)) {
                 CHECK(item.value() == item.index() * 2);
             }
         }
 
-        SECTION("initializer_list") {
+        SUBCASE("initializer_list") {
             auto il = {0, 2, 4, 6, 8};
             for (auto& item : shard::enumerate(il)) {
                 CHECK(item.value() == item.index() * 2);
             }
         }
 
-        SECTION("rvalue") {
+        SUBCASE("rvalue") {
             for (auto& item : shard::enumerate(std::vector<int> {0, 2, 4, 6, 8, 10})) {
                 CHECK(item.value() == item.index() * 2);
             }
         }
 
-        SECTION("changing values") {
+        SUBCASE("changing values") {
             for (auto& item : shard::enumerate(array)) {
                 item.value() *= 2;
             }
@@ -131,7 +131,7 @@ TEST_CASE("algorithm") {
         }
     }
 
-    SECTION("stl_wrappers") {
+    SUBCASE("stl_wrappers") {
         int array[5];
         std::list<int> list;
         std::set<int> set;
@@ -145,14 +145,14 @@ TEST_CASE("algorithm") {
             vector.emplace_back(i);
         }
 
-        SECTION("contains") {
+        SUBCASE("contains") {
             REQUIRE(shard::contains(array, 3));
             REQUIRE(shard::contains(list, 3));
             REQUIRE(shard::contains(set, 3));
             REQUIRE(shard::contains(vector, 3));
         }
 
-        SECTION("index_of") {
+        SUBCASE("index_of") {
             REQUIRE(shard::index_of(list, 1) == 1);
             REQUIRE(shard::index_of(vector, 1) == 1);
         }

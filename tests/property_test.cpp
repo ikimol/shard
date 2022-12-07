@@ -2,12 +2,12 @@
 
 #include <shard/property.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <string>
 
 TEST_CASE("property") {
-    SECTION("constructors") {
+    SUBCASE("constructors") {
         shard::property<int> p1 = 42;
         REQUIRE(p1.value() == 42);
 
@@ -17,13 +17,13 @@ TEST_CASE("property") {
         REQUIRE(p2.value() == "foobar");
     }
 
-    SECTION("assignment") {
+    SUBCASE("assignment") {
         shard::property<int> p;
         p = 42;
         REQUIRE(p.value() == 42);
     }
 
-    SECTION("dependencies") {
+    SUBCASE("dependencies") {
         shard::property<int> p1 = 3;
         shard::property<int> p2 = 5;
         shard::property<double> p3 = [&] {
@@ -34,14 +34,14 @@ TEST_CASE("property") {
         p1 = 2;
         REQUIRE(p3.value() == 0.4);
 
-        SECTION("assignment removes dependencies") {
+        SUBCASE("assignment removes dependencies") {
             p3 = 3.14;
             p1 = 4;
             REQUIRE(p3.value() == 3.14);
         }
     }
 
-    SECTION("observed property") {
+    SUBCASE("observed property") {
         bool did_update = false;
         shard::observed_property<int> p = {[&] { did_update = true; }, 0};
         REQUIRE(p.value() == 0);

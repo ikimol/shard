@@ -2,10 +2,10 @@
 
 #include <shard/bit.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("bit") {
-    SECTION("set") {
+    SUBCASE("set") {
         auto n = 0b01001u; // 9
 
         shard::bit::set(n, 1u);
@@ -15,7 +15,7 @@ TEST_CASE("bit") {
         REQUIRE(n == 15);
     }
 
-    SECTION("unset") {
+    SUBCASE("unset") {
         auto n = 0b01001u; // 9
 
         shard::bit::unset(n, 0u);
@@ -25,7 +25,7 @@ TEST_CASE("bit") {
         REQUIRE(n == 8);
     }
 
-    SECTION("toggle") {
+    SUBCASE("toggle") {
         auto n = 0b01001u; // 9
 
         shard::bit::toggle(n, 2u);
@@ -35,7 +35,7 @@ TEST_CASE("bit") {
         REQUIRE(n == 12);
     }
 
-    SECTION("is_set") {
+    SUBCASE("is_set") {
         auto n = 0b01001u; // 9
 
         REQUIRE(shard::bit::is_set(n, 0u));
@@ -43,7 +43,7 @@ TEST_CASE("bit") {
         REQUIRE_FALSE(shard::bit::is_set(n, 1u));
     }
 
-    SECTION("strip_last") {
+    SUBCASE("strip_last") {
         auto n = 0b01001u; // 9
 
         shard::bit::strip_last(n);
@@ -53,7 +53,7 @@ TEST_CASE("bit") {
         REQUIRE(n == 0);
     }
 
-    SECTION("lowest") {
+    SUBCASE("lowest") {
         auto n = 0b01011u; // 11
 
         REQUIRE(shard::bit::lowest(n) == 1);
@@ -65,7 +65,7 @@ TEST_CASE("bit") {
         REQUIRE(shard::bit::lowest(n) == 8);
     }
 
-    SECTION("count") {
+    SUBCASE("count") {
         auto n = 0b01011u; // 11
 
         REQUIRE(shard::bit::count(n) == 3);

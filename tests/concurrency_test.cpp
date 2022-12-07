@@ -5,7 +5,7 @@
 
 #include <shard/concurrency.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <thread>
 
@@ -15,17 +15,17 @@ static void channel_writer(shard::channel<int>* channel, int i) {
 }
 
 TEST_CASE("concurrency") {
-    SECTION("channel") {
+    SUBCASE("channel") {
         shard::channel<int> channel;
 
-        SECTION("try_pop") {
+        SUBCASE("try_pop") {
             channel.push(42);
             int n = -1;
             REQUIRE(channel.try_pop(n));
             REQUIRE(n == 42);
         }
 
-        SECTION("pop") {
+        SUBCASE("pop") {
             std::thread thread(channel_writer, &channel, 42);
             int n = -1;
             auto start = std::chrono::high_resolution_clock::now();
@@ -40,7 +40,7 @@ TEST_CASE("concurrency") {
             thread.join();
         }
 
-        SECTION("storing class with no default constructor") {
+        SUBCASE("storing class with no default constructor") {
             shard::channel<test::no_default> no_default_channel;
             no_default_channel.emplace(42, 21);
 
@@ -51,28 +51,28 @@ TEST_CASE("concurrency") {
         }
     }
 
-    SECTION("mpsc_queue") {
+    SUBCASE("mpsc_queue") {
         shard::mpsc_queue<test::widget, 8> queue;
 
-        SECTION("size") {
+        SUBCASE("size") {
             REQUIRE(queue.is_empty());
             REQUIRE(queue.size() == 0);
             REQUIRE(queue.capacity() == 8);
         }
 
-        SECTION("push") {
+        SUBCASE("push") {
             queue.push(test::widget {1});
             queue.push(test::widget {2});
             REQUIRE(queue.size() == 2);
         }
 
-        SECTION("emplace") {
+        SUBCASE("emplace") {
             queue.emplace(1);
             queue.emplace(2);
             REQUIRE(queue.size() == 2);
         }
 
-        SECTION("pop") {
+        SUBCASE("pop") {
             queue.emplace(1);
             queue.emplace(2);
             queue.emplace(3);
@@ -87,17 +87,17 @@ TEST_CASE("concurrency") {
         }
     }
 
-    SECTION("thread_safe") {
+    SUBCASE("thread_safe") {
         using thread_safe_widget = shard::rw_thread_safe<test::widget>;
         thread_safe_widget widget(42, 21);
 
-        SECTION("reading") {
+        SUBCASE("reading") {
             shard::read_access<thread_safe_widget> w(widget);
             REQUIRE(w->a == 42);
             REQUIRE(w->b == 21);
         }
 
-        SECTION("writing") {
+        SUBCASE("writing") {
             {
                 shard::write_access<thread_safe_widget> w(widget);
                 std::swap(w->a, w->b);

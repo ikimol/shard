@@ -4,7 +4,7 @@
 
 #include <shard/memory.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 #include <string>
 
@@ -25,8 +25,8 @@ struct test_class : public shard::object {
 };
 
 TEST_CASE("memory") {
-    SECTION("allocators") {
-        SECTION("free_list_allocator") {
+    SUBCASE("allocators") {
+        SUBCASE("free_list_allocator") {
             shard::free_list_allocator a(g_buffer, BUFFER_SIZE);
             REQUIRE(a.size() == BUFFER_SIZE);
             REQUIRE(a.used_memory() == 0);
@@ -45,7 +45,7 @@ TEST_CASE("memory") {
             REQUIRE(a.allocation_count() == 0);
         }
 
-        SECTION("heap_allocator") {
+        SUBCASE("heap_allocator") {
             shard::heap_allocator a;
             REQUIRE(a.size() == 0);
             REQUIRE(a.used_memory() == 0);
@@ -64,7 +64,7 @@ TEST_CASE("memory") {
             REQUIRE(a.allocation_count() == 0);
         }
 
-        SECTION("linear_allocator") {
+        SUBCASE("linear_allocator") {
             shard::linear_allocator a(g_buffer, BUFFER_SIZE);
             REQUIRE(a.size() == BUFFER_SIZE);
             REQUIRE(a.used_memory() == 0);
@@ -86,7 +86,7 @@ TEST_CASE("memory") {
             REQUIRE(a.allocation_count() == 0);
         }
 
-        SECTION("pool_allocator") {
+        SUBCASE("pool_allocator") {
             shard::pool_allocator<test::widget> a(g_buffer, BUFFER_SIZE);
             REQUIRE(a.size() == BUFFER_SIZE);
             REQUIRE(a.used_memory() == 0);
@@ -104,13 +104,13 @@ TEST_CASE("memory") {
             REQUIRE(a.allocation_count() == 0);
         }
 
-        SECTION("proxy_allocator") {
+        SUBCASE("proxy_allocator") {
             shard::pool_allocator<test::widget> a(g_buffer, BUFFER_SIZE);
             shard::proxy_allocator proxy(a, "test");
             REQUIRE(proxy.size() == BUFFER_SIZE);
             REQUIRE(proxy.used_memory() == 0);
             REQUIRE(proxy.allocation_count() == 0);
-            REQUIRE_THAT(proxy.name(), Catch::Matches("test"));
+            REQUIRE(proxy.name() == doctest::String("test"));
 
             auto w = shard::new_object<test::widget>(proxy, 3, 42);
             REQUIRE(proxy.used_memory() == sizeof(test::widget));
@@ -124,7 +124,7 @@ TEST_CASE("memory") {
             REQUIRE(proxy.allocation_count() == 0);
         }
 
-        SECTION("static_allocator") {
+        SUBCASE("static_allocator") {
             shard::static_allocator<BUFFER_SIZE> a;
             REQUIRE(a.size() == BUFFER_SIZE);
             REQUIRE(a.used_memory() == 0);
@@ -147,8 +147,8 @@ TEST_CASE("memory") {
         }
     }
 
-    SECTION("object") {
-        SECTION("ref_count") {
+    SUBCASE("object") {
+        SUBCASE("ref_count") {
             auto o = new test_class(42);
             REQUIRE(o->ref_count() == 0);
             o->retain();
@@ -158,7 +158,7 @@ TEST_CASE("memory") {
             delete o;
         }
 
-        SECTION("copy constructor") {
+        SUBCASE("copy constructor") {
             auto o = new test_class(42);
             REQUIRE(o->ref_count() == 0);
             o->retain();
@@ -176,45 +176,45 @@ TEST_CASE("memory") {
             REQUIRE(copy.ref_count() == 0);
         }
 
-        SECTION("object_ptr") {
+        SUBCASE("object_ptr") {
             shard::object_ptr<test_class> o(new test_class(42, "foo"));
             REQUIRE(o->ref_count() == 1);
             REQUIRE(o->id == 42);
-            REQUIRE_THAT((*o).name, Catch::Matches("foo"));
+            REQUIRE((*o).name == doctest::String("foo"));
             REQUIRE((bool)(o));
 
-            SECTION("copying") {
+            SUBCASE("copying") {
                 auto copied_to = o;
                 REQUIRE(copied_to->ref_count() == 2);
                 REQUIRE(o.get() != nullptr);
             }
 
-            SECTION("moving") {
+            SUBCASE("moving") {
                 auto moved_to = std::move(o);
                 REQUIRE(moved_to->ref_count() == 1);
                 REQUIRE(o.get() == nullptr); /* NOLINT */
             }
         }
 
-        SECTION("make_object") {
+        SUBCASE("make_object") {
             auto o = shard::make_object<test_class>(42, "foo");
             REQUIRE(o->id == 42);
-            REQUIRE_THAT(o->name, Catch::Matches("foo"));
+            REQUIRE(o->name == doctest::String("foo"));
         }
     }
 
-    SECTION("utils") {
+    SUBCASE("utils") {
         auto p2 = shard::memory::add(g_buffer, 2);
         REQUIRE(p2 == g_buffer + 2);
 
         auto p1 = shard::memory::sub(p2, 1);
         REQUIRE(p1 == g_buffer + 1);
 
-        SECTION("padding") {
+        SUBCASE("padding") {
             auto padding = shard::memory::get_padding(p1, 4);
             REQUIRE(padding == 3);
 
-            SECTION("with bigger header") {
+            SUBCASE("with bigger header") {
                 struct header {
                     std::size_t size = 0;
                 };
@@ -223,7 +223,7 @@ TEST_CASE("memory") {
                 REQUIRE(padding_with_header == 15);
             }
 
-            SECTION("with smaller header") {
+            SUBCASE("with smaller header") {
                 struct header {
                     short size = 0;
                 };

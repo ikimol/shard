@@ -2,10 +2,10 @@
 
 #include <shard/utility/defer.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 TEST_CASE("utility") {
-    SECTION("defer") {
+    SUBCASE("defer") {
         bool called = false;
         {
             auto _ = shard::defer([&] { called = true; });

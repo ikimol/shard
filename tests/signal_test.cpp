@@ -2,7 +2,7 @@
 
 #include <shard/signal.hpp>
 
-#include <catch.hpp>
+#include <doctest.h>
 
 static int g_last_i = 0;
 static bool g_handled = false;
@@ -25,10 +25,10 @@ struct event_handler {
 };
 
 TEST_CASE("signal") {
-    SECTION("slots") {
+    SUBCASE("slots") {
         shard::signal<int> event;
 
-        SECTION("free function") {
+        SUBCASE("free function") {
             event.connect(on_event);
             event.connect(on_empty_event);
             event.emit(42);
@@ -36,14 +36,14 @@ TEST_CASE("signal") {
             REQUIRE(g_handled);
         }
 
-        SECTION("lambda") {
+        SUBCASE("lambda") {
             int last_i = 0;
             event.connect([&last_i](int i) { last_i = i; });
             event.emit(42);
             REQUIRE(last_i == 42);
         }
 
-        SECTION("member function") {
+        SUBCASE("member function") {
             event_handler handler;
             event.connect(&event_handler::on_event, &handler);
             event.connect(&event_handler::on_empty_event, &handler);
@@ -53,10 +53,10 @@ TEST_CASE("signal") {
         }
     }
 
-    SECTION("connections") {
+    SUBCASE("connections") {
         shard::signal<int> event;
 
-        SECTION("disable") {
+        SUBCASE("disable") {
             int last_i = 0;
             auto c = event.connect([&](int i) { last_i = i; });
             REQUIRE(event.slot_count() == 1);
@@ -74,7 +74,7 @@ TEST_CASE("signal") {
             REQUIRE(last_i == 21);
         }
 
-        SECTION("disconnect") {
+        SUBCASE("disconnect") {
             int last_i = 0;
             auto c = event.connect([&](int i) { last_i = i; });
             REQUIRE(event.slot_count() == 1);
@@ -86,7 +86,7 @@ TEST_CASE("signal") {
             REQUIRE(last_i == 0);
         }
 
-        SECTION("scoped") {
+        SUBCASE("scoped") {
             int last_i = 0;
 
             REQUIRE(event.slot_count() == 0);
