@@ -161,17 +161,14 @@ using algorithm::enumerate;
 
 namespace std {
 
-template <>
 template <typename T>
 struct tuple_size<shard::algorithm::detail::enumerator_proxy<T>> : std::integral_constant<size_t, 2> {};
 
-template <>
 template <typename T>
 struct tuple_element<0, shard::algorithm::detail::enumerator_proxy<T>> {
     using type = size_t;
 };
 
-template <>
 template <typename T>
 struct tuple_element<1, shard::algorithm::detail::enumerator_proxy<T>> {
     using type = typename shard::algorithm::detail::enumerator_proxy<T>::value_type;
