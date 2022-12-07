@@ -1,4 +1,6 @@
-// Copyright (c) 2021 Miklos Molnar. All rights reserved.
+// Copyright (c) 2022 Miklos Molnar. All rights reserved.
+
+#include "shard/system/env.hpp"
 
 #include "shard/system/platform.hpp"
 
@@ -16,19 +18,19 @@ extern char** environ;
 namespace shard::system::env {
 namespace detail {
 
-inline std::mutex& env_mutex() {
+std::mutex& env_mutex() {
     static std::mutex mutex;
     return mutex;
 }
 
-inline std::map<std::string, std::string>& env_variables() {
+std::map<std::string, std::string>& env_variables() {
     static std::map<std::string, std::string> variables;
     return variables;
 }
 
 } // namespace detail
 
-inline bool has(const std::string& key) {
+bool has(const std::string& key) {
     std::lock_guard<std::mutex> lock(detail::env_mutex());
     try {
 #if defined(SHARD_WINDOWS)
@@ -46,7 +48,7 @@ inline bool has(const std::string& key) {
     }
 }
 
-inline std::optional<std::string> get(const std::string& key) {
+std::optional<std::string> get(const std::string& key) {
     std::lock_guard<std::mutex> lock(detail::env_mutex());
     try {
 #if defined(SHARD_WINDOWS)
@@ -66,7 +68,7 @@ inline std::optional<std::string> get(const std::string& key) {
     return std::nullopt;
 }
 
-inline bool set(const std::string& key, const std::string& value, std::string* old_value) {
+bool set(const std::string& key, const std::string& value, std::string* old_value) {
     if (old_value) {
         if (auto v = get(key)) {
             *old_value = *v;
@@ -84,7 +86,7 @@ inline bool set(const std::string& key, const std::string& value, std::string* o
     }
 }
 
-inline bool unset(const std::string& key, std::string* old_value) {
+bool unset(const std::string& key, std::string* old_value) {
     if (old_value) {
         if (auto v = get(key)) {
             *old_value = *v;
@@ -102,7 +104,7 @@ inline bool unset(const std::string& key, std::string* old_value) {
     }
 }
 
-inline const std::map<std::string, std::string>& vars() {
+const std::map<std::string, std::string>& vars() {
     auto i = 1;
     auto s = *shard_environ;
     detail::env_variables().clear();

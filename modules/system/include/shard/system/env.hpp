@@ -45,6 +45,4 @@ using system::env::vars;
 
 } // namespace shard
 
-#include "shard/system/env.inl"
-
 #endif // SHARD_SYSTEM_ENV_HPP
