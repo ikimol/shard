@@ -2,6 +2,7 @@
 
 #include <shard/algorithm/enumerate.hpp>
 
+#include <array>
 #include <iostream>
 #include <list>
 #include <string>
@@ -19,6 +20,12 @@ int main(int /* argc */, char* /* argv */[]) {
     for (const auto& p : shard::enumerate(map)) {
         auto& [name, value] = p.value();
         std::cout << '(' << p.index() << ") map['" << name << "']: " << value << '\n';
+    }
+
+    std::array<std::string, 4> array {"foo", "bar", "baz", "quack"};
+
+    for (const auto& [index, str] : shard::enumerate(array)) {
+        std::cout << "array[" << index << "]: " << str << '\n';
     }
 
     return 0;

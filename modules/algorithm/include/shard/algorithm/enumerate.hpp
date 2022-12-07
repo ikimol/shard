@@ -24,7 +24,8 @@ public:
     using iterator = decltype(std::begin(std::declval<T&>()));
     using value_type = std::remove_reference_t<decltype(*std::begin(std::declval<T&>()))>;
 
-    enumerator_proxy() = default;
+public:
+    enumerator_proxy() : m_index(std::numeric_limits<std::size_t>::max()), m_iterator(nullptr) {}
 
     enumerator_proxy(std::size_t index, iterator iterator) : m_index(index), m_iterator(iterator) {}
 
@@ -44,8 +45,36 @@ public:
 
     const value_type& value() const { return *m_iterator; }
 
+public: // structured binding support
+    template <size_t t_index>
+    auto& get() & {
+        if constexpr (t_index == 0) {
+            return m_index;
+        } else if constexpr (t_index == 1) {
+            return *m_iterator;
+        }
+    }
+
+    template <size_t t_index>
+    auto const& get() const& {
+        if constexpr (t_index == 0) {
+            return m_index;
+        } else if constexpr (t_index == 1) {
+            return *m_iterator;
+        }
+    }
+
+    template <size_t t_index>
+    auto&& get() && {
+        if constexpr (t_index == 0) {
+            return m_index;
+        } else if constexpr (t_index == 1) {
+            return std::move(*m_iterator);
+        }
+    }
+
 private:
-    std::size_t m_index = std::numeric_limits<std::size_t>::max();
+    std::size_t m_index;
     iterator m_iterator;
 };
 
@@ -127,5 +156,27 @@ detail::range_enumerator<T> enumerate(T&& range) {
 using algorithm::enumerate;
 
 } // namespace shard
+
+// structured binding support
+
+namespace std {
+
+template <>
+template <typename T>
+struct tuple_size<shard::algorithm::detail::enumerator_proxy<T>> : std::integral_constant<size_t, 2> {};
+
+template <>
+template <typename T>
+struct tuple_element<0, shard::algorithm::detail::enumerator_proxy<T>> {
+    using type = size_t;
+};
+
+template <>
+template <typename T>
+struct tuple_element<1, shard::algorithm::detail::enumerator_proxy<T>> {
+    using type = typename shard::algorithm::detail::enumerator_proxy<T>::value_type;
+};
+
+} // namespace std
 
 #endif // SHARD_ALGORITHM_ENUMERATE_HPP
