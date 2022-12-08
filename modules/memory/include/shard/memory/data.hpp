@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Miklos Molnar. All rights reserved.
+// Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
 #ifndef SHARD_MEMORY_DATA_HPP
 #define SHARD_MEMORY_DATA_HPP

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Miklos Molnar. All rights reserved.
+// Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
 #include "helpers/no_default.hpp"
 #include "helpers/widget.hpp"

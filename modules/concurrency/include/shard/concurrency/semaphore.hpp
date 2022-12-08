@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Miklos Molnar. All rights reserved.
+// Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
 #ifndef SHARD_CONCURRENCY_SEMAPHORE_HPP
 #define SHARD_CONCURRENCY_SEMAPHORE_HPP

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Miklos Molnar. All rights reserved.
+// Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
 #ifndef SHARD_META_TYPEID_HPP
 #define SHARD_META_TYPEID_HPP

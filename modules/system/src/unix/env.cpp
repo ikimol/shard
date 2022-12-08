@@ -1,1 +1,1 @@
-// Copyright (c) 2022 Miklos Molnar. All rights reserved.
+// Copyright (c) 2023 Miklos Molnar. All rights reserved.
