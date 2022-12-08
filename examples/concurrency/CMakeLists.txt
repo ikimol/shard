@@ -12,6 +12,11 @@ shard_add_example(concurrency.mpsc-queue
                   MODULES shard::concurrency
                   )
 
+shard_add_example(concurrency.semaphore
+                  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/semaphore.cpp
+                  MODULES shard::concurrency shard::random
+                  )
+
 shard_add_example(concurrency.thread-pool
                   SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/thread_pool.cpp
                   MODULES shard::concurrency
