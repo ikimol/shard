@@ -8,9 +8,13 @@ namespace test {
 struct widget {
     widget() = default;
 
-    widget(int a, int b) : a(a), b(b) {}
+    widget(int a, int b)
+    : a(a)
+    , b(b) {}
 
-    explicit widget(int n) : a(n), b(n) {}
+    explicit widget(int n)
+    : a(n)
+    , b(n) {}
 
     bool test(int x, int y) const { return x == a && y == b; }
 

@@ -5,7 +5,8 @@
 #include <iostream>
 
 struct widget {
-    explicit widget(int id) : id(id) {}
+    explicit widget(int id)
+    : id(id) {}
 
     int id = 0;
 };

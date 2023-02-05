@@ -16,17 +16,22 @@ public:
     url() = default;
 
     /// Copy constructor
-    url(const url& other) : m_url(other.m_url) { parse(); }
+    url(const url& other)
+    : m_url(other.m_url) {
+        parse();
+    }
 
     /// Move constructor
-    url(url&& other) noexcept : m_url(std::move(other.m_url)) {
+    url(url&& other) noexcept
+    : m_url(std::move(other.m_url)) {
         other.m_valid = false;
         parse();
     }
 
     /// Implicit value constructor from compatible type
     template <typename T, typename = std::enable_if_t<std::is_convertible<T, std::string>::value>>
-    url(T&& value) /* NOLINT */ : m_url(std::forward<T>(value)) {
+    url(T&& value) /* NOLINT */
+    : m_url(std::forward<T>(value)) {
         parse();
     }
 

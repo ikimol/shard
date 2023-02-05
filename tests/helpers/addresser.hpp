@@ -7,7 +7,8 @@ namespace test {
 
 template <typename T>
 struct addresser {
-    explicit addresser(const T* p) : ptr(p) {}
+    explicit addresser(const T* p)
+    : ptr(p) {}
 
     const T** operator&() { /* NOLINT */
         return &ptr;

@@ -17,7 +17,8 @@ namespace shard::net::curl {
 class handle {
 public:
     /// Default constructor
-    handle() : m_curl(curl_easy_init()) {
+    handle()
+    : m_curl(curl_easy_init()) {
         if (!m_curl) {
             throw std::runtime_error("failed to initialize curl");
         }

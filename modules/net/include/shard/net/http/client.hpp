@@ -20,7 +20,8 @@ namespace shard::net::http {
 class client {
 public:
     /// Default constructor that starts the worker thread
-    explicit client(version_t version = version_t::http_2) : m_thread(&client::worker_thread, this) {
+    explicit client(version_t version = version_t::http_2)
+    : m_thread(&client::worker_thread, this) {
         setup_curl_handle(version);
     };
 

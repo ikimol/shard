@@ -31,14 +31,18 @@ public:
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
 public:
-    explicit array(allocator& a, size_type capacity = 0) : m_allocator(&a), m_capacity(capacity) {
+    explicit array(allocator& a, size_type capacity = 0)
+    : m_allocator(&a)
+    , m_capacity(capacity) {
         if (m_capacity > 0) {
             m_data = allocate(capacity);
         }
     }
 
     template <typename Iterator>
-    array(allocator& a, Iterator begin, Iterator end) : m_allocator(&a), m_capacity(0) {
+    array(allocator& a, Iterator begin, Iterator end)
+    : m_allocator(&a)
+    , m_capacity(0) {
         if (auto size = std::distance(begin, end); size > 0) {
             m_data = allocate(size);
             m_size = size;
@@ -47,7 +51,8 @@ public:
         }
     }
 
-    array(allocator& a, std::initializer_list<value_type> il) : m_allocator(&a) {
+    array(allocator& a, std::initializer_list<value_type> il)
+    : m_allocator(&a) {
         if (il.size() > 0) {
             m_data = allocate(il.size());
             m_size = il.size();
@@ -64,7 +69,10 @@ public:
     }
 
     /// Copy constructor
-    array(const array& other) : m_allocator(other.m_allocator), m_size(other.m_size), m_capacity(other.m_capacity) {
+    array(const array& other)
+    : m_allocator(other.m_allocator)
+    , m_size(other.m_size)
+    , m_capacity(other.m_capacity) {
         if (m_capacity > 0) {
             auto data = allocate(m_capacity);
             m_data = static_cast<pointer>(std::memcpy(data, other.m_data, m_capacity * value_size));
@@ -72,11 +80,11 @@ public:
     }
 
     /// Move constructor
-    array(array&& other) noexcept :
-    m_allocator(other.m_allocator),
-    m_data(other.m_data),
-    m_size(other.m_size),
-    m_capacity(other.m_capacity) {
+    array(array&& other) noexcept
+    : m_allocator(other.m_allocator)
+    , m_data(other.m_data)
+    , m_size(other.m_size)
+    , m_capacity(other.m_capacity) {
         // invalidate "moved-from" object
         other.m_allocator = nullptr;
         other.m_data = nullptr;

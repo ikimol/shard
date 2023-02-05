@@ -10,7 +10,10 @@ namespace shard::sqlite {
 class transaction {
 public:
     /// Begin a new transaction
-    explicit transaction(database& db) : m_db(db) { m_db.execute("BEGIN"); }
+    explicit transaction(database& db)
+    : m_db(db) {
+        m_db.execute("BEGIN");
+    }
 
     /// Roll back the transaction if it was not committed
     ~transaction() {

@@ -52,7 +52,8 @@ public:
     }
 
     /// Create a UUID from an array of bytes
-    constexpr explicit uuid(const std::array<value_type, 16>& data) noexcept : m_data(data) {}
+    constexpr explicit uuid(const std::array<value_type, 16>& data) noexcept
+    : m_data(data) {}
 
     /// Create a UUID from a pair of iterators
     template <typename Iterator>
@@ -109,9 +110,7 @@ public:
 
     /// Check if every byte of the UUID is zero
     bool is_null() const {
-        return shard::all_of(m_data, [](std::uint8_t i) {
-            return i == 0;
-        });
+        return shard::all_of(m_data, [](std::uint8_t i) { return i == 0; });
     }
 
     /// Get the version of the UUID

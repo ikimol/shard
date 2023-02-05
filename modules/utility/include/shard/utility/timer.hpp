@@ -16,7 +16,9 @@ public:
     using duration = typename clock_type::duration;
 
 public:
-    explicit basic_timer(duration& result) : m_result(&result), m_start(clock_type::now()) {}
+    explicit basic_timer(duration& result)
+    : m_result(&result)
+    , m_start(clock_type::now()) {}
 
     ~basic_timer() {
         auto end = clock_type::now();

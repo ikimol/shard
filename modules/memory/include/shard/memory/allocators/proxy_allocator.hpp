@@ -10,7 +10,10 @@ namespace memory {
 
 class proxy_allocator : public allocator {
 public:
-    explicit proxy_allocator(allocator& a, const char* name = "") : allocator(a.size()), m_allocator(a), m_name(name) {}
+    explicit proxy_allocator(allocator& a, const char* name = "")
+    : allocator(a.size())
+    , m_allocator(a)
+    , m_name(name) {}
 
     void* allocate(std::size_t size, std::size_t align) override {
         assert(size != 0);

@@ -25,14 +25,12 @@ int main(int /* argc */, char* /* argv */[]) {
     input_device_t id;
     id = input_device::pencil {};
     shard::variant_switch(
-    id,
-    [](input_device::keyboard_and_pointer input_device) {
-        std::cout << "keyboard and "
-                  << static_cast<std::underlying_type_t<decltype(input_device.type)>>(input_device.type) << '\n';
-    },
-    [](input_device::pencil) {
-        std::cout << "pencil\n";
-    });
+        id,
+        [](input_device::keyboard_and_pointer input_device) {
+            std::cout << "keyboard and "
+                      << static_cast<std::underlying_type_t<decltype(input_device.type)>>(input_device.type) << '\n';
+        },
+        [](input_device::pencil) { std::cout << "pencil\n"; });
 
     return 0;
 }

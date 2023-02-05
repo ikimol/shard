@@ -17,7 +17,8 @@ public:
     constexpr object() = default;
 
     /// Copy constructor
-    constexpr object(const object& /* other */) : m_ref_count(0) {}
+    constexpr object(const object& /* other */)
+    : m_ref_count(0) {}
 
     /// Get the number of references to this object
     constexpr std::size_t ref_count() const { return m_ref_count; }
@@ -50,20 +51,26 @@ public:
 
 public:
     /// Construct a 'null' valued pointer
-    constexpr object_ptr() : m_pointer(nullptr) {};
+    constexpr object_ptr()
+    : m_pointer(nullptr) {};
 
     /// Copy constructor
-    constexpr object_ptr(const object_ptr& other) : m_pointer(other.m_pointer) {
+    constexpr object_ptr(const object_ptr& other)
+    : m_pointer(other.m_pointer) {
         if (m_pointer) {
             static_cast<object*>(m_pointer)->retain();
         }
     }
 
     /// Move constructor
-    constexpr object_ptr(object_ptr&& other) noexcept : m_pointer(other.m_pointer) { other.m_pointer = nullptr; }
+    constexpr object_ptr(object_ptr&& other) noexcept
+    : m_pointer(other.m_pointer) {
+        other.m_pointer = nullptr;
+    }
 
     /// Raw pointer constructor
-    constexpr explicit object_ptr(object_type* ptr) : m_pointer(ptr) {
+    constexpr explicit object_ptr(object_type* ptr)
+    : m_pointer(ptr) {
         if (m_pointer) {
             static_cast<object*>(m_pointer)->retain();
         }

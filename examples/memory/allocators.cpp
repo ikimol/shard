@@ -16,7 +16,8 @@
 char buffer[BUFFER_SIZE];
 
 struct widget {
-    explicit widget(std::string name) : name(std::move(name)) {}
+    explicit widget(std::string name)
+    : name(std::move(name)) {}
 
     ~widget() { std::cout << name << "::~widget()\n"; }
 

@@ -11,7 +11,9 @@ template <typename T>
 class percentage {
 public:
     /// Construct with start and end values
-    percentage(T start, T end) : m_start(start), m_end(end) {}
+    percentage(T start, T end)
+    : m_start(start)
+    , m_end(end) {}
 
     /// Get the percentage of the given value between start and end
     float from_value(T value) const { return pct(value, m_start, m_end); }

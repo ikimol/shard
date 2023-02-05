@@ -22,7 +22,9 @@ public:
 
 public:
     template <typename... Args>
-    explicit random_base(Args&&... args) : m_seed(engine_type::default_seed), m_dist(std::forward<Args>(args)...) {}
+    explicit random_base(Args&&... args)
+    : m_seed(engine_type::default_seed)
+    , m_dist(std::forward<Args>(args)...) {}
 
     value_type next() { return m_dist(m_engine); }
 

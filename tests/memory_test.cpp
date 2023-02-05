@@ -16,9 +16,12 @@ static char g_buffer[BUFFER_SIZE];
 struct test_class : public shard::object {
     test_class() = default;
 
-    explicit test_class(int id) : test_class(id, "") {}
+    explicit test_class(int id)
+    : test_class(id, "") {}
 
-    test_class(int id, const char* name) : id(id), name(name) {}
+    test_class(int id, const char* name)
+    : id(id)
+    , name(name) {}
 
     int id = 0;
     const char* name = "";

@@ -20,7 +20,10 @@ namespace shard::sqlite {
 
 class statement {
 public:
-    statement(database& db, std::string sql) : m_db(db), m_sql(std::move(sql)), m_statement(prepare()) {
+    statement(database& db, std::string sql)
+    : m_db(db)
+    , m_sql(std::move(sql))
+    , m_statement(prepare()) {
         m_column_count = sqlite3_column_count(m_statement.get());
     }
 

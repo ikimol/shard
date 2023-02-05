@@ -18,7 +18,8 @@ public:
     SHARD_DECLARE_FLAGS(open_mode, open_mode_flags)
 
 public:
-    explicit file(open_mode mode) : m_mode(mode) {}
+    explicit file(open_mode mode)
+    : m_mode(mode) {}
 
     void open() {
         std::cout << "read_only:  " << std::boolalpha << m_mode.test(open_mode_flags::read_only) << '\n';

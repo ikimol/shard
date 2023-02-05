@@ -16,11 +16,12 @@ public:
     using function_type = F;
 
 public:
-    explicit deferred_function(function_type fn) noexcept : m_function(std::move(fn)) {}
+    explicit deferred_function(function_type fn) noexcept
+    : m_function(std::move(fn)) {}
 
-    deferred_function(deferred_function&& other) noexcept :
-    m_function(std::move(other.m_function)),
-    m_invoke(std::exchange(other.m_invoke, false)) {}
+    deferred_function(deferred_function&& other) noexcept
+    : m_function(std::move(other.m_function))
+    , m_invoke(std::exchange(other.m_invoke, false)) {}
 
     deferred_function& operator=(deferred_function&&) = delete;
 

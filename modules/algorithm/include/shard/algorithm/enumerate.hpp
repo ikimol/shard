@@ -25,11 +25,17 @@ public:
     using value_type = std::remove_reference_t<decltype(*std::begin(std::declval<T&>()))>;
 
 public:
-    enumerator_proxy() : m_index(std::numeric_limits<std::size_t>::max()), m_iterator(nullptr) {}
+    enumerator_proxy()
+    : m_index(std::numeric_limits<std::size_t>::max())
+    , m_iterator(nullptr) {}
 
-    enumerator_proxy(std::size_t index, iterator iterator) : m_index(index), m_iterator(iterator) {}
+    enumerator_proxy(std::size_t index, iterator iterator)
+    : m_index(index)
+    , m_iterator(iterator) {}
 
-    enumerator_proxy(const enumerator_proxy<T>& other) : m_index(other.m_index), m_iterator(other.m_iterator) {}
+    enumerator_proxy(const enumerator_proxy<T>& other)
+    : m_index(other.m_index)
+    , m_iterator(other.m_iterator) {}
 
     enumerator_proxy<T>& operator=(const enumerator_proxy<T>& other) {
         if (this != &other) {
@@ -92,11 +98,14 @@ public:
     using iterator_type = typename result_type::iterator;
 
 public:
-    explicit enumerator(iterator_type end) : m_result(std::numeric_limits<size_t>::max(), end) {}
+    explicit enumerator(iterator_type end)
+    : m_result(std::numeric_limits<size_t>::max(), end) {}
 
-    enumerator(std::size_t index, iterator_type iterator) : m_result(index, iterator) {}
+    enumerator(std::size_t index, iterator_type iterator)
+    : m_result(index, iterator) {}
 
-    enumerator(const enumerator<T>& other) : m_result(other.m_result) {}
+    enumerator(const enumerator<T>& other)
+    : m_result(other.m_result) {}
 
     enumerator<T>& operator=(const enumerator<T>& other) {
         if (this != &other) {
@@ -132,7 +141,8 @@ private:
 template <typename T>
 class range_enumerator {
 public:
-    explicit range_enumerator(T&& range) : m_range(std::forward<T>(range)) {}
+    explicit range_enumerator(T&& range)
+    : m_range(std::forward<T>(range)) {}
 
     enumerator<T> begin() { return enumerator<T>(0, std::begin(m_range)); }
 

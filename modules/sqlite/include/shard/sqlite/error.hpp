@@ -11,7 +11,8 @@ namespace shard::sqlite {
 
 class database_error : public shard::error {
 public:
-    explicit database_error(sqlite3* db) : shard::error(sqlite3_errcode(db), sqlite3_errmsg(db)) {}
+    explicit database_error(sqlite3* db)
+    : shard::error(sqlite3_errcode(db), sqlite3_errmsg(db)) {}
 };
 
 class generic_error : public shard::error {

@@ -6,7 +6,9 @@
 namespace test {
 
 struct no_default {
-    no_default(int a, int b) : a(a), b(b) {}
+    no_default(int a, int b)
+    : a(a)
+    , b(b) {}
 
     int a;
     int b;

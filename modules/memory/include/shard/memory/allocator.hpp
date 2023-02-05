@@ -15,7 +15,8 @@ namespace memory {
 
 class allocator {
 public:
-    explicit allocator(std::size_t size) noexcept : m_size(size) {}
+    explicit allocator(std::size_t size) noexcept
+    : m_size(size) {}
 
     virtual ~allocator() {
         assert(m_used_memory == 0);

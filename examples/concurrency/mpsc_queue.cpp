@@ -9,7 +9,8 @@
 #include <vector>
 
 struct widget {
-    explicit widget(std::uint64_t value) : value(value) {}
+    explicit widget(std::uint64_t value)
+    : value(value) {}
     std::uint64_t value;
 };
 

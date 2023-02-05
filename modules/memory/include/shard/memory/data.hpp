@@ -14,7 +14,9 @@ struct data {
     data() = default;
 
     /// Create data with the given bytes and size
-    data(std::byte* bytes, std::size_t size) : bytes(bytes), size(size) {}
+    data(std::byte* bytes, std::size_t size)
+    : bytes(bytes)
+    , size(size) {}
 
     std::byte* bytes = nullptr;
     std::size_t size = 0;

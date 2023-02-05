@@ -20,7 +20,8 @@ public:
     using const_reference = typename container_type::const_reference;
 
 public:
-    explicit stack(allocator& a) : m_array(a) {}
+    explicit stack(allocator& a)
+    : m_array(a) {}
 
     // modifiers
 

@@ -24,13 +24,17 @@ public:
     connection(const connection& other) = default;
 
     /// Move constructor
-    connection(connection&& other) noexcept : m_signal(other.m_signal), m_slot(std::move(other.m_slot)) {
+    connection(connection&& other) noexcept
+    : m_signal(other.m_signal)
+    , m_slot(std::move(other.m_slot)) {
         other.m_signal = nullptr;
         other.m_slot.reset();
     }
 
     /// Construct a connection from a signal and a slot
-    connection(signal_base* signal, const std::shared_ptr<slot_base>& slot) : m_signal(signal), m_slot(slot) {}
+    connection(signal_base* signal, const std::shared_ptr<slot_base>& slot)
+    : m_signal(signal)
+    , m_slot(slot) {}
 
     /// Copy assignment operator
     connection& operator=(const connection& other) = default;
@@ -72,7 +76,8 @@ public:
     scoped_connection() = default;
 
     /// Implicit constructor from a non-scoped rvalue connection
-    scoped_connection(connection&& connection) /* NOLINT */ : m_connection(std::move(connection)) {}
+    scoped_connection(connection&& connection) /* NOLINT */
+    : m_connection(std::move(connection)) {}
 
     /// Assignment operator from a non-scoped connection
     scoped_connection& operator=(connection&& other) noexcept {
@@ -110,7 +115,8 @@ public:
 
 public:
     /// Construct a slot with a function pointer
-    explicit slot(function_type function) : m_function(std::move(function)) {}
+    explicit slot(function_type function)
+    : m_function(std::move(function)) {}
 
     /// Invoke the function pointer
     template <typename... CallArgs>

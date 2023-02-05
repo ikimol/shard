@@ -13,11 +13,10 @@ static void bar(int i) {
 }
 
 struct widget {
-    explicit widget(const char* str) : str(str) {}
+    explicit widget(const char* str)
+    : str(str) {}
 
-    void baz() const {
-        std::cout << "widget::baz('" << str << "')\n";
-    }
+    void baz() const { std::cout << "widget::baz('" << str << "')\n"; }
 
     const char* str;
 };
@@ -32,7 +31,7 @@ int main() {
     widget w("quack");
     threads.run(&widget::baz, std::ref(w));
 
-    std::this_thread::sleep_for(std::chrono::milliseconds (50));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
     return 0;
 }

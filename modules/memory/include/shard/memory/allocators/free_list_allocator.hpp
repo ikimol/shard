@@ -11,7 +11,9 @@ namespace memory {
 
 class free_list_allocator : public allocator {
 public:
-    free_list_allocator(void* data, std::size_t size) : allocator(size), m_blocks(reinterpret_cast<block*>(data)) {
+    free_list_allocator(void* data, std::size_t size)
+    : allocator(size)
+    , m_blocks(reinterpret_cast<block*>(data)) {
         assert(size > sizeof(block));
 
         // the first block is 'size' bytes big and there are no other blocks

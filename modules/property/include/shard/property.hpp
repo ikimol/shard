@@ -24,7 +24,8 @@ class property_base {
 public:
     property_base() = default;
 
-    property_base(const property_base& other) : m_dependencies(other.m_dependencies) {
+    property_base(const property_base& other)
+    : m_dependencies(other.m_dependencies) {
         for (auto property : m_dependencies) {
             property->m_subscribers.insert(this);
         }
@@ -71,7 +72,8 @@ protected:
 
 protected:
     struct evaluation_scope {
-        explicit evaluation_scope(property_base* property) : previous(*detail::current_property()) {
+        explicit evaluation_scope(property_base* property)
+        : previous(*detail::current_property()) {
             *detail::current_property() = property;
         }
 
@@ -96,19 +98,26 @@ public:
     property() = default;
 
     /// Value constructor
-    property(const T& value) /* NOLINT */ : m_value(value) {}
+    property(const T& value) /* NOLINT */
+    : m_value(value) {}
 
     /// Binding constructor
-    property(const binding_type& binding) /* NOLINT */ : m_binding(binding) { property<T>::evaluate(); }
+    property(const binding_type& binding) /* NOLINT */
+    : m_binding(binding) {
+        property<T>::evaluate();
+    }
 
     /// Converting value constructor
     template <typename U, std::enable_if_t<std::is_constructible<T, U>::value>* = nullptr>
-    property(const U& value) /* NOLINT */ : property(T(value)) {}
+    property(const U& value) /* NOLINT */
+    : property(T(value)) {}
 
     /// Converting binding constructor
     template <typename B,
-    std::enable_if_t<std::is_constructible<binding_type, B>::value && !std::is_constructible<T, B>::value>* = nullptr>
-    property(const B& binding) /* NOLINT */ : property(binding_type(binding)) {}
+              std::enable_if_t<std::is_constructible<binding_type, B>::value && !std::is_constructible<T, B>::value>* =
+                  nullptr>
+    property(const B& binding) /* NOLINT */
+    : property(binding_type(binding)) {}
 
     /// Value assignment operator
     property& operator=(const T& value) {
@@ -134,7 +143,8 @@ public:
 
     /// Converting binding assignment operator
     template <typename B,
-    std::enable_if_t<std::is_constructible<binding_type, B>::value && !std::is_constructible<T, B>::value>* = nullptr>
+              std::enable_if_t<std::is_constructible<binding_type, B>::value && !std::is_constructible<T, B>::value>* =
+                  nullptr>
     property& operator=(const B& binding) {
         *this = binding_type(binding);
         return *this;
@@ -180,13 +190,16 @@ public:
     using callback_type = std::function<void()>;
 
 public:
-    observed_property(callback_type callback) /* NOLINT */ : m_callback(std::move(callback)) {}
+    observed_property(callback_type callback) /* NOLINT */
+    : m_callback(std::move(callback)) {}
 
-    observed_property(callback_type callback, const T& value) : property<T>(value), m_callback(std::move(callback)) {}
+    observed_property(callback_type callback, const T& value)
+    : property<T>(value)
+    , m_callback(std::move(callback)) {}
 
-    observed_property(callback_type callback, binding_type binding) :
-    property<T>(binding),
-    m_callback(std::move(callback)) {}
+    observed_property(callback_type callback, binding_type binding)
+    : property<T>(binding)
+    , m_callback(std::move(callback)) {}
 
     using property<T>::operator=;
 

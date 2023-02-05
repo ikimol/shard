@@ -11,10 +11,10 @@ namespace memory {
 
 class pool_allocator_base : public allocator {
 public:
-    pool_allocator_base(void* start, std::size_t size, std::size_t obj_size, std::size_t obj_align) :
-    allocator(size),
-    m_obj_size(obj_size),
-    m_obj_align(obj_align) {
+    pool_allocator_base(void* start, std::size_t size, std::size_t obj_size, std::size_t obj_align)
+    : allocator(size)
+    , m_obj_size(obj_size)
+    , m_obj_align(obj_align) {
         assert(obj_size >= sizeof(void*));
 
         auto padding = get_padding(start, obj_align);
@@ -76,7 +76,8 @@ private:
 template <typename T>
 class pool_allocator : public pool_allocator_base {
 public:
-    pool_allocator(void* start, std::size_t size) : pool_allocator_base(start, size, sizeof(T), alignof(T)) {}
+    pool_allocator(void* start, std::size_t size)
+    : pool_allocator_base(start, size, sizeof(T), alignof(T)) {}
 };
 
 } // namespace memory

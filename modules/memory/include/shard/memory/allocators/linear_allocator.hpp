@@ -11,7 +11,10 @@ namespace memory {
 
 class linear_allocator : public allocator {
 public:
-    linear_allocator(void* data, std::size_t size) noexcept : allocator(size), m_data(data), m_next(data) {}
+    linear_allocator(void* data, std::size_t size) noexcept
+    : allocator(size)
+    , m_data(data)
+    , m_next(data) {}
 
     void* allocate(std::size_t size, std::size_t align) override {
         assert(size != 0 && align != 0);

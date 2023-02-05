@@ -68,7 +68,9 @@ public:
 
 private:
     // create an HTTP request with a URL and an HTTP method
-    request(url&& url, method_t method) : m_url(std::move(url)), m_method(method) {}
+    request(url&& url, method_t method)
+    : m_url(std::move(url))
+    , m_method(method) {}
 
 private:
     url m_url;

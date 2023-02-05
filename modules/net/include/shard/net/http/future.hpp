@@ -18,9 +18,7 @@ public:
     const http::response& get() {
         std::unique_lock<std::mutex> lock(m_state->mutex);
         // unblock when the state has the response
-        m_state->cv.wait(lock, [this] {
-            return m_state->response != nullptr;
-        });
+        m_state->cv.wait(lock, [this] { return m_state->response != nullptr; });
         return *(m_state->response);
     }
 
@@ -33,7 +31,8 @@ public:
     }
 
 private:
-    explicit future(detail::shared_state::ptr&& state) : m_state(std::move(state)) {}
+    explicit future(detail::shared_state::ptr&& state)
+    : m_state(std::move(state)) {}
 
 private:
     detail::shared_state::ptr m_state;

@@ -99,7 +99,9 @@ public:
     operator const void*() const /* NOLINT */ { return as_blob(); }
 
 private:
-    column(std::shared_ptr<sqlite3_stmt> statement, int index) : m_statement(std::move(statement)), m_index(index) {}
+    column(std::shared_ptr<sqlite3_stmt> statement, int index)
+    : m_statement(std::move(statement))
+    , m_index(index) {}
 
 private:
     std::shared_ptr<sqlite3_stmt> m_statement;

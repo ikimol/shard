@@ -16,7 +16,8 @@ namespace memory {
 
 class heap_allocator : public allocator {
 public:
-    heap_allocator() : allocator(0) {}
+    heap_allocator()
+    : allocator(0) {}
 
     void* allocate(std::size_t size, std::size_t align) override {
         assert(size != 0);

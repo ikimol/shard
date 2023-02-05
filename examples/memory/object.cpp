@@ -10,7 +10,8 @@ public:
 
     ~widget() { std::cout << "~widget()\n"; }
 
-    explicit widget(int id) : m_id(id) {}
+    explicit widget(int id)
+    : m_id(id) {}
 
     int id() const { return m_id; }
 

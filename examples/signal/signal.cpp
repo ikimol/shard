@@ -6,7 +6,8 @@
 #include <iostream>
 
 struct widget {
-    explicit widget(const char* name) : name(name) {}
+    explicit widget(const char* name)
+    : name(name) {}
 
     void foo() { std::cout << name << '\n'; }
 

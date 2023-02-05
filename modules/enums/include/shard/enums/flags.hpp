@@ -13,7 +13,8 @@ public:
     using value_type = unsigned int;
 
 public:
-    constexpr flag(value_type value) /* NOLINT */ : m_value(value) {}
+    constexpr flag(value_type value) /* NOLINT */
+    : m_value(value) {}
 
     operator value_type() /* NOLINT */ const { return m_value; }
 
@@ -32,11 +33,14 @@ public:
 public:
     constexpr flags() noexcept = default;
 
-    constexpr flags(E flags) /* NOLINT */ noexcept : m_value(to_underlying(flags)) {}
+    constexpr flags(E flags) /* NOLINT */ noexcept
+    : m_value(to_underlying(flags)) {}
 
-    constexpr flags(value_type value) /* NOLINT */ noexcept : m_value(value) {}
+    constexpr flags(value_type value) /* NOLINT */ noexcept
+    : m_value(value) {}
 
-    constexpr flags(flag f) /* NOLINT */ noexcept : m_value(f) {}
+    constexpr flags(flag f) /* NOLINT */ noexcept
+    : m_value(f) {}
 
     constexpr flags& operator&=(value_type mask) noexcept {
         m_value &= mask;

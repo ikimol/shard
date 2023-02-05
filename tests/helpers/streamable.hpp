@@ -11,7 +11,8 @@ class streamable {
 public:
     streamable() = default;
 
-    explicit streamable(const char* name) noexcept : m_name(name) {}
+    explicit streamable(const char* name) noexcept
+    : m_name(name) {}
 
     const char* name() const { return m_name; }
 

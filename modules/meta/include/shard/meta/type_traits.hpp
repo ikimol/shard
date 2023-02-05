@@ -44,8 +44,9 @@ public:
 template <typename T>
 class has_begin_end_impl {
 private:
-    template <typename U = std::decay_t<T>, typename B = decltype(std::declval<U&>().begin()),
-    typename E = decltype(std::declval<U&>().end())>
+    template <typename U = std::decay_t<T>,
+              typename B = decltype(std::declval<U&>().begin()),
+              typename E = decltype(std::declval<U&>().end())>
     static std::true_type test(int);
 
     template <typename...>
@@ -58,8 +59,10 @@ public:
 template <typename T>
 class has_key_value_pair_impl {
 private:
-    template <typename U = std::decay_t<T>, typename V = typename U::value_type,
-    typename F = decltype(std::declval<V&>().first), typename S = decltype(std::declval<V&>().second)>
+    template <typename U = std::decay_t<T>,
+              typename V = typename U::value_type,
+              typename F = decltype(std::declval<V&>().first),
+              typename S = decltype(std::declval<V&>().second)>
     static std::true_type test(int);
 
     template <typename...>

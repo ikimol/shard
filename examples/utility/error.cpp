@@ -6,9 +6,11 @@
 
 class my_error : public shard::error {
 public:
-    explicit my_error(const char* message) : shard::error(42, message) {}
+    explicit my_error(const char* message)
+    : shard::error(42, message) {}
 
-    explicit my_error(const std::string& message) : shard::error(42, message) {}
+    explicit my_error(const std::string& message)
+    : shard::error(42, message) {}
 };
 
 int main(int /* argc */, char* /* argv */[]) {

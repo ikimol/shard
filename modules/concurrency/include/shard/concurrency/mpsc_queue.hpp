@@ -20,7 +20,8 @@ public:
     using size_type = std::size_t;
 
 public:
-    mpsc_queue() : m_capacity(t_capacity) {
+    mpsc_queue()
+    : m_capacity(t_capacity) {
         m_data = new std::byte[sizeof(value_type) * t_capacity];
         m_states = new std::atomic<bool>[t_capacity];
     }

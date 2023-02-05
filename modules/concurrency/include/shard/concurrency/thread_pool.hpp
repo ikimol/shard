@@ -20,7 +20,8 @@ public:
 
 public:
     /// Create a thread pool with the maximum number of physical threads
-    thread_pool() : thread_pool(thread_pool::max_thread_count()) {}
+    thread_pool()
+    : thread_pool(thread_pool::max_thread_count()) {}
 
     /// Create a thread pool with the given number of threads
     explicit thread_pool(unsigned int count) {

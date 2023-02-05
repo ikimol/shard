@@ -43,21 +43,21 @@ private:
 
     public:
         template <typename... LockArgs>
-        access(reference value, mutex_type& mutex, LockArgs&&... lock_args) :
-        m_lock(mutex, std::forward<LockArgs>(lock_args)...),
-        m_pointer(&value) {}
+        access(reference value, mutex_type& mutex, LockArgs&&... lock_args)
+        : m_lock(mutex, std::forward<LockArgs>(lock_args)...)
+        , m_pointer(&value) {}
 
         template <typename... LockArgs>
-        access(const basic_thread_safe& value, LockArgs&&... lock_args) /* NOLINT */ :
-        access(value.m_value, value.m_mutex, std::forward<LockArgs>(lock_args)...) {}
+        access(const basic_thread_safe& value, LockArgs&&... lock_args) /* NOLINT */
+        : access(value.m_value, value.m_mutex, std::forward<LockArgs>(lock_args)...) {}
 
         template <typename... LockArgs>
-        access(basic_thread_safe& value, LockArgs&&... lock_args) /* NOLINT */ :
-        access(value.m_value, value.m_mutex, std::forward<LockArgs>(lock_args)...) {}
+        access(basic_thread_safe& value, LockArgs&&... lock_args) /* NOLINT */
+        : access(value.m_value, value.m_mutex, std::forward<LockArgs>(lock_args)...) {}
 
         template <template <typename> class OtherLock, access_mode t_other_mode, typename... LockArgs>
-        access(access<OtherLock, t_other_mode>& other, LockArgs&&... lock_args) /* NOLINT */ :
-        access(*other, *other.m_lock.release(), std::adopt_lock, std::forward<LockArgs>(lock_args)...) {
+        access(access<OtherLock, t_other_mode>& other, LockArgs&&... lock_args) /* NOLINT */
+        : access(*other, *other.m_lock.release(), std::adopt_lock, std::forward<LockArgs>(lock_args)...) {
             static_assert(t_other_mode == access_mode::read_write || t_other_mode == t_mode);
         }
 
@@ -89,7 +89,8 @@ public:
     basic_thread_safe(basic_thread_safe&&) = delete;
 
     template <typename... Args>
-    explicit basic_thread_safe(Args&&... args) : m_value(std::forward<Args>(args)...) {}
+    explicit basic_thread_safe(Args&&... args)
+    : m_value(std::forward<Args>(args)...) {}
 
     basic_thread_safe& operator=(const basic_thread_safe&) = delete;
     basic_thread_safe& operator=(basic_thread_safe&&) = delete;
