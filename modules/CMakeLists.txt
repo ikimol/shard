@@ -21,6 +21,7 @@ add_subdirectory(signal)
 add_subdirectory(string)
 add_subdirectory(system)
 add_subdirectory(utility)
+add_subdirectory(uuid)
 
 # optional modules
 
