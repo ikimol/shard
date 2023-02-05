@@ -31,6 +31,7 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/signal_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/string_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/utility_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/uuid_test.cpp
                )
 
 target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
@@ -46,6 +47,7 @@ target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
                       shard::signal
                       shard::string
                       shard::utility
+                      shard::uuid
                       )
 
 include(${PROJECT_SOURCE_DIR}/cmake/os.cmake)

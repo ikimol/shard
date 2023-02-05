@@ -109,8 +109,8 @@ public:
 
     /// Check if every byte of the UUID is zero
     bool is_null() const {
-        return shard::any_of(m_data, [](std::uint8_t i) {
-            return i != 0;
+        return shard::all_of(m_data, [](std::uint8_t i) {
+            return i == 0;
         });
     }
 
