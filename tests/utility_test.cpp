@@ -12,6 +12,14 @@ TEST_CASE("utility") {
             auto _ = shard::defer([&] { called = true; });
         }
         REQUIRE(called);
+
+        called = false;
+        {
+            SHARD_DEFER() {
+                called = true;
+            };
+        }
+        REQUIRE(called);
     }
 
     SUBCASE("hashing") {

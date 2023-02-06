@@ -4,6 +4,7 @@
 #define SHARD_UTILITY_DEFER_HPP
 
 #include "shard/utility/non_copyable.hpp"
+#include "shard/utility/preprocessor.hpp"
 
 #include <utility>
 
@@ -36,6 +37,13 @@ private:
     bool m_invoke = true;
 };
 
+struct deferred_function_helper {
+    template <typename F>
+    deferred_function<F> operator<<(F&& func) {
+        return deferred_function<F>(std::forward<F>(func));
+    }
+};
+
 template <typename F>
 deferred_function<F> defer(F&& func) noexcept {
     return deferred_function<F>(std::forward<F>(func));
@@ -48,5 +56,7 @@ deferred_function<F> defer(F&& func) noexcept {
 using utility::defer;
 
 } // namespace shard
+
+#define SHARD_DEFER() const auto SHARD_UNIQUE_ID(deferred) = shard::utility::deferred_function_helper() << [&]()
 
 #endif // SHARD_UTILITY_DEFER_HPP
