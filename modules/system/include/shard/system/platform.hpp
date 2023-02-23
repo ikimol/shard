@@ -26,4 +26,22 @@
 #endif
 // clang-format on
 
+namespace shard::system {
+
+enum platform_t {
+    platform_linux,
+    platform_android,
+    platform_macos,
+    platform_ios,
+    platform_windows,
+};
+
+/// Get the current platform
+platform_t platform();
+
+/// Get the basic name of the current platform
+const char* platform_name();
+
+} // namespace shard::system
+
 #endif // SHARD_SYSTEM_PLATFORM_HPP
