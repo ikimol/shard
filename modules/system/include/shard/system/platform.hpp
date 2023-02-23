@@ -12,7 +12,7 @@
 #elif defined(__APPLE__)
     #define SHARD_UNIX
     #include <TargetConditionals.h>
-    #if defined(TARGET_OS_MAC)
+    #if defined(TARGET_OS_OSX)
         #define SHARD_MACOS
     #elif defined(TARGET_OS_IOS)
         #define SHARD_IOS
