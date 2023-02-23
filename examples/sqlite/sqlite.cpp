@@ -28,6 +28,8 @@ std::optional<user> fetch_user(sqlite::statement& stmt) {
 }
 
 int main(int /* argc */, char* /* argv */[]) {
+    std::cout << "sqlite version: " << sqlite3_libversion() << '\n';
+
     sqlite::database db("test.db", sqlite::database::open_read_write);
     std::cout << "has 'users' table: " << db.contains_table("users") << '\n';
     std::cout << "has 'comments' table: " << db.contains_table("comments") << '\n';
