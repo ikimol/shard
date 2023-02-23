@@ -3,6 +3,8 @@
 #include <shard/utility/defer.hpp>
 #include <shard/utility/hash_value.hpp>
 
+#include <string>
+
 #include <doctest.h>
 
 TEST_CASE("utility") {

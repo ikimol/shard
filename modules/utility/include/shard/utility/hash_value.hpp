@@ -4,7 +4,7 @@
 #define SHARD_UTILITY_HASH_VALUE_HPP
 
 #include <cstddef>
-#include <utility>
+#include <functional>
 
 namespace shard {
 namespace utility {
