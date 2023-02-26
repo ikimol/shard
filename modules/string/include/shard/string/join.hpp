@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_STRING_JOIN_HPP
-#define SHARD_STRING_JOIN_HPP
+#pragma once
 
 #include "shard/string/to_string.hpp"
 
@@ -39,5 +38,3 @@ std::string join(const Range& r, const std::string& delimiter) {
 using string::join;
 
 } // namespace shard
-
-#endif // SHARD_STRING_JOIN_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_STRING_REPLACE_HPP
-#define SHARD_STRING_REPLACE_HPP
+#pragma once
 
 #include <string>
 
@@ -32,5 +31,3 @@ using string::replace_all;
 using string::replace_all_copy;
 
 } // namespace shard
-
-#endif // SHARD_STRING_REPLACE_HPP

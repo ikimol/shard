@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_MEMORY_OBJECT_HPP
-#define SHARD_MEMORY_OBJECT_HPP
+#pragma once
 
 #include <cassert>
 #include <cstddef>
@@ -276,5 +275,3 @@ using memory::object;
 using memory::object_ptr;
 
 } // namespace shard
-
-#endif // SHARD_MEMORY_OBJECT_HPP

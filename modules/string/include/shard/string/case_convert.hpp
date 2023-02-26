@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CASE_CONVERT_HPP
-#define SHARD_CASE_CONVERT_HPP
+#pragma once
 
 #include "shard/string/ctype.hpp"
 
@@ -71,5 +70,3 @@ using string::to_upper;
 using string::to_upper_copy;
 
 } // namespace shard
-
-#endif // SHARD_CASE_CONVERT_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_MATH_DEGREES_HPP
-#define SHARD_MATH_DEGREES_HPP
+#pragma once
 
 #include <cmath>
 
@@ -28,5 +27,3 @@ using math::deg;
 using math::rad;
 
 } // namespace shard
-
-#endif // SHARD_MATH_DEGREES_HPP

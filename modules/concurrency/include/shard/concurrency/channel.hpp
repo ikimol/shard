@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CONCURRENCY_CHANNEL_HPP
-#define SHARD_CONCURRENCY_CHANNEL_HPP
+#pragma once
 
 #include <shard/utility/non_copyable.hpp>
 
@@ -222,5 +221,3 @@ private:
 using concurrency::channel;
 
 } // namespace shard
-
-#endif // SHARD_CONCURRENCY_CHANNEL_HPP

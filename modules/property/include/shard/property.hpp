@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_PROPERTY_HPP
-#define SHARD_PROPERTY_HPP
+#pragma once
 
 #include <functional>
 #include <unordered_set>
@@ -214,5 +213,3 @@ private:
 };
 
 } // namespace shard
-
-#endif // SHARD_PROPERTY_HPP

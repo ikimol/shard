@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_MEMORY_STATIC_ALLOCATOR_HPP
-#define SHARD_MEMORY_STATIC_ALLOCATOR_HPP
+#pragma once
 
 #include "shard/memory/allocators/linear_allocator.hpp"
 
@@ -25,5 +24,3 @@ private:
 using memory::static_allocator;
 
 } // namespace shard
-
-#endif // SHARD_MEMORY_STATIC_ALLOCATOR_HPP

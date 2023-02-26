@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_NET_CURL_OPTION_HPP
-#define SHARD_NET_CURL_OPTION_HPP
+#pragma once
 
 #include "shard/net/curl/slist.hpp"
 #include "shard/net/http/version.hpp"
@@ -80,5 +79,3 @@ template <CURLoption Option>
 using option_t = typename option<Option>::type;
 
 } // namespace shard::net::curl
-
-#endif // SHARD_NET_CURL_OPTION_HPP

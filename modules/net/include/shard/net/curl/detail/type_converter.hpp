@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_NET_CURL_DETAIL_CONVERTER_HPP
-#define SHARD_NET_CURL_DETAIL_CONVERTER_HPP
+#pragma once
 
 #include "shard/net/curl/slist.hpp"
 #include "shard/net/http/version.hpp"
@@ -84,5 +83,3 @@ template <typename T> using curl_t = typename type_converter<T>::curl_type;
 // clang-format on
 
 } // namespace shard::net::curl::detail
-
-#endif // SHARD_NET_CURL_DETAIL_CONVERTER_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_STRING_CTYPE_HPP
-#define SHARD_STRING_CTYPE_HPP
+#pragma once
 
 #include <cctype>
 
@@ -125,5 +124,3 @@ inline bool iequal(char lhs, char rhs) {
 }
 
 } // namespace shard::ch
-
-#endif // SHARD_STRING_CTYPE_HPP

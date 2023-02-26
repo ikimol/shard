@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_UTILITY_ERROR_HPP
-#define SHARD_UTILITY_ERROR_HPP
+#pragma once
 
 #include <stdexcept>
 #include <string>
@@ -38,5 +37,3 @@ using error = basic_error<int>;
 using utility::error;
 
 } // namespace shard
-
-#endif // SHARD_UTILITY_ERROR_HPP

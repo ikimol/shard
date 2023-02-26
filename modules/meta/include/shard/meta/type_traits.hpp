@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_META_TYPE_TRAITS_HPP
-#define SHARD_META_TYPE_TRAITS_HPP
+#pragma once
 
 #include <tuple>
 #include <type_traits>
@@ -196,5 +195,3 @@ using meta::functor_traits;
 using meta::result_of_t;
 
 } // namespace shard
-
-#endif // SHARD_META_TYPE_TRAITS_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_ALGORITHM_VARIANT_SWITCH_HPP
-#define SHARD_ALGORITHM_VARIANT_SWITCH_HPP
+#pragma once
 
 #include <shard/utility/preprocessor.hpp>
 
@@ -34,5 +33,3 @@ auto variant_switch(Variant&& variant, Ts&&... ts) {
 using algorithm::variant_switch;
 
 } // namespace shard
-
-#endif // SHARD_ALGORITHM_VARIANT_SWITCH_HPP

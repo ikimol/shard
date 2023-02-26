@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_ALGORITHM_STL_WRAPPERS_HPP
-#define SHARD_ALGORITHM_STL_WRAPPERS_HPP
+#pragma once
 
 #include <algorithm>
 
@@ -126,5 +125,3 @@ using algorithm::size;
 using algorithm::transform;
 
 } // namespace shard
-
-#endif // SHARD_ALGORITHM_STL_WRAPPERS_HPP

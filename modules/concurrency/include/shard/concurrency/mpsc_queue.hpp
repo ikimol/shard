@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CONCURRENCY_MPSC_QUEUE_HPP
-#define SHARD_CONCURRENCY_MPSC_QUEUE_HPP
+#pragma once
 
 #include <atomic>
 #include <cassert>
@@ -150,5 +149,3 @@ private:
 using concurrency::mpsc_queue;
 
 } // namespace shard
-
-#endif // SHARD_CONCURRENCY_MPSC_QUEUE_HPP

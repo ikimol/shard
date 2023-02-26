@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_SQLITE_ERROR_HPP
-#define SHARD_SQLITE_ERROR_HPP
+#pragma once
 
 #include <shard/utility/error.hpp>
 
@@ -22,5 +21,3 @@ public:
 };
 
 } // namespace shard::sqlite
-
-#endif // SHARD_SQLITE_ERROR_HPP

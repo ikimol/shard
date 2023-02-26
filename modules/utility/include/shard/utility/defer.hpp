@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_UTILITY_DEFER_HPP
-#define SHARD_UTILITY_DEFER_HPP
+#pragma once
 
 #include "shard/utility/non_copyable.hpp"
 #include "shard/utility/preprocessor.hpp"
@@ -58,5 +57,3 @@ using utility::defer;
 } // namespace shard
 
 #define SHARD_DEFER() const auto SHARD_UNIQUE_ID(deferred) = shard::utility::deferred_function_helper() << [&]()
-
-#endif // SHARD_UTILITY_DEFER_HPP

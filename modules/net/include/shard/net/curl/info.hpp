@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_NET_CURL_INFO_HPP
-#define SHARD_NET_CURL_INFO_HPP
+#pragma once
 
 #include <curl/curl.h>
 
@@ -77,5 +76,3 @@ template <CURLINFO t_info>
 using info_t = typename info<t_info>::type;
 
 } // namespace shard::net::curl
-
-#endif // SHARD_NET_CURL_INFO_HPP

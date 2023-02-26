@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_NET_CURL_HANDLE_HPP
-#define SHARD_NET_CURL_HANDLE_HPP
+#pragma once
 
 #include "shard/net/curl/detail/type_converter.hpp"
 #include "shard/net/curl/info.hpp"
@@ -96,5 +95,3 @@ private:
 };
 
 } // namespace shard::net::curl
-
-#endif // SHARD_NET_CURL_HANDLE_HPP

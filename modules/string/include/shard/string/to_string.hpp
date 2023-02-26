@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_STRING_TO_STRING_HPP
-#define SHARD_STRING_TO_STRING_HPP
+#pragma once
 
 #include <shard/meta/type_traits.hpp>
 
@@ -58,5 +57,3 @@ std::string to_string(T&& value) {
 using string::to_string;
 
 } // namespace shard
-
-#endif // SHARD_STRING_TO_STRING_HPP

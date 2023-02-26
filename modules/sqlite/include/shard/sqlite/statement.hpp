@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_SQLITE_STATEMENT_HPP
-#define SHARD_SQLITE_STATEMENT_HPP
+#pragma once
 
 #include "shard/sqlite/column.hpp"
 #include "shard/sqlite/database.hpp"
@@ -278,5 +277,3 @@ bool database::contains_table(const std::string& name) {
 }
 
 } // namespace shard::sqlite
-
-#endif // SHARD_SQLITE_STATEMENT_HPP

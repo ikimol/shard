@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_UTILITY_TIMER_HPP
-#define SHARD_UTILITY_TIMER_HPP
+#pragma once
 
 #include <chrono>
 
@@ -39,5 +38,3 @@ using timer = basic_timer<std::chrono::high_resolution_clock>;
 using utility::timer;
 
 } // namespace shard
-
-#endif // SHARD_UTILITY_TIMER_HPP

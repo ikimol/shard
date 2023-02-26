@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_UTILITY_NON_COPYABLE_HPP
-#define SHARD_UTILITY_NON_COPYABLE_HPP
+#pragma once
 
 namespace shard {
 namespace utility {
@@ -23,5 +22,3 @@ protected:
 using utility::non_copyable;
 
 } // namespace shard
-
-#endif // SHARD_UTILITY_NON_COPYABLE_HPP

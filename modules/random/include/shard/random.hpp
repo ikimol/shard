@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_RANDOM_HPP
-#define SHARD_RANDOM_HPP
+#pragma once
 
 #include <shard/meta/type_traits.hpp>
 
@@ -77,5 +76,3 @@ inline int fast_random(int lower, int upper) {
 }
 
 } // namespace shard
-
-#endif // SHARD_RANDOM_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CONCURRENCY_SYNC_HPP
-#define SHARD_CONCURRENCY_SYNC_HPP
+#pragma once
 
 #include "shard/concurrency/lock_traits.hpp"
 
@@ -131,5 +130,3 @@ using concurrency::thread_safe;
 using concurrency::write_access;
 
 } // namespace shard
-
-#endif // SHARD_CONCURRENCY_SYNC_HPP

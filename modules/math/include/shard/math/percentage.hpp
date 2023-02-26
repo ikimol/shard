@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_MATH_PERCENTAGE_HPP
-#define SHARD_MATH_PERCENTAGE_HPP
+#pragma once
 
 #include "shard/math/utils.hpp"
 
@@ -27,5 +26,3 @@ private:
 };
 
 } // namespace shard::math
-
-#endif // SHARD_MATH_PERCENTAGE_HPP

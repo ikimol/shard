@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_HTTP_VERSION_HPP
-#define SHARD_HTTP_VERSION_HPP
+#pragma once
 
 #include <curl/curl.h>
 
@@ -17,5 +16,3 @@ enum class version_t {
 };
 
 } // namespace shard::net::http
-
-#endif // SHARD_HTTP_VERSION_HPP

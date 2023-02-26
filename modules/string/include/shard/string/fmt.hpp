@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_STRING_FMT_HPP
-#define SHARD_STRING_FMT_HPP
+#pragma once
 
 #include <cstdarg>
 #include <cstddef>
@@ -44,5 +43,3 @@ using string::sfmt;
 #undef SHARD_PRINTF_STYLE
 
 #include "shard/string/fmt.inl"
-
-#endif // SHARD_STRING_FMT_HPP

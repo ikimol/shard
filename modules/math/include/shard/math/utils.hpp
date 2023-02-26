@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_MATH_UTILS_HPP
-#define SHARD_MATH_UTILS_HPP
+#pragma once
 
 namespace shard {
 namespace math {
@@ -49,5 +48,3 @@ using math::pct;
 using math::sq;
 
 } // namespace shard
-
-#endif // SHARD_MATH_UTILS_HPP

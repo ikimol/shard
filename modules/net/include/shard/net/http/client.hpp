@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_HTTP_CLIENT_HPP
-#define SHARD_HTTP_CLIENT_HPP
+#pragma once
 
 #include "shard/net/curl/handle.hpp"
 #include "shard/net/http/future.hpp"
@@ -196,5 +195,3 @@ private:
 };
 
 } // namespace shard::net::http
-
-#endif // SHARD_HTTP_CLIENT_HPP

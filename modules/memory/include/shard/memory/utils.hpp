@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_MEMORY_UTILS_HPP
-#define SHARD_MEMORY_UTILS_HPP
+#pragma once
 
 #include <cstddef>
 #include <cstdint>
@@ -93,5 +92,3 @@ bool is_aligned(const T* ptr) {
 
 } // namespace memory
 } // namespace shard
-
-#endif // SHARD_MEMORY_UTILS_HPP

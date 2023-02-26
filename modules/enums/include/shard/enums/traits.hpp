@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_ENUMS_TRAITS_HPP
-#define SHARD_ENUMS_TRAITS_HPP
+#pragma once
 
 #include <type_traits>
 
@@ -36,5 +35,3 @@ constexpr T to_underlying(E e) noexcept {
 using enums::to_underlying;
 
 } // namespace shard
-
-#endif // SHARD_ENUMS_TRAITS_HPP

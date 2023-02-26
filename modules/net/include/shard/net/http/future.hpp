@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_NET_HTTP_FUTURE_HPP
-#define SHARD_NET_HTTP_FUTURE_HPP
+#pragma once
 
 #include "shard/net/http/detail/shared_state.hpp"
 #include "shard/net/http/response.hpp"
@@ -39,5 +38,3 @@ private:
 };
 
 } // namespace shard::net::http
-
-#endif // SHARD_NET_HTTP_FUTURE_HPP

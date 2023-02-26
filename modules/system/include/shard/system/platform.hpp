@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_SYSTEM_PLATFORM_HPP
-#define SHARD_SYSTEM_PLATFORM_HPP
+#pragma once
 
 // clang-format off
 #if defined(__ANDROID__)
@@ -43,5 +42,3 @@ platform_t platform();
 const char* platform_name();
 
 } // namespace shard::system
-
-#endif // SHARD_SYSTEM_PLATFORM_HPP

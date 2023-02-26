@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_MEMORY_DATA_HPP
-#define SHARD_MEMORY_DATA_HPP
+#pragma once
 
 #include <string_view>
 #include <utility>
@@ -35,5 +34,3 @@ std::string_view to_string_view(const data& data) {
 using memory::data;
 
 } // namespace shard
-
-#endif // SHARD_MEMORY_DATA_HPP

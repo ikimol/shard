@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_MEMORY_POOL_ALLOCATOR_HPP
-#define SHARD_MEMORY_POOL_ALLOCATOR_HPP
+#pragma once
 
 #include "shard/memory/allocator.hpp"
 #include "shard/memory/utils.hpp"
@@ -87,5 +86,3 @@ public:
 using memory::pool_allocator;
 
 } // namespace shard
-
-#endif // SHARD_MEMORY_POOL_ALLOCATOR_HPP

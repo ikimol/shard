@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CONCURRENCY_TBUF_VALUE_HPP
-#define SHARD_CONCURRENCY_TBUF_VALUE_HPP
+#pragma once
 
 #include <atomic>
 #include <cstdint>
@@ -89,5 +88,3 @@ private:
 using concurrency::tbuf_value;
 
 } // namespace shard
-
-#endif // SHARD_CONCURRENCY_TBUF_VALUE_HPP

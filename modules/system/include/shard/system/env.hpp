@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_SYSTEM_ENV_HPP
-#define SHARD_SYSTEM_ENV_HPP
+#pragma once
 
 #include <map>
 #include <optional>
@@ -42,7 +41,4 @@ using system::env::unset;
 using system::env::vars;
 
 } // namespace env
-
 } // namespace shard
-
-#endif // SHARD_SYSTEM_ENV_HPP

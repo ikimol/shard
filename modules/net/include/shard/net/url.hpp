@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_NET_URL_HPP
-#define SHARD_NET_URL_HPP
+#pragma once
 
 #include <regex>
 #include <string>
@@ -150,5 +149,3 @@ inline std::ostream& operator<<(std::ostream& os, const url& u) {
 using net::url;
 
 } // namespace shard
-
-#endif // SHARD_NET_URL_HPP

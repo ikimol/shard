@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_ALGORITHM_CONTAINER_UTILS_HPP
-#define SHARD_ALGORITHM_CONTAINER_UTILS_HPP
+#pragma once
 
 #include <algorithm>
 #include <set>
@@ -108,5 +107,3 @@ using algorithm::remove_unordered;
 using algorithm::values_of;
 
 } // namespace shard
-
-#endif // SHARD_ALGORITHM_CONTAINER_UTILS_HPP

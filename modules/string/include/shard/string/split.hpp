@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_STRING_SPLIT_HPP
-#define SHARD_STRING_SPLIT_HPP
+#pragma once
 
 #include <sstream>
 #include <string>
@@ -45,5 +44,3 @@ void split(const std::string& s, OutputIt out, UnaryPredicate p) {
 using string::split;
 
 } // namespace shard
-
-#endif // SHARD_STRING_SPLIT_HPP

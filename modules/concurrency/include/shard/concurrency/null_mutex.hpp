@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CONCURRENCY_NULL_MUTEX_HPP
-#define SHARD_CONCURRENCY_NULL_MUTEX_HPP
+#pragma once
 
 #include <shard/utility/non_copyable.hpp>
 
@@ -28,5 +27,3 @@ struct null_mutex : private utility::non_copyable {
 using concurrency::null_mutex;
 
 } // namespace shard
-
-#endif // SHARD_CONCURRENCY_NULL_MUTEX_HPP

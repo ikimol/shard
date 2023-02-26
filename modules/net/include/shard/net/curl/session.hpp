@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_NET_CURL_SESSION_HPP
-#define SHARD_NET_CURL_SESSION_HPP
+#pragma once
 
 #include <curl/curl.h>
 
@@ -20,5 +19,3 @@ public:
 };
 
 } // namespace shard::net::curl
-
-#endif // SHARD_NET_CURL_SESSION_HPP

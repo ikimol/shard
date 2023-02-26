@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_UTILITY_HASH_VALUE_HPP
-#define SHARD_UTILITY_HASH_VALUE_HPP
+#pragma once
 
 #include <cstddef>
 #include <functional>
@@ -31,5 +30,3 @@ std::size_t hash_value(const Args&... args) {
 using utility::hash_value;
 
 } // namespace shard
-
-#endif // SHARD_UTILITY_HASH_VALUE_HPP

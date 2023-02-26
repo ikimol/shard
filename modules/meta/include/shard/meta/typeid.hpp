@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_META_TYPEID_HPP
-#define SHARD_META_TYPEID_HPP
+#pragma once
 
 #include <atomic>
 #include <cstddef>
@@ -41,5 +40,3 @@ std::atomic<typeid_t> typespace<T>::s_counter = ATOMIC_VAR_INIT(0);
 
 #define __SHARD_TYPEID_SELECT(_1, _2, MACRO, ...) MACRO
 #define SHARD_TYPEID(...) __SHARD_TYPEID_SELECT(__VA_ARGS__, __SHARD_TYPEID_2, __SHARD_TYPEID_1)(__VA_ARGS__)
-
-#endif // SHARD_META_TYPEID_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_ENUMS_FLAGS_HPP
-#define SHARD_ENUMS_FLAGS_HPP
+#pragma once
 
 #include "shard/enums/traits.hpp"
 
@@ -142,5 +141,3 @@ using enums::flags;
     constexpr inline shard::flags<T::enum_type> operator|(T::enum_type lhs, shard::flags<T::enum_type> rhs) noexcept { \
         return rhs | lhs;                                                                                              \
     }
-
-#endif // SHARD_ENUMS_FLAGS_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CONTAINERS_ARRAY_HPP
-#define SHARD_CONTAINERS_ARRAY_HPP
+#pragma once
 
 #include <shard/memory/allocator.hpp>
 
@@ -509,5 +508,3 @@ bool operator!=(const array<T>& lhs, const array<T>& rhs) {
 using containers::array;
 
 } // namespace shard
-
-#endif // SHARD_CONTAINERS_ARRAY_HPP

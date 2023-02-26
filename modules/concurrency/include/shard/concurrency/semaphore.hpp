@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CONCURRENCY_SEMAPHORE_HPP
-#define SHARD_CONCURRENCY_SEMAPHORE_HPP
+#pragma once
 
 #include <shard/system/platform.hpp>
 #include <shard/utility/preprocessor.hpp>
@@ -58,5 +57,3 @@ private:
 using concurrency::semaphore;
 
 } // namespace shard
-
-#endif // SHARD_CONCURRENCY_SEMAPHORE_HPP

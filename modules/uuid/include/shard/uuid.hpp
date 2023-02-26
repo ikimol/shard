@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_UTILITY_UUID_HPP
-#define SHARD_UTILITY_UUID_HPP
+#pragma once
 
 #include <shard/algorithm/enumerate.hpp>
 #include <shard/algorithm/stl_wrappers.hpp>
@@ -216,5 +215,3 @@ struct std::hash<shard::uuid> {
         return shard::hash_value(hi, lo);
     }
 };
-
-#endif // SHARD_UTILITY_UUID_HPP

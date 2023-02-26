@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_STRING_TRIM_HPP
-#define SHARD_STRING_TRIM_HPP
+#pragma once
 
 #include <algorithm>
 #include <cctype>
@@ -58,5 +57,3 @@ using string::trim;
 using string::trim_copy;
 
 } // namespace shard
-
-#endif // SHARD_STRING_TRIM_HPP

@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_SQLITE_COLUMN_HPP
-#define SHARD_SQLITE_COLUMN_HPP
+#pragma once
 
 #include <sqlite3.h>
 
@@ -109,5 +108,3 @@ private:
 };
 
 } // namespace shard::sqlite
-
-#endif // SHARD_SQLITE_COLUMN_HPP

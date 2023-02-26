@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_ALGORITHM_ENUMERATE_HPP
-#define SHARD_ALGORITHM_ENUMERATE_HPP
+#pragma once
 
 #include <cassert>
 #include <iterator>
@@ -185,5 +184,3 @@ struct tuple_element<1, shard::algorithm::detail::enumerator_proxy<T>> {
 };
 
 } // namespace std
-
-#endif // SHARD_ALGORITHM_ENUMERATE_HPP

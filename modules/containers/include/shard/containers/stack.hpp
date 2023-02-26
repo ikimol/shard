@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CONTAINERS_STACK_HPP
-#define SHARD_CONTAINERS_STACK_HPP
+#pragma once
 
 #include "shard/containers/array.hpp"
 
@@ -91,5 +90,3 @@ bool operator!=(const stack<T>& lhs, const stack<T>& rhs) {
 using containers::stack;
 
 } // namespace shard
-
-#endif // SHARD_CONTAINERS_STACK_HPP

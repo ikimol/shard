@@ -1,9 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CONTAINERS_HPP
-#define SHARD_CONTAINERS_HPP
+#pragma once
 
 #include "shard/containers/array.hpp"
 #include "shard/containers/stack.hpp"
-
-#endif // SHARD_CONTAINERS_HPP

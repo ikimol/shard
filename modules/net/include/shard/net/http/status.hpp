@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_HTTP_STATUS_HPP
-#define SHARD_HTTP_STATUS_HPP
+#pragma once
 
 namespace shard::net::http {
 
@@ -41,5 +40,3 @@ enum class status_t {
 };
 
 } // namespace shard::net::http
-
-#endif // SHARD_HTTP_STATUS_HPP

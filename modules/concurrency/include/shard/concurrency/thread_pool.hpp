@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CONCURRENCY_THREAD_POOL_HPP
-#define SHARD_CONCURRENCY_THREAD_POOL_HPP
+#pragma once
 
 #include "shard/concurrency/channel.hpp"
 
@@ -94,5 +93,3 @@ private:
 using concurrency::thread_pool;
 
 } // namespace shard
-
-#endif // SHARD_CONCURRENCY_THREAD_POOL_HPP

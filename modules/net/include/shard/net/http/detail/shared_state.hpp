@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_HTTP_DETAIL_SHARED_STATE_HPP
-#define SHARD_HTTP_DETAIL_SHARED_STATE_HPP
+#pragma once
 
 #include <condition_variable>
 #include <functional>
@@ -28,5 +27,3 @@ struct shared_state {
 
 } // namespace detail
 } // namespace shard::net::http
-
-#endif // SHARD_HTTP_DETAIL_SHARED_STATE_HPP

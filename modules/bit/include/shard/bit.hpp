@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_BIT_HPP
-#define SHARD_BIT_HPP
+#pragma once
 
 #include <type_traits>
 
@@ -61,5 +60,3 @@ unsigned int count(T n) {
 }
 
 } // namespace shard::bit
-
-#endif // SHARD_BIT_HPP

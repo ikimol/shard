@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_STRING_TO_NUMBER_HPP
-#define SHARD_STRING_TO_NUMBER_HPP
+#pragma once
 
 #include "shard/string/trim.hpp"
 
@@ -74,5 +73,3 @@ using string::to_int;
 using string::to_unsigned;
 
 } // namespace shard
-
-#endif // SHARD_STRING_TO_NUMBER_HPP

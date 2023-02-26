@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_CONCURRENCY_LOCK_TRAITS_HPP
-#define SHARD_CONCURRENCY_LOCK_TRAITS_HPP
+#pragma once
 
 #include <mutex>
 #include <shared_mutex>
@@ -34,5 +33,3 @@ struct lock_traits<std::shared_lock> {
 using concurrency::lock_traits;
 
 } // namespace shard
-
-#endif // SHARD_CONCURRENCY_LOCK_TRAITS_HPP

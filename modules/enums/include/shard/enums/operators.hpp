@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_ENUMS_OPERATORS_HPP
-#define SHARD_ENUMS_OPERATORS_HPP
+#pragma once
 
 #include "shard/enums/traits.hpp"
 
@@ -31,5 +30,3 @@ constexpr bool operator==(const std::underlying_type_t<E>& lhs, const E& rhs) no
 }
 
 } // namespace shard::enums::operators
-
-#endif // SHARD_ENUMS_OPERATORS_HPP

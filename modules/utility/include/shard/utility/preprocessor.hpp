@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_UTILITY_PREPROCESSOR_HPP
-#define SHARD_UTILITY_PREPROCESSOR_HPP
+#pragma once
 
 /// Extract the head of the argument list
 #define SHARD_VA_HEAD(x, ...) x
@@ -24,5 +23,3 @@
 
 /// Forwards the argument
 #define SHARD_FWD(x) std::forward<decltype(x)>(x)
-
-#endif // SHARD_UTILITY_PREPROCESSOR_HPP

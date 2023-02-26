@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_SQLITE_DATABASE_HPP
-#define SHARD_SQLITE_DATABASE_HPP
+#pragma once
 
 #include <shard/enums/flags.hpp>
 
@@ -61,5 +60,3 @@ private:
 SHARD_DECLARE_FLAG_OPERATORS(database::open_mode);
 
 } // namespace shard::sqlite
-
-#endif // SHARD_SQLITE_DATABASE_HPP

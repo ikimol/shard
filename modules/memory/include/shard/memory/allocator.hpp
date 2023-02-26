@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_MEMORY_ALLOCATOR_HPP
-#define SHARD_MEMORY_ALLOCATOR_HPP
+#pragma once
 
 #include <shard/utility/non_copyable.hpp>
 
@@ -71,5 +70,3 @@ using memory::delete_object;
 using memory::new_object;
 
 } // namespace shard
-
-#endif // SHARD_MEMORY_ALLOCATOR_HPP

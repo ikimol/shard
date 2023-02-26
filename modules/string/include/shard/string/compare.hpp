@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_STRING_COMPARE_HPP
-#define SHARD_STRING_COMPARE_HPP
+#pragma once
 
 #include "shard/string/ctype.hpp"
 
@@ -53,5 +52,3 @@ using string::iequals;
 using string::starts_with;
 
 } // namespace shard
-
-#endif // SHARD_STRING_COMPARE_HPP

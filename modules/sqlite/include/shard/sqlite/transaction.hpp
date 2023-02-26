@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_SQLITE_TRANSACTION_HPP
-#define SHARD_SQLITE_TRANSACTION_HPP
+#pragma once
 
 #include "shard/sqlite/database.hpp"
 
@@ -40,5 +39,3 @@ private:
 };
 
 } // namespace shard::sqlite
-
-#endif // SHARD_SQLITE_TRANSACTION_HPP

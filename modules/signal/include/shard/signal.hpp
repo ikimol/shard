@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_SIGNAL_HPP
-#define SHARD_SIGNAL_HPP
+#pragma once
 
 #include <shard/meta/type_traits.hpp>
 
@@ -251,5 +250,3 @@ inline void connection::set_enabled(bool enabled) {
 #ifndef signals
 #define signals public
 #endif
-
-#endif // SHARD_SIGNAL_HPP

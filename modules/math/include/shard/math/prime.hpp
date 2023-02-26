@@ -1,7 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#ifndef SHARD_MATH_PRIME_HPP
-#define SHARD_MATH_PRIME_HPP
+#pragma once
 
 #include <cstddef>
 
@@ -55,5 +54,3 @@ using math::is_prime;
 using math::next_prime;
 
 } // namespace shard
-
-#endif // SHARD_MATH_PRIME_HPP
