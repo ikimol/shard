@@ -5,6 +5,7 @@
 #include <cstdarg>
 #include <cstddef>
 #include <string>
+#include <string_view>
 
 #if defined(__GNUC__)
 #define SHARD_PRINTF_STYLE(n) __attribute__((format(__printf__, n, n + 1)))
@@ -16,7 +17,7 @@ namespace shard {
 namespace string {
 
 /// Create a string inside the buffer using a format and a number of arguments
-std::string sfmt(char* buffer, std::size_t size, const char* format, ...) SHARD_PRINTF_STYLE(3);
+std::string_view sfmt(char* buffer, std::size_t size, const char* format, ...) SHARD_PRINTF_STYLE(3);
 
 /// Create a string using a format and a number of arguments
 std::string fmt(const char* format, ...) SHARD_PRINTF_STYLE(1);

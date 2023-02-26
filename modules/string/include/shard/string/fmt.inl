@@ -5,7 +5,7 @@
 
 namespace shard::string {
 
-inline std::string sfmt(char* buffer, std::size_t size, const char* format, ...) {
+inline std::string_view sfmt(char* buffer, std::size_t size, const char* format, ...) {
     assert(size > 0);
     std::va_list args;
     va_start(args, format);
