@@ -5,8 +5,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace shard {
-namespace memory {
+namespace shard::memory {
 
 /// Cast an address to its unsigned integer representation
 inline std::uintptr_t as_uint(const void* ptr) {
@@ -90,5 +89,4 @@ bool is_aligned(const T* ptr) {
     return is_aligned(ptr, alignof(T));
 }
 
-} // namespace memory
-} // namespace shard
+} // namespace shard::memory
