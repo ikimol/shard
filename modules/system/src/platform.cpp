@@ -2,7 +2,7 @@
 
 #include "shard/system/platform.hpp"
 
-static constexpr const char* g_os_names[] = {"linux", "android", "mac", "ios", "windows"};
+static constexpr const char* g_os_names[] = {"linux", "android", "macos", "ios", "windows"};
 
 namespace shard::system {
 
