@@ -25,6 +25,7 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/concurrency_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/enums_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/expected_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/hash_map_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/math_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/memory_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/meta_test.cpp
