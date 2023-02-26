@@ -17,6 +17,11 @@ shard_add_example(concurrency.semaphore
                   MODULES shard::concurrency shard::random
                   )
 
+shard_add_example(concurrency.tbuf-value
+                  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/tbuf_value.cpp
+                  MODULES shard::concurrency
+                  )
+
 shard_add_example(concurrency.thread-pool
                   SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/thread_pool.cpp
                   MODULES shard::concurrency
