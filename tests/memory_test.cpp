@@ -1,5 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
+#include "helpers/counter.hpp"
 #include "helpers/widget.hpp"
 
 #include <shard/memory.hpp>
@@ -147,6 +148,40 @@ TEST_CASE("memory") {
             a.clear();
             REQUIRE(a.used_memory() == 0);
             REQUIRE(a.allocation_count() == 0);
+        }
+    }
+
+    SUBCASE("buffer_ptr") {
+        constexpr auto size = sizeof(test::widget);
+        std::byte buffer[size];
+
+        SUBCASE("constructor") {
+            SUBCASE("default") {
+                shard::buffer_ptr<test::widget> w(buffer);
+                REQUIRE(w->a == 0);
+                REQUIRE(w->b == 0);
+            }
+
+            SUBCASE("single argument") {
+                shard::buffer_ptr<test::widget> w(buffer, 42);
+                REQUIRE(w->a == 42);
+                REQUIRE(w->b == 42);
+            }
+
+            SUBCASE("multiple arguments") {
+                shard::buffer_ptr<test::widget> w(buffer, 3, 4);
+                REQUIRE(w->a == 3);
+                REQUIRE(w->b == 4);
+            }
+        }
+
+        SUBCASE("destructor") {
+            {
+                shard::buffer_ptr<test::counter> w(buffer);
+                REQUIRE(test::counter::default_constructor == 1);
+            }
+            REQUIRE(test::counter::destructor == 1);
+            test::counter::reset();
         }
     }
 
