@@ -154,7 +154,21 @@ public:
     // clang-format on
 
 public:
+    /// Default constructor
+    signal() = default;
+
+    /// Move constructor
+    signal(signal&& other) noexcept
+    : m_slots(std::move(other.m_slots)) {}
+
+    /// Destructor
     ~signal() { disconnect_all(); }
+
+    /// Move assignment operator
+    signal& operator=(signal&& other) noexcept {
+        m_slots = std::move(other.m_slots);
+        return *this;
+    }
 
     /// Get the number of connected slots
     std::size_t slot_count() const { return m_slots.size(); }
@@ -246,7 +260,3 @@ inline void connection::set_enabled(bool enabled) {
 }
 
 } // namespace shard
-
-#ifndef signals
-#define signals public
-#endif

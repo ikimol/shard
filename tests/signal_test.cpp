@@ -4,6 +4,8 @@
 
 #include <doctest.h>
 
+#include <utility>
+
 static int g_last_i = 0;
 static bool g_handled = false;
 
@@ -25,6 +27,31 @@ struct event_handler {
 };
 
 TEST_CASE("signal") {
+    SUBCASE("move") {
+        shard::signal<int> event;
+
+        SUBCASE("constructor") {
+            int last_i = 0;
+            event.connect([&last_i](int i) { last_i = i; });
+            REQUIRE(event.slot_count() == 1);
+
+            auto other = std::move(event);
+            REQUIRE(other.slot_count() == 1);
+            REQUIRE(event.slot_count() == 0); /* NOLINT */
+        }
+
+        SUBCASE("assignment") {
+            int last_i = 0;
+            event.connect([&last_i](int i) { last_i = i; });
+            REQUIRE(event.slot_count() == 1);
+
+            shard::signal<int> other;
+            other = std::move(event);
+            REQUIRE(other.slot_count() == 1);
+            REQUIRE(event.slot_count() == 0); /* NOLINT */
+        }
+    }
+
     SUBCASE("slots") {
         shard::signal<int> event;
 
