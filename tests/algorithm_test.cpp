@@ -54,6 +54,16 @@ TEST_CASE("algorithm") {
             }
         }
 
+        SUBCASE("get_value") {
+            std::map<std::string, int> map = {{"one", 1}, {"two", 2}, {"three", 3}};
+            auto value = shard::get_value(map, "one");
+            REQUIRE(value);
+            REQUIRE(value.value() == 1);
+
+            value = shard::get_value(map, "four");
+            REQUIRE_FALSE(value);
+        }
+
         SUBCASE("has_key") {
             std::map<std::string, int> map = {{"one", 1}, {"two", 2}, {"three", 3}};
             REQUIRE(shard::has_key(map, "one"));

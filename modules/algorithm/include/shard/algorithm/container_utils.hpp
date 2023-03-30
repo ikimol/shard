@@ -3,6 +3,7 @@
 #pragma once
 
 #include <algorithm>
+#include <optional>
 #include <set>
 #include <vector>
 
@@ -44,6 +45,18 @@ void erase(Container& c, const T& val) {
 template <typename Container, typename UnaryPred>
 void erase_if(Container& c, UnaryPred pred) {
     c.erase(std::remove_if(std::begin(c), std::end(c), pred), c.end());
+}
+
+/// Get the value if the key exists
+///
+/// \note Supports: map, unordered_map
+template <typename Container, typename T>
+auto get_value(Container& c, const T& key) -> std::optional<typename Container::mapped_type> {
+    auto it = c.find(key);
+    if (it != c.end()) {
+        return it->second;
+    }
+    return std::nullopt;
 }
 
 /// Check if the key exists
@@ -100,6 +113,7 @@ std::vector<typename Map::mapped_type> values_of(const Map& m) {
 
 using algorithm::erase;
 using algorithm::erase_if;
+using algorithm::get_value;
 using algorithm::has_key;
 using algorithm::insert_ordered;
 using algorithm::keys_of;
