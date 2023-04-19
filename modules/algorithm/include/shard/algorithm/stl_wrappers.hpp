@@ -3,9 +3,16 @@
 #pragma once
 
 #include <algorithm>
+#include <optional>
 
 namespace shard {
 namespace algorithm {
+namespace detail {
+
+template <typename Range>
+using difference_type = typename std::iterator_traits<decltype(std::begin(std::declval<Range>()))>::difference_type;
+
+} // namespace detail
 
 /// Convenience wrapper for 'std::distance'
 template <typename Range>
@@ -75,13 +82,13 @@ OutputIt copy_if(Range&& r, OutputIt it, UnaryPred pred) {
 
 /// Convenience wrapper for 'std::count'
 template <typename Range, typename T>
-auto count(Range&& r, const T& val) -> typename std::iterator_traits<decltype(std::begin(r))>::difference_type {
+auto count(Range&& r, const T& val) -> detail::difference_type<Range> {
     return std::count(std::begin(r), std::end(r), val);
 }
 
 /// Convenience wrapper for 'std::count_if'
 template <typename Range, typename UnaryPred>
-auto count_if(Range&& r, UnaryPred pred) -> typename std::iterator_traits<decltype(std::begin(r))>::difference_type {
+auto count_if(Range&& r, UnaryPred pred) -> detail::difference_type<Range> {
     return std::count_if(std::begin(r), std::end(r), pred);
 }
 
@@ -91,16 +98,13 @@ OutputIt transform(Range&& r, OutputIt it, UnaryPredicate pred) {
     return std::transform(std::begin(r), std::end(r), it, pred);
 }
 
-/// Check if the range contains the value
-template <typename Range, typename T>
-bool contains(Range&& r, const T& val) {
-    return find(r, val) != std::end(r);
-}
-
 /// Get the index of the value in the range
 template <typename Range, typename T>
-auto index_of(Range&& r, const T& val) -> typename std::iterator_traits<decltype(std::begin(r))>::difference_type {
-    return std::distance(std::begin(r), find(r, val));
+auto index_of(Range&& r, const T& val) -> std::optional<detail::difference_type<Range>> {
+    if (auto it = find(r, val); it != std::end(r)) {
+        return std::distance(std::begin(r), it);
+    }
+    return std::nullopt;
 }
 
 } // namespace algorithm
@@ -109,7 +113,6 @@ auto index_of(Range&& r, const T& val) -> typename std::iterator_traits<decltype
 
 using algorithm::all_of;
 using algorithm::any_of;
-using algorithm::contains;
 using algorithm::copy;
 using algorithm::copy_if;
 using algorithm::count;

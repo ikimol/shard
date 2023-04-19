@@ -63,7 +63,7 @@ auto get_value(Container& c, const T& key) -> std::optional<typename Container::
 ///
 /// \note Supports: map, unordered_map, set, unordered_set
 template <typename Container, typename T>
-bool has_key(Container&& c, const T& key) {
+bool contains(Container&& c, const T& key) {
     return c.find(key) != c.end();
 }
 
@@ -111,10 +111,10 @@ std::vector<typename Map::mapped_type> values_of(const Map& m) {
 
 // bring symbols into parent namespace
 
+using algorithm::contains;
 using algorithm::erase;
 using algorithm::erase_if;
 using algorithm::get_value;
-using algorithm::has_key;
 using algorithm::insert_ordered;
 using algorithm::keys_of;
 using algorithm::remove_unordered;

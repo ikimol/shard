@@ -64,14 +64,14 @@ TEST_CASE("algorithm") {
             REQUIRE_FALSE(value);
         }
 
-        SUBCASE("has_key") {
+        SUBCASE("contains") {
             std::map<std::string, int> map = {{"one", 1}, {"two", 2}, {"three", 3}};
-            REQUIRE(shard::has_key(map, "one"));
-            REQUIRE_FALSE(shard::has_key(map, "four"));
+            REQUIRE(shard::contains(map, "one"));
+            REQUIRE_FALSE(shard::contains(map, "four"));
 
             std::set<std::string> set = {"foo", "bar", "baz"};
-            REQUIRE(shard::has_key(set, "bar"));
-            REQUIRE_FALSE(shard::has_key(set, "quack"));
+            REQUIRE(shard::contains(set, "bar"));
+            REQUIRE_FALSE(shard::contains(set, "quack"));
         }
 
         SUBCASE("keys_of") {
@@ -80,9 +80,9 @@ TEST_CASE("algorithm") {
             shard::keys_of(map, std::inserter(keys, keys.end()));
 
             REQUIRE(keys.size() == 3);
-            REQUIRE(shard::has_key(keys, "one"));
-            REQUIRE(shard::has_key(keys, "two"));
-            REQUIRE(shard::has_key(keys, "three"));
+            REQUIRE(shard::contains(keys, "one"));
+            REQUIRE(shard::contains(keys, "two"));
+            REQUIRE(shard::contains(keys, "three"));
         }
 
         SUBCASE("values_of") {
@@ -91,9 +91,9 @@ TEST_CASE("algorithm") {
             shard::values_of(map, std::back_inserter(values));
 
             REQUIRE(values.size() == 3);
-            REQUIRE(shard::contains(values, 1));
-            REQUIRE(shard::contains(values, 2));
-            REQUIRE(shard::contains(values, 3));
+            REQUIRE(shard::index_of(values, 1).has_value());
+            REQUIRE(shard::index_of(values, 2).has_value());
+            REQUIRE(shard::index_of(values, 3).has_value());
         }
 
         SUBCASE("erase") {
@@ -155,16 +155,11 @@ TEST_CASE("algorithm") {
             vector.emplace_back(i);
         }
 
-        SUBCASE("contains") {
-            REQUIRE(shard::contains(array, 3));
-            REQUIRE(shard::contains(list, 3));
-            REQUIRE(shard::contains(set, 3));
-            REQUIRE(shard::contains(vector, 3));
-        }
-
         SUBCASE("index_of") {
-            REQUIRE(shard::index_of(list, 1) == 1);
-            REQUIRE(shard::index_of(vector, 1) == 1);
+            REQUIRE(shard::index_of(list, 1).has_value());
+            REQUIRE(shard::index_of(list, 1).value() == 1);
+            REQUIRE(shard::index_of(vector, 1).has_value());
+            REQUIRE(shard::index_of(vector, 1).value() == 1);
         }
     }
 }
