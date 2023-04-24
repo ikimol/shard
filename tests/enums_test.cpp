@@ -38,4 +38,43 @@ TEST_CASE("enums") {
         REQUIRE(shard::to_underlying(side::right) == 4);
         REQUIRE(shard::to_underlying(side::bottom) == 8);
     }
+
+    SUBCASE("enum_set") {
+        enum class side { left, top, right, bottom };
+        using padding = shard::enum_set<side, 4>;
+
+        padding sides;
+        REQUIRE(sides.none());
+
+        sides = {side::left, side::top};
+        REQUIRE(sides.test(side::left));
+        REQUIRE(sides.test(side::top));
+        REQUIRE_FALSE(sides.test(side::right));
+        REQUIRE_FALSE(sides.test(side::bottom));
+
+        sides.set_all();
+        REQUIRE(sides.all());
+
+        SUBCASE("operations") {
+            padding lhs;
+            lhs.set(side::left);
+            lhs.set(side::top);
+
+            padding rhs;
+            rhs.set(side::right);
+            rhs.set(side::bottom);
+
+            REQUIRE(lhs.union_with(rhs).all());
+            REQUIRE(lhs.intersection_with(rhs).none());
+
+            rhs.set(side::left);
+            rhs.set(side::bottom, false);
+            auto diff = rhs.subtracting(lhs);
+            REQUIRE(diff.any());
+            REQUIRE(diff == side::right);
+
+            REQUIRE(diff.is_subset_of(rhs));
+            REQUIRE_FALSE(diff.is_subset_of(lhs));
+        }
+    }
 }

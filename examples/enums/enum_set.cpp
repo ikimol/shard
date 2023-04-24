@@ -9,7 +9,7 @@ enum class target : char { player, enemy, bullet };
 int main(int /* argc */, char* /* argv */[]) {
     std::cout << "sizeof(target): " << sizeof(target) << '\n';
 
-    shard::enum_set<target> targets;
+    shard::enum_set<target, 3> targets;
     std::cout << "count: " << targets.count() << '\n';
 
     targets.set_all();

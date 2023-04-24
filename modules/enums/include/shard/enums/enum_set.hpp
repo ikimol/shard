@@ -8,11 +8,8 @@
 namespace shard {
 namespace enums {
 
-template <typename E>
+template <typename E, std::size_t N>
 class enum_set {
-    friend bool operator==(const enum_set<E>&, const enum_set<E>&);
-    friend bool operator!=(const enum_set<E>&, const enum_set<E>&);
-
 private:
     using value_type = E;
     using underlying_type = std::underlying_type_t<E>;
@@ -101,18 +98,21 @@ public:
 
     iterator begin() const { return iterator(*this, next_bit(0)); }
 
-    iterator end() const { return iterator(*this, bit_count); }
+    iterator end() const { return iterator(*this, N); }
+
+    bool operator==(const enum_set<E, N>& other) const { return m_bits == other.m_bits; }
+
+    bool operator!=(const enum_set<E, N>& other) const { return m_bits != other.m_bits; }
+
+    bool operator==(E other) const { return m_bits.count() == 1 && m_bits.test(to_index(other)); }
 
 private:
-    static constexpr underlying_type bit_count = sizeof(value_type) * 8;
-
-private:
-    constexpr explicit enum_set(std::bitset<bit_count> bits)
+    constexpr explicit enum_set(std::bitset<N> bits)
     : m_bits(bits) {}
 
     static constexpr inline underlying_type to_index(value_type value) {
         auto index = static_cast<underlying_type>(value);
-        assert(index < bit_count);
+        assert(index < (underlying_type)(N));
         return index;
     }
 
@@ -125,27 +125,15 @@ private:
     }
 
     underlying_type next_bit(underlying_type after) const {
-        while (after < bit_count && !m_bits.test(after)) {
+        while (after < (underlying_type)(N) && !m_bits.test(after)) {
             ++after;
         }
         return after;
     }
 
 private:
-    std::bitset<bit_count> m_bits;
+    std::bitset<N> m_bits;
 };
-
-// operators
-
-template <typename E>
-bool operator==(const enum_set<E>& lhs, const enum_set<E>& rhs) {
-    return lhs.m_bits == rhs.m_bits;
-}
-
-template <typename E>
-bool operator!=(const enum_set<E>& lhs, const enum_set<E>& rhs) {
-    return !(lhs == rhs);
-}
 
 } // namespace enums
 
