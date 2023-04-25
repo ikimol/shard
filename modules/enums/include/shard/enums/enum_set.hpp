@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "shard/meta/type_traits.hpp"
+
 #include <bitset>
 #include <cassert>
 #include <type_traits>
@@ -48,9 +50,13 @@ public:
     /// Default constructor
     constexpr enum_set() noexcept = default;
 
+    /// Construct with a number of values
+    template <typename... Args>
+    constexpr explicit enum_set(Args&&... args);
+
     /// Construct using a set of values
     constexpr enum_set(std::initializer_list<E> il)
-    : m_bits(to_index_set(il)) {}
+    : m_bits(to_index_set(il.begin(), il.end())) {}
 
     /// Check if the bit for the value is set
     bool test(value_type value) const { return m_bits.test(to_index(value)); }
@@ -123,10 +129,11 @@ private:
         return index;
     }
 
-    static constexpr inline underlying_type to_index_set(const std::initializer_list<E>& il) {
+    template <typename Iterator>
+    static constexpr inline underlying_type to_index_set(Iterator begin, Iterator end) {
         underlying_type result = 0;
-        for (auto value : il) {
-            result |= 1 << to_index(value);
+        for (auto it = begin; it != end; ++it) {
+            result |= 1 << to_index(*it);
         }
         return result;
     }
@@ -143,6 +150,14 @@ private:
 };
 
 // implementation
+
+template <typename E, std::size_t N>
+template <typename... Args>
+constexpr enum_set<E, N>::enum_set(Args&&... args) {
+    static_assert(are_same<E, Args...>::value, "mismatched value types");
+    E values[sizeof...(args)] = {std::forward<Args>(args)...};
+    m_bits = to_index_set(std::begin(values), std::end(values));
+}
 
 template <typename E, std::size_t N>
 enum_set<E, N>& enum_set<E, N>::set(value_type value, bool flag) {

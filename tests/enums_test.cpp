@@ -44,9 +44,9 @@ TEST_CASE("enums") {
         using padding = shard::enum_set<side, 4>;
 
         padding sides;
-        REQUIRE(sides.none());
+        sides.set(side::left);
+        sides.set(side::top);
 
-        sides = {side::left, side::top};
         REQUIRE(sides.test(side::left));
         REQUIRE(sides.test(side::top));
         REQUIRE_FALSE(sides.test(side::right));
@@ -54,6 +54,18 @@ TEST_CASE("enums") {
 
         sides.set_all();
         REQUIRE(sides.all());
+
+        SUBCASE("constructors") {
+            padding p1;
+            REQUIRE(p1.none());
+
+            padding p2({side::left});
+            REQUIRE(p2.test(side::left));
+
+            padding p3(side::right, side::bottom);
+            REQUIRE(p3.test(side::right));
+            REQUIRE(p3.test(side::bottom));
+        }
 
         SUBCASE("operations") {
             padding lhs;
