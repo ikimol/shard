@@ -72,17 +72,23 @@ public:
     /// Access a bit by the value
     auto operator[](value_type value) { return m_bits[to_index(value)]; }
 
-    /// Set every bit
-    void set_all() noexcept { m_bits.set(); }
-
-    /// Unset every bit
-    void clear() noexcept { m_bits.reset(); }
-
     /// Set the bit for the value
-    void set(value_type value, bool flag = true) { m_bits.set(to_index(value), flag); }
+    enum_set& set(value_type value, bool flag = true);
+
+    /// Set every bit
+    enum_set& set_all() noexcept;
 
     /// Unset the bit for the value
-    void reset(value_type value) { m_bits.reset(to_index(value)); }
+    enum_set& reset(value_type value);
+
+    /// Unset every bit
+    enum_set& clear() noexcept;
+
+    /// Set / unset the bit for the value
+    enum_set& toggle(value_type value);
+
+    /// Set / unset every bit
+    enum_set& toggle_all() noexcept;
 
     /// Get the union of the two sets
     enum_set union_with(const enum_set& other) const { return enum_set(m_bits | other.m_bits); }
@@ -134,6 +140,44 @@ private:
 private:
     std::bitset<N> m_bits;
 };
+
+// implementation
+
+template <typename E, std::size_t N>
+enum_set<E, N>& enum_set<E, N>::set(value_type value, bool flag) {
+    m_bits.set(to_index(value), flag);
+    return *this;
+}
+
+template <typename E, std::size_t N>
+enum_set<E, N>& enum_set<E, N>::set_all() noexcept {
+    m_bits.set();
+    return *this;
+}
+
+template <typename E, std::size_t N>
+enum_set<E, N>& enum_set<E, N>::reset(value_type value) {
+    m_bits.reset(to_index(value));
+    return *this;
+}
+
+template <typename E, std::size_t N>
+enum_set<E, N>& enum_set<E, N>::clear() noexcept {
+    m_bits.reset();
+    return *this;
+}
+
+template <typename E, std::size_t N>
+enum_set<E, N>& enum_set<E, N>::toggle(value_type value) {
+    m_bits.flip(to_index(value));
+    return *this;
+}
+
+template <typename E, std::size_t N>
+enum_set<E, N>& enum_set<E, N>::toggle_all() noexcept {
+    m_bits.flip();
+    return *this;
+}
 
 } // namespace enums
 
