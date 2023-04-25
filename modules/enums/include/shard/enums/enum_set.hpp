@@ -3,6 +3,7 @@
 #pragma once
 
 #include <bitset>
+#include <cassert>
 #include <type_traits>
 
 namespace shard {
