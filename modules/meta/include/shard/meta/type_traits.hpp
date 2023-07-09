@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <functional>
 #include <tuple>
 #include <type_traits>
 
@@ -79,24 +80,45 @@ template <typename T>
 struct is_integer : detail::is_integer_impl<std::remove_cv_t<T>> {};
 
 template <typename T>
+inline constexpr bool is_integer_v = is_integer<T>::value;
+
+template <typename T>
 struct is_bool : std::is_same<std::remove_cv_t<T>, bool> {};
 
 template <typename T>
-struct is_numeric : std::bool_constant<is_integer<T>::value || std::is_floating_point<T>::value> {};
+inline constexpr bool is_bool_v = is_bool<T>::value;
+
+template <typename T>
+struct is_numeric : std::bool_constant<is_integer_v<T> || std::is_floating_point_v<T>> {};
+
+template <typename T>
+inline constexpr bool is_numeric_v = is_numeric<T>::value;
 
 template <typename S, typename T>
 struct is_streamable : std::bool_constant<detail::is_streamable_impl<S, T>::value> {};
+
+template <typename S, typename T>
+inline constexpr bool is_streamable_v = is_streamable<S, T>::value;
 
 template <typename T>
 struct has_begin_end : std::bool_constant<detail::has_begin_end_impl<T>::value> {};
 
 template <typename T>
+inline constexpr bool has_begin_end_v = has_begin_end<T>::value;
+
+template <typename T>
 struct has_key_value_pair : std::bool_constant<detail::has_key_value_pair_impl<T>::value> {};
+
+template <typename T>
+inline constexpr bool has_key_value_pair_v = has_key_value_pair<T>::value;
 
 // is_empty
 
 template <typename... Args>
 struct is_empty : std::bool_constant<sizeof...(Args) == 0> {};
+
+template <typename... Args>
+inline constexpr bool is_empty_v = is_empty<Args...>::value;
 
 // are_same
 
@@ -106,31 +128,51 @@ struct are_same : std::true_type {};
 template <typename T, typename U, typename... Args>
 struct are_same<T, U, Args...> : std::bool_constant<std::is_same<T, U>::value && are_same<T, Args...>::value> {};
 
+template <typename... Args>
+inline constexpr bool are_same_v = are_same<Args...>::value;
+
+// unqualified
+
+template <typename T>
+using unqualified_t = std::remove_cv_t<std::remove_reference_t<T>>;
+
 // operators
 
 template <typename T>
-using not_type = std::bool_constant<!T::value>;
+using not_t = std::bool_constant<!T::value>;
+
+template <typename T>
+inline constexpr bool not_v = not_t<T>::value;
 
 template <typename Condition, typename Then, typename Else>
-using if_type = std::conditional_t<Condition::value, Then, Else>;
+using if_t = std::conditional_t<Condition::value, Then, Else>;
+
+template <typename Condition, typename Then, typename Else>
+inline constexpr bool if_v = if_t<Condition, Then, Else>::value;
 
 template <typename... Args>
-struct and_type : std::bool_constant<true> {};
+struct and_t : std::bool_constant<true> {};
 
 template <typename T, typename... Args>
-struct and_type<T, Args...> : if_type<T, and_type<Args...>, std::bool_constant<false>> {};
+struct and_t<T, Args...> : if_t<T, and_t<Args...>, std::bool_constant<false>> {};
 
 template <typename... Args>
-struct or_type : std::bool_constant<false> {};
+inline constexpr bool and_v = and_t<Args...>::value;
+
+template <typename... Args>
+struct or_t : std::bool_constant<false> {};
 
 template <typename T, typename... Args>
-struct or_type<T, Args...> : if_type<T, std::bool_constant<true>, or_type<Args...>> {};
+struct or_t<T, Args...> : if_t<T, std::bool_constant<true>, or_t<Args...>> {};
 
 template <typename... Args>
-using enable_if_all_t = std::enable_if_t<and_type<Args...>::value, int>;
+inline constexpr bool or_v = or_t<Args...>::value;
 
 template <typename... Args>
-using enable_if_any_t = std::enable_if_t<or_type<Args...>::value, int>;
+using enable_if_all_t = std::enable_if_t<and_t<Args...>::value, int>;
+
+template <typename... Args>
+using enable_if_any_t = std::enable_if_t<or_t<Args...>::value, int>;
 
 // disable_if
 
@@ -151,39 +193,66 @@ template <typename R, typename... Args> struct result_of<R(*)(Args...)> { using 
 // clang-format on
 
 template <typename T>
+using result_of_t = typename result_of<T>::type;
+
+template <typename T>
 struct functor_traits : public functor_traits<decltype(&T::operator())> {};
 
 template <typename T, typename R, typename... Args>
 struct functor_traits<R (T::*)(Args...) const> {
     static constexpr auto arity = sizeof...(Args);
 
-    typedef R result_type;
+    using return_type = R;
     using args_type = std::tuple<Args...>;
+    using function_type = std::function<R(Args...)>;
 
     template <std::size_t N>
     using arg_type = typename std::tuple_element<N, args_type>::type;
 };
 
-template <typename T>
-using result_of_t = typename result_of<T>::type;
+template <typename R, typename... Args>
+struct functor_traits<R(Args...)> {
+    static constexpr auto arity = sizeof...(Args);
+
+    using return_type = R;
+    using args_type = std::tuple<Args...>;
+    using function_type = std::function<R(Args...)>;
+
+    template <std::size_t N>
+    using arg_type = typename std::tuple_element<N, args_type>::type;
+};
 
 } // namespace meta
 
 using meta::is_bool;
+using meta::is_bool_v;
 using meta::is_integer;
+using meta::is_integer_v;
 using meta::is_numeric;
+using meta::is_numeric_v;
 using meta::is_streamable;
+using meta::is_streamable_v;
 
 using meta::has_begin_end;
+using meta::has_begin_end_v;
 using meta::has_key_value_pair;
+using meta::has_key_value_pair_v;
 
 using meta::are_same;
+using meta::are_same_v;
 using meta::is_empty;
+using meta::is_empty_v;
 
-using meta::and_type;
-using meta::if_type;
-using meta::not_type;
-using meta::or_type;
+using meta::unqualified_t;
+
+using meta::and_t;
+using meta::and_v;
+using meta::if_t;
+using meta::if_v;
+using meta::not_t;
+using meta::not_v;
+using meta::or_t;
+using meta::or_v;
 
 using meta::enable_if_all_t;
 using meta::enable_if_any_t;
