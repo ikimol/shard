@@ -83,6 +83,14 @@ TEST_CASE("meta") {
             REQUIRE_FALSE(shard::is_streamable_v<std::ostream, Gizmo>);
         }
 
+        SUBCASE("is_specialization_of") {
+            REQUIRE(shard::is_specialization_of_v<std::optional<int>, std::optional>);
+            REQUIRE(shard::is_specialization_of_v<std::vector<int>, std::vector>);
+            REQUIRE(shard::is_specialization_of_v<std::unordered_map<int, bool>, std::unordered_map>);
+
+            REQUIRE_FALSE(shard::is_specialization_of_v<std::vector<int>, std::queue>);
+        }
+
         SUBCASE("has_begin_end") {
             REQUIRE(shard::has_begin_end_v<std::array<int, 3>>);
             REQUIRE(shard::has_begin_end_v<std::vector<int>>);
