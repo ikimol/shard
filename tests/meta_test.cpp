@@ -91,6 +91,14 @@ TEST_CASE("meta") {
             REQUIRE_FALSE(shard::is_specialization_of_v<std::vector<int>, std::queue>);
         }
 
+        SUBCASE("is_optional") {
+            REQUIRE(shard::is_optional_v<std::optional<int>>);
+            REQUIRE(shard::is_optional_v<std::optional<float>>);
+
+            REQUIRE_FALSE(shard::is_optional_v<int>);
+            REQUIRE_FALSE(shard::is_optional_v<std::nullopt_t>);
+        }
+
         SUBCASE("has_begin_end") {
             REQUIRE(shard::has_begin_end_v<std::array<int, 3>>);
             REQUIRE(shard::has_begin_end_v<std::vector<int>>);

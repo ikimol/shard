@@ -3,6 +3,7 @@
 #pragma once
 
 #include <functional>
+#include <optional>
 #include <tuple>
 #include <type_traits>
 
@@ -111,6 +112,12 @@ using is_specialization_of = detail::is_specialization_of_impl<std::remove_cv_t<
 
 template <typename T, template <typename...> class Template>
 inline constexpr bool is_specialization_of_v = is_specialization_of<std::remove_cv_t<T>, Template>::value;
+
+template <typename T>
+using is_optional = is_specialization_of<T, std::optional>;
+
+template <typename T>
+inline constexpr bool is_optional_v = is_optional<T>::value;
 
 template <typename T>
 struct has_begin_end : std::bool_constant<detail::has_begin_end_impl<T>::value> {};
@@ -242,6 +249,8 @@ using meta::is_integer;
 using meta::is_integer_v;
 using meta::is_numeric;
 using meta::is_numeric_v;
+using meta::is_optional;
+using meta::is_optional_v;
 using meta::is_specialization_of;
 using meta::is_specialization_of_v;
 using meta::is_streamable;
