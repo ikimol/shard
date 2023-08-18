@@ -80,5 +80,9 @@ TEST_CASE("math") {
         REQUIRE(shard::pct(5, 0, 10) == 0.5f);
         REQUIRE(shard::pct(10, 0, 10) == 1.f);
         REQUIRE(shard::pct(15, 0, 10) == 1.5f);
+
+        REQUIRE(shard::approx(1.f, 10.f / 10.f));
+        REQUIRE(shard::approx(1.f, 10.f / 10.000001f));
+        REQUIRE_FALSE(shard::approx(1.f, 10.f / 10.00001f));
     }
 }

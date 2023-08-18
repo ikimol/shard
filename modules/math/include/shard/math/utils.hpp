@@ -2,6 +2,10 @@
 
 #pragma once
 
+#include <cmath>
+#include <limits>
+#include <type_traits>
+
 namespace shard {
 namespace math {
 
@@ -37,10 +41,17 @@ constexpr float pct(T x, T min, T max) noexcept {
     return (x - min) / static_cast<float>(max - min);
 }
 
+/// Returns true if the given values are approximately equal
+template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
+constexpr bool approx(T a, T b) noexcept {
+    return std::fabs(a - b) <= std::fabs(a) * std::numeric_limits<T>::epsilon();
+}
+
 } // namespace math
 
 // bring symbols into parent namespace
 
+using math::approx;
 using math::clamp;
 using math::max;
 using math::min;
