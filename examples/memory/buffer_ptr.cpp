@@ -36,7 +36,7 @@ int main(int /* argc */, char* /* argv */[]) {
     std::byte buffer[size];
     {
         shard::buffer_ptr<widget> w(buffer, 42);
-        std::cout << "id: " << w->id() << '\n'
+        std::cout << "id: " << w->id() << '\n';
     }
     print(buffer);
 
