@@ -9,14 +9,20 @@
 
 namespace shard {
 namespace algorithm {
+namespace detail {
+
+template <typename T>
+using difference_type = typename std::iterator_traits<decltype(std::begin(std::declval<T>()))>::difference_type;
+
+} // namespace detail
 
 /// Insert a value into the container, keeping its order
 ///
 /// \note Supported containers: deque, list, map, set, string, vector
 template <typename Container, typename T>
-auto insert_ordered(Container& c, const T& val) -> decltype(std::begin(c)) {
-    auto it = std::lower_bound(std::begin(c), std::end(c), val);
-    return c.insert(it, val);
+auto insert_ordered(Container& c, const T& value) -> decltype(std::begin(c)) {
+    auto it = std::lower_bound(std::begin(c), std::end(c), value);
+    return c.insert(it, value);
 }
 
 /// Remove an iterator from the container, breaking its order
@@ -33,8 +39,8 @@ void remove_unordered(Container& c, Iterator it) {
 /// \note Supports: deque, list, map, unordered_map, string, set, unordered_set,
 ///                 vector
 template <typename Container, typename T>
-void erase(Container& c, const T& val) {
-    c.erase(std::remove(std::begin(c), std::end(c), val), c.end());
+void erase(Container& c, const T& value) {
+    c.erase(std::remove(std::begin(c), std::end(c), value), c.end());
 }
 
 /// Remove all occurrences of the values from the container that match the
@@ -42,9 +48,9 @@ void erase(Container& c, const T& val) {
 ///
 /// \note Supports: deque, list, map, unordered_map, string, set, unordered_set,
 ///                 vector
-template <typename Container, typename UnaryPred>
-void erase_if(Container& c, UnaryPred pred) {
-    c.erase(std::remove_if(std::begin(c), std::end(c), pred), c.end());
+template <typename Container, typename UnaryPredicate>
+void erase_if(Container& c, UnaryPredicate p) {
+    c.erase(std::remove_if(std::begin(c), std::end(c), p), c.end());
 }
 
 /// Get the value if the key exists
@@ -107,6 +113,15 @@ std::vector<typename Map::mapped_type> values_of(const Map& m) {
     return v;
 }
 
+/// Get the index of the value in the range
+template <typename Container, typename T>
+auto index_of(Container&& c, const T& value) -> std::optional<detail::difference_type<Container>> {
+    if (auto it = std::find(std::begin(c), std::end(c), value); it != std::end(c)) {
+        return std::distance(std::begin(c), it);
+    }
+    return std::nullopt;
+}
+
 } // namespace algorithm
 
 // bring symbols into parent namespace
@@ -119,5 +134,6 @@ using algorithm::insert_ordered;
 using algorithm::keys_of;
 using algorithm::remove_unordered;
 using algorithm::values_of;
+using algorithm::index_of;
 
 } // namespace shard
