@@ -3,7 +3,6 @@
 #pragma once
 
 #include <shard/algorithm/enumerate.hpp>
-#include <shard/algorithm/stl_wrappers.hpp>
 #include <shard/utility/hash_value.hpp>
 
 #include <array>
@@ -63,84 +62,18 @@ public:
     }
 
     /// Create a UUID from its string representation
-    static std::optional<uuid> from_string(const std::string& str) noexcept {
-        if (str.empty()) {
-            return std::nullopt;
-        }
-
-        std::size_t has_braces = 0;
-        if (str.front() == '{') {
-            has_braces = 1;
-        }
-        if (has_braces && str.back() != '}') {
-            return std::nullopt;
-        }
-
-        std::array<std::uint8_t, 16> data = {0};
-
-        bool first_digit = true;
-        std::size_t index = 0;
-
-        for (std::size_t i = has_braces; i < str.size() - has_braces; ++i) {
-            if (str[i] == '-') {
-                continue;
-            }
-
-            if (index >= 16 || !std::isxdigit(str[i])) {
-                return std::nullopt;
-            }
-
-            if (first_digit) {
-                data[index] = to_nibble(str[i]) << 4;
-                first_digit = false;
-            } else {
-                data[index] = data[index] | to_nibble(str[i]);
-                index++;
-                first_digit = true;
-            }
-        }
-
-        if (index < 16) {
-            return std::nullopt;
-        }
-
-        return uuid(data);
-    }
+    static std::optional<uuid> from_string(const std::string& str) noexcept;
 
     /// Check if every byte of the UUID is zero
     bool is_null() const {
-        return shard::all_of(m_data, [](std::uint8_t i) { return i == 0; });
+        return std::all_of(std::cbegin(m_data), std::cend(m_data), [](auto i) { return i == 0; });
     }
 
     /// Get the version of the UUID
-    version version() const {
-        if ((m_data[6] & 0xf0) == 0x10) {
-            return version::time_based;
-        } else if ((m_data[6] & 0xf0) == 0x20) {
-            return version::dce_security;
-        } else if ((m_data[6] & 0xf0) == 0x30) {
-            return version::name_based_md5;
-        } else if ((m_data[6] & 0xf0) == 0x40) {
-            return version::random_number_based;
-        } else if ((m_data[6] & 0xf0) == 0x50) {
-            return version::name_based_sha1;
-        } else {
-            return version::none;
-        }
-    }
+    version version() const;
 
     /// Get the variant of the UUID
-    variant variant() const {
-        if ((m_data[8] & 0x80) == 0x00) {
-            return variant::ncs;
-        } else if ((m_data[8] & 0xc0) == 0x80) {
-            return variant::rfc;
-        } else if ((m_data[8] & 0xe0) == 0xc0) {
-            return variant::microsoft;
-        } else {
-            return variant::reserved;
-        }
-    }
+    variant variant() const;
 
     /// Convert the UUID to its string representation
     std::string to_string() const {
@@ -188,6 +121,8 @@ private:
     alignas(8) std::array<value_type, 16> m_data = {0};
 };
 
+// operators
+
 inline void swap(uuid& lhs, uuid& rhs) noexcept {
     lhs.swap(rhs);
 }
@@ -203,6 +138,80 @@ inline bool operator==(const uuid& lhs, const uuid& rhs) noexcept {
 
 inline bool operator<(const uuid& lhs, const uuid& rhs) noexcept {
     return lhs.m_data < rhs.m_data;
+}
+
+// implementation
+
+inline std::optional<uuid> uuid::from_string(const std::string& str) noexcept {
+    if (str.empty()) {
+        return std::nullopt;
+    }
+
+    std::size_t has_braces = 0;
+    if (str.front() == '{') {
+        has_braces = 1;
+    }
+    if (has_braces && str.back() != '}') {
+        return std::nullopt;
+    }
+
+    std::array<std::uint8_t, 16> data = {0};
+
+    bool first_digit = true;
+    std::size_t index = 0;
+
+    for (std::size_t i = has_braces; i < str.size() - has_braces; ++i) {
+        if (str[i] == '-') {
+            continue;
+        }
+
+        if (index >= 16 || !std::isxdigit(str[i])) {
+            return std::nullopt;
+        }
+
+        if (first_digit) {
+            data[index] = to_nibble(str[i]) << 4;
+            first_digit = false;
+        } else {
+            data[index] = data[index] | to_nibble(str[i]);
+            index++;
+            first_digit = true;
+        }
+    }
+
+    if (index < 16) {
+        return std::nullopt;
+    }
+
+    return uuid(data);
+}
+
+inline enum uuid::version uuid::version() const {
+    if ((m_data[6] & 0xf0) == 0x10) {
+        return version::time_based;
+    } else if ((m_data[6] & 0xf0) == 0x20) {
+        return version::dce_security;
+    } else if ((m_data[6] & 0xf0) == 0x30) {
+        return version::name_based_md5;
+    } else if ((m_data[6] & 0xf0) == 0x40) {
+        return version::random_number_based;
+    } else if ((m_data[6] & 0xf0) == 0x50) {
+        return version::name_based_sha1;
+    } else {
+        return version::none;
+    }
+}
+
+inline enum uuid::variant uuid::variant() const {
+    if ((m_data[8] & 0x80) == 0x00) {
+        return variant::ncs;
+    } else if ((m_data[8] & 0xc0) == 0x80) {
+        return variant::rfc;
+    } else if ((m_data[8] & 0xe0) == 0xc0) {
+        return variant::microsoft;
+    } else {
+        return variant::reserved;
+    }
 }
 
 } // namespace shard
