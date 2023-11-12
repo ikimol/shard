@@ -19,8 +19,7 @@ public:
     using size_type = std::size_t;
 
 public:
-    mpsc_queue()
-    : m_capacity(t_capacity) {
+    mpsc_queue() {
         m_data = new std::byte[sizeof(value_type) * t_capacity];
         m_states = new std::atomic<bool>[t_capacity];
     }
@@ -95,7 +94,7 @@ public:
         auto value = std::move(*reinterpret_cast<value_type*>(&m_data[offset]));
         m_states[m_tail].store(false, std::memory_order_release);
 
-        if (++m_tail >= m_capacity) {
+        if (++m_tail >= t_capacity) {
             m_tail = 0;
         }
 
@@ -109,12 +108,12 @@ public:
 
     std::size_t size() const { return m_size.load(std::memory_order_relaxed); }
 
-    std::size_t capacity() const { return m_capacity; }
+    std::size_t capacity() const { return t_capacity; }
 
 private:
     bool is_full() {
-        auto old_size = m_size.fetch_add(1, std::memory_order_acquire);
-        if (old_size >= m_capacity) {
+        auto size = m_size.fetch_add(1, std::memory_order_acquire);
+        if (size >= t_capacity) {
             m_size.fetch_sub(1, std::memory_order_release);
             return true;
         }
@@ -123,7 +122,7 @@ private:
 
     size_type next_head() {
         auto head = m_head.fetch_add(1, std::memory_order_acquire);
-        if (head >= m_capacity) {
+        if (head >= t_capacity) {
             head = 0;
             m_head.store(1, std::memory_order_release);
         }
@@ -136,7 +135,6 @@ private:
     std::atomic<bool>* m_states = ATOMIC_VAR_INIT(nullptr);
 
     std::atomic<size_type> m_size = ATOMIC_VAR_INIT(0);
-    size_type m_capacity;
 
     std::atomic<size_type> m_head = ATOMIC_VAR_INIT(0);
     size_type m_tail = 0;

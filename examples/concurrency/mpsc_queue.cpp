@@ -59,8 +59,15 @@ void consumer() {
     }
 }
 
+void signal_handler(int) {
+    g_exit = true;
+}
+
 int main() {
+    std::signal(SIGTERM, signal_handler);
+
     std::vector<std::thread> threads;
+    threads.reserve(5);
     for (auto i = 0; i < 5; ++i) {
         threads.emplace_back(producer);
     }
