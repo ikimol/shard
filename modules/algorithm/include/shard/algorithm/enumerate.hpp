@@ -153,6 +153,8 @@ private:
 
 } // namespace detail
 
+/// Get an iterable wrapper for the given range that unpacks both the index
+/// and the value of the iterators.
 template <typename T>
 detail::range_enumerator<T> enumerate(T&& range) {
     return detail::range_enumerator<T>(std::forward<T>(range));
