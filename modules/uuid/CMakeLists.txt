@@ -5,7 +5,7 @@
 set(MODULE_NAME uuid)
 
 set(MODULE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/modules/uuid/include)
-set(MODULE_SOURCE_DIR ${PROJECT_SOURCE_DIR}/modules/uuid/src)
+set(MODULE_SRC_DIR ${PROJECT_SOURCE_DIR}/modules/uuid/src)
 
 set(PLATFORM_SPECIFIC_SOURCES "")
 set(PLATFORM_SPECIFIC_LIBS "")
@@ -13,14 +13,14 @@ set(PLATFORM_SPECIFIC_LIBS "")
 include(${PROJECT_SOURCE_DIR}/cmake/os.cmake)
 
 if (SHARD_OS_LINUX)       # Linux
-    list(APPEND PLATFORM_SPECIFIC_SOURCES ${MODULE_SOURCE_DIR}/linux/generator.cpp)
+    list(APPEND PLATFORM_SPECIFIC_SOURCES ${MODULE_SRC_DIR}/linux/generator.cpp)
     list(APPEND PLATFORM_SPECIFIC_LIBS -luuid)
 elseif (SHARD_OS_DARWIN)  # Apple
-    list(APPEND PLATFORM_SPECIFIC_SOURCES ${MODULE_SOURCE_DIR}/darwin/generator.cpp)
+    list(APPEND PLATFORM_SPECIFIC_SOURCES ${MODULE_SRC_DIR}/darwin/generator.cpp)
     include(${PROJECT_SOURCE_DIR}/cmake/macos.cmake)
     shard_find_frameworks(PLATFORM_SPECIFIC_LIBS CoreFoundation)
 elseif (SHARD_OS_WINDOWS) # Windows
-    list(APPEND PLATFORM_SPECIFIC_SOURCES ${MODULE_SOURCE_DIR}/win/generator.cpp)
+    list(APPEND PLATFORM_SPECIFIC_SOURCES ${MODULE_SRC_DIR}/win/generator.cpp)
 endif ()
 
 shard_add_static_library(${MODULE_NAME}
