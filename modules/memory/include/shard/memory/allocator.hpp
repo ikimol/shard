@@ -50,13 +50,13 @@ T* new_object(allocator& a, Args&&... args) {
     return new (a.allocate(sizeof(T), alignof(T))) T(std::forward<Args>(args)...);
 }
 
-template <typename T, std::enable_if_t<!std::is_trivially_destructible<T>::value>* = nullptr>
+template <typename T, std::enable_if_t<!std::is_trivially_destructible_v<T>>* = nullptr>
 void delete_object(allocator& a, T* object) {
     object->~T();
     a.deallocate(object);
 }
 
-template <typename T, std::enable_if_t<std::is_trivially_destructible<T>::value>* = nullptr>
+template <typename T, std::enable_if_t<std::is_trivially_destructible_v<T>>* = nullptr>
 void delete_object(allocator& a, T* object) {
     a.deallocate(object);
 }
