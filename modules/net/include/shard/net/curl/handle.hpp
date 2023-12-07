@@ -61,7 +61,7 @@ public:
 
     /// Get a piece of curl info in a type-safe manner
     template <CURLINFO t_info>
-    bool get_info(info_t<t_info>& out) {
+    bool get_info(info_t<t_info>& out) const {
         detail::curl_t<info_t<t_info>> tmp;
         auto code = curl_easy_getinfo(m_curl, t_info, &tmp);
         out = tmp;
@@ -70,7 +70,7 @@ public:
 
     /// Get a piece of curl info in a type-safe manner
     template <CURLINFO t_info>
-    std::optional<info_t<t_info>> get_info() {
+    std::optional<info_t<t_info>> get_info() const {
         info_t<t_info> value {};
         if (get_info<t_info>(value)) {
             return value;
@@ -79,7 +79,7 @@ public:
     }
 
     /// URL encode the given string
-    std::string escape(const std::string& string) {
+    std::string escape(const std::string& string) const {
         auto encoded = curl_easy_escape(m_curl, string.c_str(), (int)(string.size()));
         std::string result(encoded);
         curl_free(encoded);

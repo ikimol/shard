@@ -18,6 +18,12 @@ namespace detail {
 struct shared_state {
     using ptr = std::shared_ptr<shared_state>;
 
+    void invoke_callback() const {
+        if (callback) {
+            callback(*response);
+        }
+    }
+
     response_callback callback;
     std::unique_ptr<response> response;
 

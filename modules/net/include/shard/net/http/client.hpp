@@ -50,27 +50,27 @@ public:
     ///
     /// \return A future object to add a callback to the request or block until
     ///         the response is available or the request times out.
-    future send_request(request::ptr request) {
+    future send_request(request&& request) {
         auto state = std::make_shared<detail::shared_state>();
-        request->m_state = state;
+        request.m_state = state;
         m_requests.push(std::move(request));
-        return future {std::move(state)};
+        return future(std::move(state));
     }
 
 private:
     bool setup_curl_handle(version_t version) {
-        std::lock_guard<std::mutex> curl_lock(m_mutex);
+        std::lock_guard<mutex_type> curl_lock(m_mutex);
 
         bool result = m_curl.set_option<CURLOPT_HTTP_VERSION>(version);
         result = result && m_curl.set_option<CURLOPT_WRITEFUNCTION>(&client::write_callback);
         result = result && m_curl.set_option<CURLOPT_HEADERFUNCTION>(&client::write_callback);
-        result = result && m_curl.set_option<CURLOPT_TIMEOUT>(m_timeout);
-        result = result && m_curl.set_option<CURLOPT_CONNECTTIMEOUT>(m_connection_timeout);
 
         return result;
     }
 
     void reset_curl_handle() {
+        std::lock_guard<mutex_type> curl_lock(m_mutex);
+
         m_curl.set_option<CURLOPT_HTTPGET>(false);
         m_curl.set_option<CURLOPT_FOLLOWLOCATION>(true);
         m_curl.set_option<CURLOPT_POST>(false);
@@ -89,41 +89,53 @@ private:
         }
     }
 
-    void perform_request(request::ptr&& request) {
+    void perform_request(request&& request) {
         auto response = std::make_unique<http::response>();
 
-        std::lock_guard<std::mutex> curl_lock(m_mutex);
+        std::lock_guard<mutex_type> curl_lock(m_mutex);
 
         // setup the request
-        m_curl.set_option<CURLOPT_URL>(request->m_url);
-        m_curl.set_option<CURLOPT_WRITEDATA>(&response->m_data);
-        m_curl.set_option<CURLOPT_HEADERDATA>(&response->m_header);
+        bool setup_result = m_curl.set_option<CURLOPT_URL>(request.url());
+        setup_result = setup_result && m_curl.set_option<CURLOPT_WRITEDATA>(&response->m_data);
+        setup_result = setup_result && m_curl.set_option<CURLOPT_HEADERDATA>(&response->m_header);
+        setup_result = setup_result && m_curl.set_option<CURLOPT_TIMEOUT>(m_timeout);
+        setup_result = setup_result && m_curl.set_option<CURLOPT_CONNECTTIMEOUT>(m_connection_timeout);
+
+        if (!setup_result) {
+            return;
+        }
 
         // set the HTTP method
-        if (request->m_method == http::request::method_get) {
+        switch (request.method()) {
+        case request::method_get: {
             m_curl.set_option<CURLOPT_HTTPGET>(true);
             m_curl.set_option<CURLOPT_FOLLOWLOCATION>(true);
-        } else if (request->m_method == http::request::method_post) {
+        } break;
+        case request::method_head: {
+            m_curl.set_option<CURLOPT_NOBODY>(true);
+        } break;
+        case request::method_post: {
             m_curl.set_option<CURLOPT_POST>(true);
-            auto post_fields = make_post_fields_string(request);
+            auto post_fields = request.merge_post_fields(m_curl);
             m_curl.set_option<CURLOPT_POSTFIELDSIZE>(post_fields.size());
             m_curl.set_option<CURLOPT_COPYPOSTFIELDS>(post_fields);
-        } else if (request->m_method == http::request::method_head) {
-            m_curl.set_option<CURLOPT_NOBODY>(true);
-        } else if (request->m_method == http::request::method_put) {
+        } break;
+        case request::method_put: {
             m_curl.set_option<CURLOPT_PUT>(true);
-        } else if (request->m_method == http::request::method_delete) {
+        } break;
+        case request::method_delete: {
             m_curl.set_option<CURLOPT_CUSTOMREQUEST>("DELETE");
+        } break;
         }
 
         // set the request headers
-        auto& headers = request->m_headers;
+        curl::slist http_header;
+        auto& headers = request.headers();
         if (!headers.empty()) {
-            m_headers.clear();
-            for (auto& header : headers) {
-                m_headers.append(header);
+            for (auto& [_, header] : headers) {
+                http_header.append(header);
             }
-            m_curl.set_option<CURLOPT_HTTPHEADER>(m_headers);
+            m_curl.set_option<CURLOPT_HTTPHEADER>(http_header);
         }
 
         // perform the request
@@ -138,15 +150,12 @@ private:
             response->m_error = m_curl.error_msg();
         }
 
-        auto& state = request->m_state;
+        auto state = request.shared_state();
 
         {
             std::lock_guard<std::mutex> state_lock(state->mutex);
             state->response = std::move(response);
-            // invoke callback
-            if (state->callback) {
-                state->callback(*state->response);
-            }
+            state->invoke_callback();
         }
 
         // notify blocked threads
@@ -170,26 +179,17 @@ private:
         return total_size;
     }
 
-    std::string make_post_fields_string(const request::ptr& request) {
-        std::vector<std::string> post_fields;
-        post_fields.reserve(request->m_post_fields.size());
-        for (auto& [key, value] : request->m_post_fields) {
-            auto encoded_value = m_curl.escape(value);
-            auto entry = shard::fmt("%s=%s", key.c_str(), encoded_value.c_str());
-            post_fields.push_back(entry);
-        }
-        return shard::join(post_fields, "&");
-    }
+private:
+    using mutex_type = std::recursive_mutex;
 
 private:
     curl::handle m_curl;
-    curl::slist m_headers;
-    std::mutex m_mutex;
+    mutex_type m_mutex;
 
     std::size_t m_timeout = 0;
     std::size_t m_connection_timeout = 0;
 
-    shard::channel<request::ptr> m_requests;
+    shard::channel<request> m_requests;
 
     std::thread m_thread;
 };
