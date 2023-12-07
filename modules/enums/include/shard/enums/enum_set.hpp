@@ -52,7 +52,7 @@ public:
 
     /// Construct with a number of values
     template <typename... Args>
-    constexpr explicit enum_set(Args&&... args);
+    constexpr /* implicit */ enum_set(Args&&... args); /* NOLINT */
 
     /// Construct using a set of values
     constexpr enum_set(std::initializer_list<E> il)
