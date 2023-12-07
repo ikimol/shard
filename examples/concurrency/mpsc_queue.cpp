@@ -33,7 +33,7 @@ void producer() {
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         if (pushed) {
             {
-                std::lock_guard<std::mutex> lock(g_cout_mutex);
+                std::lock_guard lock(g_cout_mutex);
                 std::cout << '[';
                 print_as_hex(std::cout, std::this_thread::get_id());
                 std::cout << "] produced: " << g_value << '\n';
@@ -51,7 +51,7 @@ void consumer() {
             if (t.has_value()) {
                 auto value = t.value().value;
                 {
-                    std::lock_guard<std::mutex> lock(g_cout_mutex);
+                    std::lock_guard lock(g_cout_mutex);
                     std::cout << "consumed: " << value << '\n';
                 }
             }

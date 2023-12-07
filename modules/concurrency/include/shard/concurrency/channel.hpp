@@ -34,7 +34,7 @@ public:
         }
         // put the value on the queue
         {
-            std::lock_guard<std::mutex> lock(m_mutex);
+            std::lock_guard lock(m_mutex);
             m_queue.push(value);
         }
         // lock released before notifying
@@ -48,7 +48,7 @@ public:
         }
         // put the value on the queue
         {
-            std::lock_guard<std::mutex> lock(m_mutex);
+            std::lock_guard lock(m_mutex);
             m_queue.push(std::move(value));
         }
         // lock released before notifying
@@ -63,7 +63,7 @@ public:
         }
         // create the value in-place on the queue
         {
-            std::lock_guard<std::mutex> lock(m_mutex);
+            std::lock_guard lock(m_mutex);
             m_queue.emplace(std::forward<Args>(args)...);
         }
         // lock released before notifying
@@ -79,7 +79,7 @@ public:
     /// \return true if a value was retrieved, false if the channel was closed
     /// or if the queue is empty
     bool try_pop(value_type& out) {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard lock(m_mutex);
         if (!m_open || m_queue.empty()) {
             return false;
         }
@@ -95,7 +95,7 @@ public:
     /// \return An optional value with the result if a value was retrieved from
     /// the queue, nullopt otherwise
     std::optional<T> try_pop() {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard lock(m_mutex);
         if (!m_open || m_queue.empty()) {
             return std::nullopt;
         }
@@ -113,7 +113,7 @@ public:
     ///
     /// \return true if a value was retrieved, false if the channel was closed
     bool pop(value_type& out) {
-        std::unique_lock<std::mutex> lock(m_mutex);
+        std::unique_lock lock(m_mutex);
         // unblock if closed or there's something new on the queue
         m_cv.wait(lock, [this] { return !m_open || !m_queue.empty(); });
         if (!m_open) {
@@ -132,7 +132,7 @@ public:
     /// \return An optional value with the result if a value was retrieved from
     /// the queue, nullopt otherwise
     std::optional<T> pop() {
-        std::unique_lock<std::mutex> lock(m_mutex);
+        std::unique_lock lock(m_mutex);
         // unblock if closed or there's something new on the queue
         m_cv.wait(lock, [this] { return !m_open || !m_queue.empty(); });
         if (!m_open) {
@@ -145,20 +145,20 @@ public:
 
     /// Get number of items on the channel
     size_type size() const {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard lock(m_mutex);
         return m_queue.size();
     }
 
     /// Check if channel is empty
     bool is_empty() const {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::lock_guard lock(m_mutex);
         return m_queue.empty();
     }
 
     /// Clear the channel, removing everything from the queue
     void clear() {
         {
-            std::lock_guard<std::mutex> lock(m_mutex);
+            std::lock_guard lock(m_mutex);
             while (!m_queue.empty()) {
                 m_queue.pop();
             }

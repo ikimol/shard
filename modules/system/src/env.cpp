@@ -31,7 +31,7 @@ std::map<std::string, std::string>& env_variables() {
 } // namespace detail
 
 bool has(const std::string& key) {
-    std::lock_guard<std::mutex> lock(detail::env_mutex());
+    std::lock_guard lock(detail::env_mutex());
     try {
 #if defined(SHARD_WINDOWS)
         std::size_t size;
@@ -49,7 +49,7 @@ bool has(const std::string& key) {
 }
 
 std::optional<std::string> get(const std::string& key) {
-    std::lock_guard<std::mutex> lock(detail::env_mutex());
+    std::lock_guard lock(detail::env_mutex());
     try {
 #if defined(SHARD_WINDOWS)
         std::size_t size;
@@ -74,7 +74,7 @@ bool set(const std::string& key, const std::string& value, std::string* old_valu
             *old_value = *v;
         }
     }
-    std::lock_guard<std::mutex> lock(detail::env_mutex());
+    std::lock_guard lock(detail::env_mutex());
     try {
 #if defined(SHARD_WINDOWS)
         return ::_putenv_s(key.c_str(), value.c_str()) == 0;
@@ -92,7 +92,7 @@ bool unset(const std::string& key, std::string* old_value) {
             *old_value = *v;
         }
     }
-    std::lock_guard<std::mutex> lock(detail::env_mutex());
+    std::lock_guard lock(detail::env_mutex());
     try {
 #if defined(SHARD_WINDOWS)
         return ::_putenv_s(key.c_str(), "") == 0;

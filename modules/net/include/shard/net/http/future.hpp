@@ -15,7 +15,7 @@ class future {
 public:
     /// Get the response by blocking the calling thread until available
     const http::response& get() {
-        std::unique_lock<std::mutex> lock(m_state->mutex);
+        std::unique_lock lock(m_state->mutex);
         // unblock when the state has the response
         m_state->cv.wait(lock, [this] { return m_state->response != nullptr; });
         return *(m_state->response);
@@ -25,7 +25,7 @@ public:
     ///
     /// \note This does not block the calling thread
     void then(response_callback callback) {
-        std::lock_guard<std::mutex> lock(m_state->mutex);
+        std::lock_guard lock(m_state->mutex);
         m_state->callback = std::move(callback);
     }
 

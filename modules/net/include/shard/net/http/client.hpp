@@ -153,7 +153,7 @@ private:
         auto state = request.shared_state();
 
         {
-            std::lock_guard<std::mutex> state_lock(state->mutex);
+            std::lock_guard state_lock(state->mutex);
             state->response = std::move(response);
             state->invoke_callback();
         }
