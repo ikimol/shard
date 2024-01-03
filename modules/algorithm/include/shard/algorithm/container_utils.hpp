@@ -131,10 +131,10 @@ using algorithm::contains;
 using algorithm::erase;
 using algorithm::erase_if;
 using algorithm::get_value;
+using algorithm::index_of;
 using algorithm::insert_ordered;
 using algorithm::keys_of;
 using algorithm::remove_unordered;
 using algorithm::values_of;
-using algorithm::index_of;
 
 } // namespace shard
