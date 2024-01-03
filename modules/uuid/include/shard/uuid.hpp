@@ -5,6 +5,7 @@
 #include <shard/algorithm/enumerate.hpp>
 #include <shard/utility/hash_value.hpp>
 
+#include <algorithm>
 #include <array>
 #include <cassert>
 #include <cctype>

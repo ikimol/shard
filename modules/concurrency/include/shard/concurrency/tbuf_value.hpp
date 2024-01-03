@@ -4,6 +4,7 @@
 
 #include <atomic>
 #include <cstdint>
+#include <utility>
 
 namespace shard {
 namespace concurrency {
