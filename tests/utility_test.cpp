@@ -1,9 +1,11 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
 #include <shard/utility/defer.hpp>
+#include <shard/utility/exception_guard.hpp>
 #include <shard/utility/hash_value.hpp>
 #include <shard/utility/lazy.hpp>
 
+#include <stdexcept>
 #include <string>
 
 #include <doctest.h>
@@ -15,6 +17,30 @@ TEST_CASE("utility") {
             auto _ = shard::defer([&] { called = true; });
         }
         REQUIRE(called);
+    }
+
+    SUBCASE("exception_guard") {
+        bool did_rollback = false;
+
+        SUBCASE("throw") {
+            {
+                auto guard = shard::make_exception_guard([&] { did_rollback = true; });
+                try {
+                    throw std::runtime_error("test error");
+                } catch (std::exception& e) {}
+            }
+            REQUIRE(did_rollback);
+        }
+
+        SUBCASE("nothrow") {
+            {
+                auto guard = shard::make_exception_guard([&] { did_rollback = true; });
+                try {
+                    guard.dismiss();
+                } catch (std::exception& e) {}
+            }
+            REQUIRE_FALSE(did_rollback);
+        }
     }
 
     SUBCASE("hashing") {
