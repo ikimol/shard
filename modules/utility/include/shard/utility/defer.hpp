@@ -2,28 +2,28 @@
 
 #pragma once
 
-#include "shard/utility/non_copyable.hpp"
-#include "shard/utility/preprocessor.hpp"
-
 #include <utility>
 
 namespace shard {
 namespace utility {
 
 template <typename F>
-class deferred_function : private utility::non_copyable {
+class deferred_function {
 public:
     using function_type = F;
 
 public:
-    explicit deferred_function(function_type fn) noexcept
-    : m_function(std::move(fn)) {}
+    deferred_function() = delete;
 
-    deferred_function(deferred_function&& other) noexcept
+    explicit deferred_function(function_type fn) noexcept
+    : m_function(std::move(fn))
+    , m_invoke(true) {}
+
+    deferred_function(const deferred_function&) = delete;
+
+    deferred_function(deferred_function&& other) noexcept(std::is_nothrow_move_constructible_v<F>)
     : m_function(std::move(other.m_function))
     , m_invoke(std::exchange(other.m_invoke, false)) {}
-
-    deferred_function& operator=(deferred_function&&) = delete;
 
     ~deferred_function() noexcept {
         if (m_invoke) {
@@ -31,16 +31,12 @@ public:
         }
     }
 
+    deferred_function& operator=(const deferred_function&) = delete;
+    deferred_function& operator=(deferred_function&&) = delete;
+
 private:
     function_type m_function;
-    bool m_invoke = true;
-};
-
-struct deferred_function_helper {
-    template <typename F>
-    deferred_function<F> operator<<(F&& func) {
-        return deferred_function<F>(std::forward<F>(func));
-    }
+    bool m_invoke;
 };
 
 template <typename F>
@@ -55,5 +51,3 @@ deferred_function<F> defer(F&& func) noexcept {
 using utility::defer;
 
 } // namespace shard
-
-#define SHARD_DEFER() const auto SHARD_UNIQUE_ID(deferred) = shard::utility::deferred_function_helper() << [&]()
