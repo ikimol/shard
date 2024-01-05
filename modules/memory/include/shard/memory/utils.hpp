@@ -89,4 +89,10 @@ bool is_aligned(const T* ptr) {
     return is_aligned(ptr, alignof(T));
 }
 
+/// Creates an object at the given address initialized with the arguments
+template <typename T, typename... Args>
+constexpr T* construct_at(T* p, Args&&... args) {
+    return ::new (static_cast<void*>(p)) T(std::forward<Args>(args)...);
+}
+
 } // namespace shard::memory
