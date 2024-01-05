@@ -7,31 +7,16 @@
 include(${PROJECT_SOURCE_DIR}/cmake/add_target.cmake)
 include(${PROJECT_SOURCE_DIR}/cmake/export.cmake)
 
-add_subdirectory(algorithm)
-add_subdirectory(bit)
-add_subdirectory(concurrency)
-add_subdirectory(containers)
-add_subdirectory(enums)
-add_subdirectory(math)
-add_subdirectory(memory)
-add_subdirectory(meta)
-add_subdirectory(property)
-add_subdirectory(random)
-add_subdirectory(signal)
-add_subdirectory(string)
-add_subdirectory(system)
-add_subdirectory(utility)
-add_subdirectory(uuid)
+shard_list_subdirs(MODULE_DIRS ${CMAKE_CURRENT_LIST_DIR})
 
-# optional modules
-
-if (SHARD_BUILD_NET_MODULE)
-    add_subdirectory(net)
-endif ()
-
-if (SHARD_BUILD_SQLITE_MODULE)
-    add_subdirectory(sqlite)
-endif ()
+foreach (MODULE_DIR ${MODULE_DIRS})
+    string(TOUPPER "${MODULE_DIR}" MODULE_DIR_UPPER)
+    if (NOT ${SHARD_BUILD_${MODULE_DIR_UPPER}_MODULE})
+        message(STATUS "Skipping '${MODULE_DIR}' directory")
+        continue()
+    endif ()
+    add_subdirectory(${MODULE_DIR})
+endforeach ()
 
 # export all the targets
 
