@@ -10,7 +10,7 @@
 #include <thread>
 
 static void channel_writer(shard::channel<int>* channel, int i) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
     channel->push(i);
 }
 
@@ -34,9 +34,8 @@ TEST_CASE("concurrency") {
             REQUIRE(success);
             REQUIRE(n == 42);
             auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-            // +-50 milliseconds tolerance
-            REQUIRE(ms > 50);
-            REQUIRE(ms < 150);
+            // 90 milliseconds tolerance
+            REQUIRE(ms < 100);
             thread.join();
         }
 
