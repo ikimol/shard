@@ -176,12 +176,12 @@ TEST_CASE("memory") {
         }
 
         SUBCASE("destructor") {
+            test::counter::reset();
             {
                 shard::buffer_ptr<test::counter> w(buffer);
                 REQUIRE(test::counter::default_constructor == 1);
             }
             REQUIRE(test::counter::destructor == 1);
-            test::counter::reset();
         }
     }
 

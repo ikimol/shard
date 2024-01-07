@@ -104,6 +104,7 @@ TEST_CASE("array") {
     }
 
     SUBCASE("destructor") {
+        test::counter::reset();
         {
             shard::array<test::counter> array(allocator);
             array.emplace_back();
@@ -113,7 +114,6 @@ TEST_CASE("array") {
         REQUIRE(allocator.allocation_count() == 0);
 
         REQUIRE(test::counter::destructor == 1);
-        test::counter::reset();
     }
 
     SUBCASE("copy assignment") {
@@ -218,17 +218,17 @@ TEST_CASE("array") {
         }
 
         SUBCASE("non-trivially destructible") {
+            test::counter::reset();
             shard::array<test::counter> array(allocator);
             array.resize(10);
             REQUIRE(test::counter::default_constructor == 10);
             array.remove(array.begin(), array.end() - 5);
             REQUIRE(test::counter::destructor == 5);
         }
-
-        test::counter::reset();
     }
 
     SUBCASE("remove_last") {
+        test::counter::reset();
         shard::array<test::counter> array(allocator);
         array.emplace_back();
         REQUIRE_FALSE(array.is_empty());
@@ -236,7 +236,6 @@ TEST_CASE("array") {
         array.remove_last();
         REQUIRE(array.is_empty());
         REQUIRE(test::counter::destructor == 1);
-        test::counter::reset();
     }
 
     SUBCASE("clear") {
