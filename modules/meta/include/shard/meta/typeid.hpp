@@ -35,8 +35,9 @@ std::atomic<typeid_t> typespace<T>::s_counter = ATOMIC_VAR_INIT(0);
 
 } // namespace shard::meta
 
-#define __SHARD_TYPEID_1(T) shard::meta::typespace<shard::meta::detail::default_typespace>::id<T>()
-#define __SHARD_TYPEID_2(T, N) shard::meta::typespace<T>::id<N>()
+#define SHARD_INTERNAL_TYPEID_1(T) shard::meta::typespace<shard::meta::detail::default_typespace>::id<T>()
+#define SHARD_INTERNAL_TYPEID_2(T, N) shard::meta::typespace<T>::id<N>()
 
-#define __SHARD_TYPEID_SELECT(_1, _2, MACRO, ...) MACRO
-#define SHARD_TYPEID(...) __SHARD_TYPEID_SELECT(__VA_ARGS__, __SHARD_TYPEID_2, __SHARD_TYPEID_1)(__VA_ARGS__)
+#define SHARD_INTERNAL_TYPEID_SELECT(_1, _2, MACRO, ...) MACRO
+#define SHARD_TYPEID(...)                                                                                              \
+    SHARD_INTERNAL_TYPEID_SELECT(__VA_ARGS__, SHARD_INTERNAL_TYPEID_2, SHARD_INTERNAL_TYPEID_1)(__VA_ARGS__)
