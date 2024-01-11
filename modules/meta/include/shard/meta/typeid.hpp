@@ -5,35 +5,50 @@
 #include <atomic>
 #include <cstddef>
 
-namespace shard::meta {
+namespace shard {
+namespace meta {
 namespace detail {
 
 struct default_typespace {};
 
 } // namespace detail
 
-/// Represents the unique id of a type inside a typespace
-using typeid_t = std::size_t;
+/// Represents a unique ID for a type
+template <typename T>
+struct type_id {
+    /* implicit */ type_id(std::size_t value) /* NOLINT */
+    : value(value) {}
 
-/// Represents a family of type ids
-template <typename>
+    /* implicit */ operator std::size_t() const /* NOLINT */ { return value; }
+
+    const std::size_t value;
+};
+
+/// Represents a family of type IDs
+template <typename T>
 class typespace {
 public:
-    /// Get the unique id
+    /// Get the unique ID for a type
     template <typename>
-    static typeid_t id() {
+    static type_id<T> id() {
         static const auto id = s_counter++;
         return id;
     }
 
 private:
-    static std::atomic<typeid_t> s_counter;
+    static std::atomic<std::size_t> s_counter;
 };
 
 template <typename T>
-std::atomic<typeid_t> typespace<T>::s_counter = ATOMIC_VAR_INIT(0);
+std::atomic<std::size_t> typespace<T>::s_counter = ATOMIC_VAR_INIT(0);
 
-} // namespace shard::meta
+} // namespace meta
+
+// bring symbols into parent namespace
+
+using meta::type_id;
+
+} // namespace shard
 
 #define SHARD_INTERNAL_TYPEID_1(T) shard::meta::typespace<shard::meta::detail::default_typespace>::id<T>()
 #define SHARD_INTERNAL_TYPEID_2(T, N) shard::meta::typespace<T>::id<N>()
