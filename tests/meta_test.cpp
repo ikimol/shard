@@ -161,22 +161,17 @@ TEST_CASE("meta") {
     }
 
     SUBCASE("type_id") {
-        SUBCASE("constructor") {
-            shard::type_id<void> id(42);
-            REQUIRE(id.value == 42);
-        }
-
         SUBCASE("conversion") {
-            shard::type_id<void> id(42);
+            shard::type_id<void> id = SHARD_TYPEID(void, int);
             std::size_t value = id;
-            REQUIRE(value == 42);
+            REQUIRE(value == 0);
         }
 
         SUBCASE("default typespace") {
-            REQUIRE(SHARD_TYPEID(int).value == 0);
-            REQUIRE(SHARD_TYPEID(unsigned int).value == 1);
-            REQUIRE(SHARD_TYPEID(float).value == 2);
-            REQUIRE(SHARD_TYPEID(double).value == 3);
+            REQUIRE(SHARD_TYPEID(int).value() == 0);
+            REQUIRE(SHARD_TYPEID(unsigned int).value() == 1);
+            REQUIRE(SHARD_TYPEID(float).value() == 2);
+            REQUIRE(SHARD_TYPEID(double).value() == 3);
         }
 
         SUBCASE("separate typespaces") {

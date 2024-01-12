@@ -13,15 +13,28 @@ struct default_typespace {};
 
 } // namespace detail
 
+// forward declaration
+template <typename T>
+class typespace;
+
 /// Represents a unique ID for a type
 template <typename T>
-struct type_id {
+class type_id {
+    friend class typespace<T>;
+
+public:
+    /// Get the underlying value of the type ID
+    std::size_t value() const { return m_value; }
+
+    /// Conversion operator to the underlying value
+    /* implicit */ operator std::size_t() const /* NOLINT */ { return value(); }
+
+private:
     /* implicit */ type_id(std::size_t value) /* NOLINT */
-    : value(value) {}
+    : m_value(value) {}
 
-    /* implicit */ operator std::size_t() const /* NOLINT */ { return value; }
-
-    const std::size_t value;
+private:
+    std::size_t m_value;
 };
 
 /// Represents a family of type IDs
@@ -31,7 +44,7 @@ public:
     /// Get the unique ID for a type
     template <typename>
     static type_id<T> id() {
-        static const auto id = s_counter++;
+        static const type_id<T> id = s_counter++;
         return id;
     }
 
