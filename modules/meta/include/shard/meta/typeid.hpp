@@ -30,7 +30,7 @@ public:
     /* implicit */ operator std::size_t() const /* NOLINT */ { return value(); }
 
 private:
-    /* implicit */ type_id(std::size_t value) /* NOLINT */
+    explicit type_id(std::size_t value)
     : m_value(value) {}
 
 private:
