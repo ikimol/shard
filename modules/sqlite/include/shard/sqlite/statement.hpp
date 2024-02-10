@@ -57,7 +57,7 @@ public:
 
     /// Bind raw data
     void bind(int index, const memory::data& data) {
-        sqlite3_bind_blob(m_statement.get(), index, data.bytes, (int)(data.size), SQLITE_TRANSIENT);
+        sqlite3_bind_blob(m_statement.get(), index, data.bytes(), (int)(data.size()), SQLITE_TRANSIENT);
     }
 
     /// Bind an optional value as the value or null
@@ -222,8 +222,9 @@ private:
     }
 
     static void read_value(sqlite3_stmt* statement, int column_index, memory::data& out) {
-        out.bytes = reinterpret_cast<std::byte*>(const_cast<void*>(sqlite3_column_blob(statement, column_index)));
-        out.size = sqlite3_column_bytes(statement, column_index);
+        auto bytes = reinterpret_cast<const std::byte*>(sqlite3_column_blob(statement, column_index));
+        auto size = sqlite3_column_bytes(statement, column_index);
+        out = memory::data(bytes, size);
     }
 
     template <typename T>

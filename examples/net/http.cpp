@@ -8,9 +8,9 @@
 
 namespace http = shard::net::http;
 
-std::optional<std::string> data_to_string(const shard::memory::data& data) {
-    if (data.bytes) {
-        std::string s(reinterpret_cast<char*>(data.bytes), data.size);
+std::optional<std::string> data_to_string(const shard::memory::allocation& data) {
+    if (data.bytes()) {
+        std::string s(reinterpret_cast<const char*>(data.bytes()), data.size());
         shard::trim(s);
         shard::replace_all(s, "\r\n", "\n");
         return s;

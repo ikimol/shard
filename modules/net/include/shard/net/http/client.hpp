@@ -168,15 +168,13 @@ private:
     // callback function used by libcurl to collect response & header data
     static std::size_t write_callback(char* data, std::size_t size, std::size_t nmemb, void* user_data) {
         auto total_size = size * nmemb;
-        auto buffer = static_cast<memory::data*>(user_data);
-        auto ptr = std::realloc(buffer->bytes, buffer->size + total_size);
-        if (!ptr) {
-            return 0;
+        auto& buffer = *static_cast<memory::allocation*>(user_data);
+        auto current_size = buffer.size();
+        if (auto new_bytes = buffer.reallocate(current_size + total_size)) {
+            std::memcpy(&(new_bytes[current_size]), data, total_size); // write data
+            return total_size;
         }
-        buffer->bytes = reinterpret_cast<std::byte*>(ptr);
-        std::memcpy(&(buffer->bytes[buffer->size]), data, total_size);
-        buffer->size += total_size;
-        return total_size;
+        return 0;
     }
 
 private:
