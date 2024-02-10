@@ -2,30 +2,31 @@
 
 #pragma once
 
-#include <string_view>
 #include <utility>
 
 namespace shard {
 namespace memory {
 
-struct data {
-    /// Create empty data
+class data {
+public:
+    /// Create an empty data
     data() = default;
 
-    /// Create data with the given bytes and size
-    data(std::byte* bytes, std::size_t size)
-    : bytes(bytes)
-    , size(size) {}
+    /// Create a wrapper for data with the given bytes and size
+    data(const void* bytes, std::size_t size)
+    : m_bytes(bytes)
+    , m_size(size) {}
 
-    std::byte* bytes = nullptr;
-    std::size_t size = 0;
+    /// Get the bytes
+    const std::byte* bytes() const { return static_cast<const std::byte*>(m_bytes); }
+
+    /// Get the number of bytes
+    std::size_t size() const { return m_size; }
+
+private:
+    const void* m_bytes = nullptr;
+    std::size_t m_size = 0;
 };
-
-/// Get the contents of the buffer as a string view
-std::string_view to_string_view(const data& data) {
-    auto c_str = reinterpret_cast<const char*>(data.bytes);
-    return std::string_view {c_str, data.size};
-}
 
 } // namespace memory
 

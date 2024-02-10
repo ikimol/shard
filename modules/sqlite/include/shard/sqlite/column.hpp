@@ -62,16 +62,12 @@ public:
 
     std::string as_string() const {
         assert(is_string());
-        auto data = static_cast<const char*>(sqlite3_column_blob(m_statement.get(), m_index));
-        std::size_t length = sqlite3_column_bytes(m_statement.get(), m_index);
-        return std::string {data, length};
+        return reinterpret_cast<const char*>(sqlite3_column_text(m_statement.get(), m_index));
     }
 
     std::string_view as_string_view() const {
         assert(is_string());
-        auto data = static_cast<const char*>(sqlite3_column_blob(m_statement.get(), m_index));
-        std::size_t length = sqlite3_column_bytes(m_statement.get(), m_index);
-        return std::string_view {data, length};
+        return reinterpret_cast<const char*>(sqlite3_column_text(m_statement.get(), m_index));
     }
 
     const void* as_blob() const {

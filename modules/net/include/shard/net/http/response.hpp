@@ -5,7 +5,7 @@
 #include "shard/net/http/status.hpp"
 
 #include <shard/enums/traits.hpp>
-#include <shard/memory/data.hpp>
+#include <shard/memory/allocation.hpp>
 
 #include <optional>
 #include <string>
@@ -28,18 +28,18 @@ public:
     const std::optional<std::string>& error() const { return m_error; }
 
     /// Get the response headers
-    const memory::data& header() const { return m_header; }
+    const memory::allocation& header() const { return m_header; }
 
     /// Get the response data
-    const memory::data& data() const { return m_data; }
+    const memory::allocation& data() const { return m_data; }
 
 private:
     status_t m_status = status_t::unknown;
 
     std::optional<std::string> m_error;
 
-    memory::data m_header;
-    memory::data m_data;
+    memory::allocation m_header;
+    memory::allocation m_data;
 };
 
 } // namespace shard::net::http
