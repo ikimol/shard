@@ -59,8 +59,7 @@ void erase_if(Container& c, UnaryPredicate p) {
 /// \note Supports: map, unordered_map
 template <typename Container, typename T>
 auto get_value(Container& c, const T& key) -> std::optional<typename Container::mapped_type> {
-    auto it = c.find(key);
-    if (it != c.end()) {
+    if (auto it = c.find(key); it != c.end()) {
         return it->second;
     }
     return std::nullopt;

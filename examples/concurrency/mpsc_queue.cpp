@@ -47,9 +47,8 @@ void consumer() {
     while (!g_exit) {
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
         if (!g_queue.is_empty()) {
-            auto t = g_queue.pop();
-            if (t.has_value()) {
-                auto value = t.value().value;
+            if (auto w = g_queue.pop()) {
+                auto value = w->value;
                 {
                     std::lock_guard lock(g_cout_mutex);
                     std::cout << "consumed: " << value << '\n';

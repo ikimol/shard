@@ -130,8 +130,7 @@ private:
 
         // set the request headers
         curl::slist http_header;
-        auto& headers = request.headers();
-        if (!headers.empty()) {
+        if (auto& headers = request.headers(); !headers.empty()) {
             for (auto& [_, header] : headers) {
                 http_header.append(header);
             }

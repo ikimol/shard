@@ -230,8 +230,7 @@ public:
 
 protected:
     void disconnect(const std::shared_ptr<slot_base>& slot) final {
-        auto it = std::find(m_slots.begin(), m_slots.end(), slot);
-        if (it != m_slots.end()) {
+        if (auto it = std::find(m_slots.begin(), m_slots.end(), slot); it != m_slots.end()) {
             m_slots.erase(it);
         }
     }
