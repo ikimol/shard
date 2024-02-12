@@ -80,8 +80,7 @@ public:
     ///
     /// \return true if there's more rows to be processed, false otherwise
     bool step() {
-        auto r = do_step();
-        if ((r != SQLITE_ROW) && (r != SQLITE_DONE)) {
+        if (auto r = do_step(); (r != SQLITE_ROW) && (r != SQLITE_DONE)) {
             throw database_error(m_db.handle());
         }
         return m_row_available;
@@ -91,8 +90,7 @@ public:
     ///
     /// \return The number of updated rows
     int execute() {
-        auto r = do_step();
-        if (r != SQLITE_DONE) {
+        if (auto r = do_step(); r != SQLITE_DONE) {
             if (r == SQLITE_ROW) {
                 throw generic_error(r, "unexpected result");
             } else {
@@ -116,8 +114,7 @@ public:
         args_type arguments;
 
         do {
-            auto r = do_step();
-            if (r == SQLITE_ROW) {
+            if (auto r = do_step(); r == SQLITE_ROW) {
                 std::apply(read, arguments);
                 std::apply(fn, std::move(arguments));
             } else if (r == SQLITE_DONE) {

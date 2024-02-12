@@ -101,10 +101,12 @@ private:
     void parse() {
         // regex pattern from: https://www.ietf.org/rfc/rfc2396.txt
         static const std::regex uri_regex(R"(^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?)");
-        std::smatch groups;
 
-        auto match = std::regex_match(m_url, groups, uri_regex);
-        if (match && !groups.empty()) {
+        std::smatch groups;
+        if (auto match = std::regex_match(m_url, groups, uri_regex); match && !groups.empty()) {
+            // scheme and authority or path must be set
+            m_valid = (!m_scheme.empty() && !m_authority.empty()) || !m_path.empty();
+
             if (groups[2].matched) {
                 m_scheme = make_string_view(groups, 2);
             }
@@ -120,9 +122,9 @@ private:
             if (groups[9].matched) {
                 m_fragment = make_string_view(groups, 9);
             }
+        } else {
+            m_valid = false;
         }
-        // scheme and authority or path must be set
-        m_valid = match && ((!m_scheme.empty() && !m_authority.empty()) || !m_path.empty());
     }
 
 private:
