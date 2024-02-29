@@ -9,7 +9,7 @@
 namespace shard::concurrency {
 
 semaphore::semaphore(std::ptrdiff_t count) {
-    assert(count > 0);
+    assert(count >= 0);
     auto max = std::numeric_limits<std::ptrdiff_t>::max();
     m_handle = CreateSemaphoreW(nullptr, count, max, nullptr);
     assert(m_handle);

@@ -9,7 +9,7 @@
 namespace shard::concurrency {
 
 semaphore::semaphore(std::ptrdiff_t count) {
-    assert(count > 0);
+    assert(count >= 0);
     auto r = semaphore_create(mach_task_self(), &m_handle, SYNC_POLICY_FIFO, static_cast<int>(count));
     assert(r == KERN_SUCCESS);
     SHARD_UNUSED(r);
