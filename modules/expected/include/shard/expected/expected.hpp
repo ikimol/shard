@@ -15,6 +15,14 @@
 
 namespace shard {
 
+/// Tag type for constructing unexpected values
+struct unexpect_t {
+    explicit unexpect_t() = default;
+};
+
+/// Tag for constructing unexpected values
+inline constexpr unexpect_t unexpect {};
+
 template <typename T, typename E>
 class expected {
 public:
@@ -41,6 +49,18 @@ private:
                          std::negation<std::is_constructible<unexpected<E>, expected<T2, E2>>>,
                          std::negation<std::is_constructible<unexpected<E>, const expected<T2, E2>&>>,
                          std::negation<std::is_constructible<unexpected<E>, const expected<T2, E2>>>>;
+
+    template <typename T2>
+    using is_constructible_from = std::conjunction<std::negation<std::is_same<unqualified_t<T2>, std::in_place_t>>,
+                                                   std::negation<std::is_same<unqualified_t<T2>, expected>>,
+                                                   std::negation<is_unexpected<unqualified_t<T2>>>,
+                                                   std::is_constructible<T, T2>>;
+
+    template <typename T2>
+    using is_assignable_from = std::conjunction<std::negation<std::is_same<unqualified_t<T2>, std::in_place_t>>,
+                                                std::negation<std::is_same<unqualified_t<T2>, expected>>,
+                                                std::negation<is_unexpected<unqualified_t<T2>>>,
+                                                std::is_assignable<T&, T2>>;
 
 public:
     /// Default constructor
@@ -106,14 +126,24 @@ public:
     }
 
     /// Converting constructor for a value (non-error)
-    template <
-        typename T2 = T,
-        typename = std::enable_if_t<!std::is_same_v<shard::unqualified_t<T2>, std::in_place_t>
-                                    && !std::is_same_v<shard::unqualified_t<T2>, expected>
-                                    && !is_unexpected_v<shard::unqualified_t<T2>> && std::is_constructible_v<T2, T2>>>
+    template <typename T2 = T, typename = std::enable_if_t<is_constructible_from<T2>::value>>
     /* implicit */ expected(T2&& value) /* NOLINT */
     : m_has_value(true) {
         memory::construct_at(std::addressof(m_storage.value), std::forward<T2>(value));
+    }
+
+    /// Tagged constructor for an unexpected value
+    template <typename... Args, typename = std::enable_if_t<std::is_constructible_v<E, Args...>>>
+    explicit expected(unexpect_t, Args&&... args) noexcept
+    : m_has_value(false) {
+        memory::construct_at(std::addressof(m_storage.error), std::forward<Args>(args)...);
+    }
+
+    /// Tagged constructor for a value (non-error)
+    template <typename... Args, typename = std::enable_if_t<std::is_constructible_v<T, Args...>>>
+    explicit expected(std::in_place_t, Args&&... args) noexcept
+    : m_has_value(true) {
+        memory::construct_at(std::addressof(m_storage.value), std::forward<Args>(args)...);
     }
 
     /// Destructor
@@ -180,10 +210,7 @@ public:
     }
 
     /// Converting assignment operator for a value (non-error)
-    template <typename T2 = T,
-              typename = std::enable_if_t<!std::is_same_v<expected, shard::unqualified_t<T2>>
-                                          && !is_unexpected_v<shard::unqualified_t<T2>>
-                                          && std::is_constructible_v<T, T2> && std::is_assignable_v<T&, T2>>>
+    template <typename T2 = T, typename = std::enable_if_t<is_assignable_from<T2>::value>>
     expected& operator=(T2&& value) noexcept {
         if (m_has_value) {
             m_storage.value = std::forward<T2>(value);
@@ -248,26 +275,110 @@ public:
 
     /// Execute the provided function if a value is contained
     template <typename F>
-    auto and_then(F&& f) {
+    auto and_then(F&& f) const& {
         using U = unqualified_t<std::invoke_result_t<F, const T&>>;
         static_assert(is_expected_v<U>);
         static_assert(std::is_same_v<typename U::error_type, E>);
+
         if (m_has_value) {
             return std::invoke(std::forward<F>(f), m_storage.value);
+        } else {
+            return U(unexpect, m_storage.error);
         }
-        return U(unexpected(m_storage.error));
+    }
+
+    /// Execute the provided function if a value is contained
+    template <typename F>
+    auto and_then(F&& f) && {
+        using U = unqualified_t<std::invoke_result_t<F, T&&>>;
+        static_assert(is_expected_v<U>);
+        static_assert(std::is_same_v<typename U::error_type, E>);
+
+        if (m_has_value) {
+            return std::invoke(std::forward<F>(f), std::move(m_storage.value));
+        } else {
+            return U(unexpect, std::move(m_storage.error));
+        }
     }
 
     /// Execute the provided function if an error is contained
     template <typename F>
-    auto or_else(F&& f) {
+    auto or_else(F&& f) const& {
         using U = unqualified_t<std::invoke_result_t<F, const E&>>;
         static_assert(is_expected_v<U>);
         static_assert(std::is_same_v<typename U::value_type, T>);
+
         if (m_has_value) {
-            return U(m_storage.value);
+            return U(std::in_place, m_storage.value);
+        } else {
+            return std::invoke(std::forward<F>(f), m_storage.error);
         }
-        return std::invoke(std::forward<F>(f), m_storage.error);
+    }
+
+    /// Execute the provided function if an error is contained
+    template <typename F>
+    auto or_else(F&& f) && {
+        using U = unqualified_t<std::invoke_result_t<F, E&&>>;
+        static_assert(is_expected_v<U>);
+        static_assert(std::is_same_v<typename U::value_type, T>);
+
+        if (m_has_value) {
+            return U(std::in_place, std::move(m_storage.value));
+        } else {
+            return std::invoke(std::forward<F>(f), std::move(m_storage.error));
+        }
+    }
+
+    /// Execute the provided function if a value is contained
+    template <typename F>
+    auto transform(F&& f) const& {
+        using U = std::remove_cv_t<std::invoke_result_t<F&&, const T&>>;
+        using R = expected<U, E>;
+
+        if (m_has_value) {
+            return R(std::in_place, std::invoke(std::forward<F>(f), m_storage.value));
+        } else {
+            return R(unexpect, m_storage.error);
+        }
+    }
+
+    /// Execute the provided function if a value is contained
+    template <typename F>
+    auto transform(F&& f) && {
+        using U = std::remove_cv_t<std::invoke_result_t<F, T&&>>;
+        using R = expected<U, E>;
+
+        if (m_has_value) {
+            return R(std::in_place, std::invoke(std::forward<F>(f), std::move(m_storage.value)));
+        } else {
+            return R(unexpect, std::move(m_storage.error));
+        }
+    }
+
+    /// Execute the provided function if a value is contained
+    template <typename F>
+    auto transform_error(F&& f) const& {
+        using U = std::remove_cv_t<std::invoke_result_t<F&&, const E&>>;
+        using R = expected<T, U>;
+
+        if (m_has_value) {
+            return R(std::in_place, m_storage.value);
+        } else {
+            return R(unexpect, std::invoke(std::forward<F>(f), m_storage.error));
+        }
+    }
+
+    /// Execute the provided function if a value is contained
+    template <typename F>
+    auto transform_error(F&& f) && {
+        using U = std::remove_cv_t<std::invoke_result_t<F, E&&>>;
+        using R = expected<T, U>;
+
+        if (m_has_value) {
+            return R(std::in_place, std::move(m_storage.value));
+        } else {
+            return R(unexpect, std::invoke(std::forward<F>(f), std::move(m_storage.error)));
+        }
     }
 
     // equality
@@ -426,6 +537,17 @@ public:
         memory::construct_at(std::addressof(m_storage.error), std::move(ue.error()));
     }
 
+    /// Tagged constructor for an unexpected value
+    explicit expected(std::in_place_t) noexcept
+    : expected() {}
+
+    /// Tagged constructor for a value (non-error)
+    template <typename... Args>
+    explicit expected(unexpect_t, Args&&... args) noexcept
+    : m_has_value(false) {
+        memory::construct_at(std::addressof(m_storage.error), std::forward<Args>(args)...);
+    }
+
     /// Destructor
     ~expected() {
         if (!m_has_value) {
@@ -516,26 +638,110 @@ public:
 
     /// Execute the provided function if a value is contained
     template <typename F>
-    auto and_then(F&& f) {
+    auto and_then(F&& f) const& {
         using U = unqualified_t<std::invoke_result_t<F>>;
         static_assert(is_expected_v<U>);
         static_assert(std::is_same_v<typename U::error_type, E>);
+
         if (m_has_value) {
             return std::invoke(std::forward<F>(f));
+        } else {
+            return U(unexpect, m_storage.error);
         }
-        return U(unexpected(m_storage.error));
+    }
+
+    /// Execute the provided function if a value is contained
+    template <typename F>
+    auto and_then(F&& f) && {
+        using U = unqualified_t<std::invoke_result_t<F>>;
+        static_assert(is_expected_v<U>);
+        static_assert(std::is_same_v<typename U::error_type, E>);
+
+        if (m_has_value) {
+            return std::invoke(std::forward<F>(f));
+        } else {
+            return U(unexpect, std::move(m_storage.error));
+        }
     }
 
     /// Execute the provided function if an error is contained
     template <typename F>
-    auto or_else(F&& f) {
+    auto or_else(F&& f) const& {
         using U = unqualified_t<std::invoke_result_t<F, const E&>>;
         static_assert(is_expected_v<U>);
         static_assert(std::is_same_v<typename U::value_type, void>);
+
         if (m_has_value) {
             return U();
+        } else {
+            return std::invoke(std::forward<F>(f), m_storage.error);
         }
-        return std::invoke(std::forward<F>(f), m_storage.error);
+    }
+
+    /// Execute the provided function if an error is contained
+    template <typename F>
+    auto or_else(F&& f) && {
+        using U = unqualified_t<std::invoke_result_t<F, E&&>>;
+        static_assert(is_expected_v<U>);
+        static_assert(std::is_same_v<typename U::value_type, void>);
+
+        if (m_has_value) {
+            return U();
+        } else {
+            return std::invoke(std::forward<F>(f), std::move(m_storage.error));
+        }
+    }
+
+    /// Execute the provided function if a value is contained
+    template <typename F>
+    auto transform(F&& f) const& {
+        using U = std::remove_cv_t<std::invoke_result_t<F>>;
+        using R = expected<U, E>;
+
+        if (m_has_value) {
+            return R(std::in_place, std::forward<F>(f));
+        } else {
+            return R(unexpect, m_storage.error);
+        }
+    }
+
+    /// Execute the provided function if a value is contained
+    template <typename F>
+    auto transform(F&& f) && {
+        using U = std::remove_cv_t<std::invoke_result_t<F>>;
+        using R = expected<U, E>;
+
+        if (m_has_value) {
+            return R(std::in_place, std::forward<F>(f));
+        } else {
+            return R(unexpect, std::move(m_storage.error));
+        }
+    }
+
+    /// Execute the provided function if an error is contained
+    template <typename F>
+    auto transform_error(F&& f) const& {
+        using U = std::remove_cv_t<std::invoke_result_t<F&&, const E&>>;
+        using R = expected<void, U>;
+
+        if (m_has_value) {
+            return R();
+        } else {
+            return R(unexpect, std::invoke(std::forward<F>(f), m_storage.error));
+        }
+    }
+
+    /// Execute the provided function if an error is contained
+    template <typename F>
+    auto transform_error(F&& f) && {
+        using U = std::remove_cv_t<std::invoke_result_t<F, E&&>>;
+        using R = expected<void, U>;
+
+        if (m_has_value) {
+            return R();
+        } else {
+            return R(unexpect, std::invoke(std::forward<F>(f), std::move(m_storage.error)));
+        }
     }
 
     // equality
@@ -550,7 +756,7 @@ public:
         }
     }
 
-    /// Inquality with another expected
+    /// Inequality with another expected
     template <typename T2, typename E2, typename = std::enable_if_t<std::is_void_v<T2>>>
     friend bool operator!=(const expected& lhs, const expected<T2, E2>& rhs) {
         return !(lhs == rhs); /* NOLINT */

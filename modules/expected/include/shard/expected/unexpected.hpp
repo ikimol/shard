@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "shard/meta/type_traits.hpp"
+
 #include <type_traits>
 #include <utility>
 
@@ -16,7 +18,10 @@ public:
     /// Move constructor
     constexpr unexpected(unexpected&&) = default;
 
-    template <typename Error = E>
+    template <typename Error = E,
+              typename = std::enable_if_t<!std::is_same_v<unqualified_t<Error>, unexpected>
+                                          && !std::is_same_v<unqualified_t<Error>, std::in_place_t>
+                                          && std::is_constructible_v<E, Error>>>
     constexpr explicit unexpected(Error&& error) noexcept(std::is_nothrow_constructible_v<E, Error>)
     : m_error(std::forward<Error>(error)) {}
 

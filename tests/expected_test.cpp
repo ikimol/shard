@@ -189,6 +189,22 @@ TEST_CASE("expected") {
             succeed().or_else(handler);
             REQUIRE_FALSE(called);
         }
+
+        SUBCASE("transform") {
+            auto called = false;
+            auto handler = [&](int i) -> int {
+                called = true;
+                return i;
+            };
+
+            auto result = succeed(42).transform(handler);
+            REQUIRE(called);
+            REQUIRE(*result == 42);
+
+            called = false;
+            fail().transform(handler);
+            REQUIRE_FALSE(called);
+        }
     }
 
     SUBCASE("void") {
