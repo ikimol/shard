@@ -8,6 +8,7 @@
 
 #include <curl/curl.h>
 
+#include <cstdio>
 #include <optional>
 
 namespace shard::net::curl {
@@ -21,9 +22,7 @@ struct option;
 
 template <> struct option<CURLOPT_URL> { using type = url; };
 
-#if LIBCURL_VERSION_NUM >= 0x073E00
 template <> struct option<CURLOPT_HTTP_VERSION> { using type = http::version_t; };
-#endif
 
 template <> struct option<CURLOPT_FOLLOWLOCATION> { using type = bool; };
 template <> struct option<CURLOPT_CONNECT_ONLY> { using type = bool; };
@@ -49,7 +48,9 @@ template <> struct option<CURLOPT_CUSTOMREQUEST> { using type = std::optional<st
 template <> struct option<CURLOPT_HTTPHEADER> { using type = slist; };
 
 template <> struct option<CURLOPT_TIMEOUT> { using type = std::size_t; };
+template <> struct option<CURLOPT_TIMEOUT_MS> { using type = std::size_t; };
 template <> struct option<CURLOPT_CONNECTTIMEOUT> { using type = std::size_t; };
+template <> struct option<CURLOPT_CONNECTTIMEOUT_MS> { using type = std::size_t; };
 
 template <> struct option<CURLOPT_SSL_VERIFYPEER> { using type = bool; };
 template <> struct option<CURLOPT_SSL_VERIFYHOST> { using type = long; };
@@ -68,8 +69,16 @@ template <> struct option<CURLOPT_HEADERFUNCTION> { using type = curl_write_call
 template <> struct option<CURLOPT_HEADERDATA> { using type = void*; };
 
 template <> struct option<CURLOPT_NOPROGRESS> { using type = bool; };
+template <> struct option<CURLOPT_PROGRESSFUNCTION> { using type = curl_progress_callback; };
 template <> struct option<CURLOPT_XFERINFOFUNCTION> { using type = curl_xferinfo_callback; };
 template <> struct option<CURLOPT_XFERINFODATA> { using type = void*; };
+
+template <> struct option<CURLOPT_STDERR> { using type = FILE*; };
+template <> struct option<CURLOPT_VERBOSE> { using type = bool; };
+template <> struct option<CURLOPT_DEBUGFUNCTION> { using type = curl_debug_callback; };
+template <> struct option<CURLOPT_DEBUGDATA> { using type = void*; };
+
+template <> struct option<CURLOPT_PRIVATE> { using type = void*; };
 
 // clang-format on
 

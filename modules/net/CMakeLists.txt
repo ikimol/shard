@@ -11,6 +11,7 @@ shard_add_header_only_library(${MODULE_NAME} ${MODULE_INCLUDE_DIR})
 target_link_libraries(${MODULE_NAME} INTERFACE
                       shard::concurrency
                       shard::enums
+                      shard::expected
                       shard::memory
                       shard::string
                       # third party

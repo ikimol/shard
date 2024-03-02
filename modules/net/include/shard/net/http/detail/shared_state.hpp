@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "shard/net/http/result.hpp"
+
 #include <condition_variable>
 #include <functional>
 #include <memory>
@@ -9,9 +11,8 @@
 
 namespace shard::net::http {
 
-class response;
-
-using response_callback = std::function<void(const response&)>;
+using success_callback = std::function<void(const response&)>;
+using error_callback = std::function<void(const curl::error&)>;
 
 namespace detail {
 
@@ -19,13 +20,18 @@ struct shared_state {
     using ptr = std::shared_ptr<shared_state>;
 
     void invoke_callback() const {
-        if (callback) {
-            callback(*response);
+        if (result.has_value() && on_success) {
+            on_success(result.value());
+        } else if (on_error) {
+            on_error(result.error());
         }
     }
 
-    response_callback callback;
-    std::unique_ptr<response> response;
+    bool is_available = false;
+
+    success_callback on_success;
+    error_callback on_error;
+    result result;
 
     std::mutex mutex;
     std::condition_variable cv;

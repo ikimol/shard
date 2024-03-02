@@ -22,10 +22,7 @@ public:
 
     /// See if the request was successful by checking if its HTTP status code is
     /// in the 2xx range
-    bool did_succeed() const { return to_underlying(m_status) >= 200 && to_underlying(m_status) < 300; }
-
-    /// Get the curl error, if any
-    const std::optional<std::string>& error() const { return m_error; }
+    bool is_successful() const { return to_underlying(m_status) >= 200 && to_underlying(m_status) < 300; }
 
     /// Get the response headers
     const memory::allocation& header() const { return m_header; }
@@ -35,8 +32,6 @@ public:
 
 private:
     status_t m_status = status_t::unknown;
-
-    std::optional<std::string> m_error;
 
     memory::allocation m_header;
     memory::allocation m_data;

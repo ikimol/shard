@@ -10,6 +10,7 @@
 
 #include <shard/concurrency/channel.hpp>
 
+#include <chrono>
 #include <cstddef>
 #include <mutex>
 #include <thread>
@@ -20,7 +21,9 @@ class client {
 public:
     /// Default constructor that starts the worker thread
     explicit client(version_t version = version_t::http_2)
-    : m_thread(&client::worker_thread, this) {
+    : m_timeout(std::chrono::milliseconds(0))
+    , m_connection_timeout(std::chrono::milliseconds(0))
+    , m_thread(&client::worker_thread, this) {
         setup_curl_handle(version);
     };
 
@@ -31,16 +34,16 @@ public:
     }
 
     /// Get the request timeout
-    std::size_t timeout() const { return m_timeout; }
+    std::chrono::milliseconds timeout() const { return m_timeout; }
 
     /// Set the request timeout
-    void set_timeout(std::size_t value) { m_timeout = value; }
+    void set_timeout(std::chrono::milliseconds value) { m_timeout = value; }
 
     /// Get the connection timeout
-    std::size_t connection_timeout() const { return m_connection_timeout; }
+    std::chrono::milliseconds connection_timeout() const { return m_connection_timeout; }
 
     /// Set the connection timeout
-    void set_connection_timeout(std::size_t value) { m_connection_timeout = value; }
+    void set_connection_timeout(std::chrono::milliseconds value) { m_connection_timeout = value; }
 
     /// Send the HTTP request
     ///
@@ -50,7 +53,7 @@ public:
     ///
     /// \return A future object to add a callback to the request or block until
     ///         the response is available or the request times out.
-    future send_request(request&& request) {
+    [[nodiscard]] future send_request(request&& request) {
         auto state = std::make_shared<detail::shared_state>();
         request.m_state = state;
         m_requests.push(std::move(request));
@@ -59,7 +62,7 @@ public:
 
 private:
     bool setup_curl_handle(version_t version) {
-        std::lock_guard<mutex_type> curl_lock(m_mutex);
+        std::lock_guard curl_lock(m_mutex);
 
         bool result = m_curl.set_option<CURLOPT_HTTP_VERSION>(version);
         result = result && m_curl.set_option<CURLOPT_WRITEFUNCTION>(&client::write_callback);
@@ -69,7 +72,7 @@ private:
     }
 
     void reset_curl_handle() {
-        std::lock_guard<mutex_type> curl_lock(m_mutex);
+        std::lock_guard curl_lock(m_mutex);
 
         m_curl.set_option<CURLOPT_HTTPGET>(false);
         m_curl.set_option<CURLOPT_FOLLOWLOCATION>(true);
@@ -90,16 +93,16 @@ private:
     }
 
     void perform_request(request&& request) {
-        auto response = std::make_unique<http::response>();
+        http::response response;
 
-        std::lock_guard<mutex_type> curl_lock(m_mutex);
+        std::lock_guard curl_lock(m_mutex);
 
         // setup the request
         bool setup_result = m_curl.set_option<CURLOPT_URL>(request.url());
-        setup_result = setup_result && m_curl.set_option<CURLOPT_WRITEDATA>(&response->m_data);
-        setup_result = setup_result && m_curl.set_option<CURLOPT_HEADERDATA>(&response->m_header);
-        setup_result = setup_result && m_curl.set_option<CURLOPT_TIMEOUT>(m_timeout);
-        setup_result = setup_result && m_curl.set_option<CURLOPT_CONNECTTIMEOUT>(m_connection_timeout);
+        setup_result = setup_result && m_curl.set_option<CURLOPT_WRITEDATA>(&response.m_data);
+        setup_result = setup_result && m_curl.set_option<CURLOPT_HEADERDATA>(&response.m_header);
+        setup_result = setup_result && m_curl.set_option<CURLOPT_TIMEOUT_MS>(m_timeout.count());
+        setup_result = setup_result && m_curl.set_option<CURLOPT_CONNECTTIMEOUT_MS>(m_connection_timeout.count());
 
         if (!setup_result) {
             return;
@@ -140,20 +143,23 @@ private:
         // perform the request
         m_curl.perform();
 
-        // get information about the request
-
-        auto response_code = *m_curl.get_info<CURLINFO_RESPONSE_CODE>();
-        response->m_status = static_cast<http::status_t>(response_code);
+        http::result result;
 
         if (m_curl.error_code() != CURLE_OK) {
-            response->m_error = m_curl.error_msg();
+            result = shard::unexpected(curl::error(m_curl.error_code()));
+        } else if (auto status_code = m_curl.get_info<CURLINFO_RESPONSE_CODE>()) {
+            response.m_status = static_cast<http::status_t>(*status_code);
+            result = std::move(response);
+        } else { // this should never be the case
+            result = shard::unexpected(curl::error(CURLE_OK));
         }
 
         auto state = request.shared_state();
 
         {
             std::lock_guard state_lock(state->mutex);
-            state->response = std::move(response);
+            state->is_available = true;
+            state->result = std::move(result);
             state->invoke_callback();
         }
 
@@ -183,8 +189,8 @@ private:
     curl::handle m_curl;
     mutex_type m_mutex;
 
-    std::size_t m_timeout = 0;
-    std::size_t m_connection_timeout = 0;
+    std::chrono::milliseconds m_timeout;
+    std::chrono::milliseconds m_connection_timeout;
 
     shard::channel<request> m_requests;
 

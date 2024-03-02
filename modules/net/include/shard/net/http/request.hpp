@@ -33,6 +33,9 @@ public:
     };
 
 public:
+    /// Default constructor
+    request() = default;
+
     /// Create a new HTTP request
     explicit request(net::url&& url, method_t method = method_get)
     : m_url(std::move(url))
@@ -95,12 +98,47 @@ private:
 
 private:
     net::url m_url;
-    method_t m_method;
+    method_t m_method = method_get;
 
     header_map m_headers;
     post_fields m_post_fields;
 
     detail::shared_state::ptr m_state;
+};
+
+/// Factory class that builds a request
+class request_builder {
+public:
+    /// Set the URL
+    request_builder& with_url(net::url&& url) {
+        m_request.set_url(std::move(url));
+        return *this;
+    }
+
+    /// Set the HTTP request method
+    request_builder& with_method(request::method_t method) {
+        m_request.set_method(method);
+        return *this;
+    }
+
+    /// Add a single HTTP header
+    request_builder& with_header(const std::string& key, std::optional<std::string> value) {
+        m_request.set_header(key, std::move(value));
+        return *this;
+    }
+
+    /// Add a single post field
+    template <typename T>
+    request_builder& with_post_field(const std::string& key, T&& value) {
+        m_request.set_post_field(key, SHARD_FWD(value));
+        return *this;
+    }
+
+    /// Get the configured request
+    request&& build() { return std::move(m_request); }
+
+private:
+    request m_request;
 };
 
 } // namespace shard::net::http

@@ -68,11 +68,13 @@ template <> struct info<CURLINFO_SPEED_DOWNLOAD_T> { using type = curl_off_t; };
 template <> struct info<CURLINFO_HEADER_SIZE> { using type = long; };
 template <> struct info<CURLINFO_REQUEST_SIZE> { using type = long; };
 
+template <> struct info<CURLINFO_PRIVATE> { using type = long; };
+
 // clang-format on
 
 // convenience typedef
 
-template <CURLINFO t_info>
-using info_t = typename info<t_info>::type;
+template <CURLINFO Info>
+using info_t = typename info<Info>::type;
 
 } // namespace shard::net::curl

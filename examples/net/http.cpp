@@ -20,11 +20,23 @@ std::optional<std::string> data_to_string(const shard::memory::allocation& data)
 
 int main(int /* argc */, char* /* argv */[]) {
     http::client client;
-    auto request = http::request("https://www.example.com");
+    // clang-format off
+    auto request = http::request_builder()
+        .with_url("https://www.example.com")
+        .with_method(http::request::method_get)
+        .build();
+    // clang-format on
     auto future = client.send_request(std::move(request));
-    auto& response = future.get();
-    if (auto headers = data_to_string(response.header())) {
-        std::cout << *headers << '\n';
-    }
+    future.get()
+        .and_then([](http::response&& r) -> http::result {
+            if (auto headers = data_to_string(r.header())) {
+                std::cout << *headers << '\n';
+            }
+            return std::move(r);
+        })
+        .or_else([](shard::net::curl::error&& e) -> http::result {
+            std::cerr << "Request failed: " << e.message() << '\n';
+            return shard::unexpected(e);
+        });
     return 0;
 }

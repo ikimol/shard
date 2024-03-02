@@ -13,20 +13,36 @@ class future {
     friend class client;
 
 public:
-    /// Get the response by blocking the calling thread until available
-    const http::response& get() {
+    /// Wait for the result to be available
+    void wait() const {
         std::unique_lock lock(m_state->mutex);
-        // unblock when the state has the response
-        m_state->cv.wait(lock, [this] { return m_state->response != nullptr; });
-        return *(m_state->response);
+        // unblock when the state has the result
+        m_state->cv.wait(lock, [this] { return m_state->is_available; });
     }
 
-    /// Execute a function once the response is available
+    /// Get the result by blocking the calling thread until available
+    [[nodiscard]] http::result&& get() {
+        std::unique_lock lock(m_state->mutex);
+        // unblock when the state has the result
+        m_state->cv.wait(lock, [this] { return m_state->is_available; });
+        m_state->is_available = false;
+        return std::move(m_state->result);
+    }
+
+    /// Execute the callback with the response if the request succeeded
     ///
     /// \note This does not block the calling thread
-    void then(response_callback callback) {
+    void on_success(success_callback callback) {
         std::lock_guard lock(m_state->mutex);
-        m_state->callback = std::move(callback);
+        m_state->on_success = std::move(callback);
+    }
+
+    /// Execute the callback with the error if the request failed
+    ///
+    /// \note This does not block the calling thread
+    void on_error(error_callback callback) {
+        std::lock_guard lock(m_state->mutex);
+        m_state->on_error = std::move(callback);
     }
 
 private:
