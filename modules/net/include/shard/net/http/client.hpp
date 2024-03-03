@@ -67,6 +67,7 @@ private:
         bool result = m_curl.set_option<CURLOPT_HTTP_VERSION>(version);
         result = result && m_curl.set_option<CURLOPT_WRITEFUNCTION>(&client::write_callback);
         result = result && m_curl.set_option<CURLOPT_HEADERFUNCTION>(&client::write_callback);
+        result = result && m_curl.set_option<CURLOPT_XFERINFOFUNCTION>(&client::progress_callback);
 
         return result;
     }
@@ -84,6 +85,8 @@ private:
         m_curl.set_option<CURLOPT_COPYPOSTFIELDS>(std::nullopt);
         m_curl.set_option<CURLOPT_CUSTOMREQUEST>(std::nullopt);
         m_curl.set_option<CURLOPT_HTTPHEADER>(curl::slist {});
+        m_curl.set_option<CURLOPT_XFERINFODATA>(nullptr);
+        m_curl.set_option<CURLOPT_NOPROGRESS>(true);
     }
 
     void worker_thread() {
@@ -93,6 +96,8 @@ private:
     }
 
     void perform_request(request&& request) {
+        auto state = request.shared_state();
+
         http::response response;
 
         std::lock_guard curl_lock(m_mutex);
@@ -103,6 +108,12 @@ private:
         setup_result = setup_result && m_curl.set_option<CURLOPT_HEADERDATA>(&response.m_header);
         setup_result = setup_result && m_curl.set_option<CURLOPT_TIMEOUT_MS>(m_timeout.count());
         setup_result = setup_result && m_curl.set_option<CURLOPT_CONNECTTIMEOUT_MS>(m_connection_timeout.count());
+
+        // cancellation
+        if (request.is_cancellable()) {
+            setup_result = setup_result && m_curl.set_option<CURLOPT_XFERINFODATA>(state.get());
+            setup_result = setup_result && m_curl.set_option<CURLOPT_NOPROGRESS>(false);
+        }
 
         if (!setup_result) {
             return;
@@ -154,8 +165,6 @@ private:
             result = shard::unexpected(curl::error(CURLE_OK));
         }
 
-        auto state = request.shared_state();
-
         {
             std::lock_guard state_lock(state->mutex);
             state->is_available = true;
@@ -180,6 +189,17 @@ private:
             return total_size;
         }
         return 0;
+    }
+
+    // callback function used by libcurl to report the progress of requests
+    static int progress_callback(void* user_data,
+                                 curl_off_t /* dl_total */,
+                                 curl_off_t /* dl_current */,
+                                 curl_off_t /* ul_total */,
+                                 curl_off_t /* ul_current */) {
+        auto state = static_cast<detail::shared_state*>(user_data);
+        std::lock_guard lock(state->mutex);
+        return state->is_cancelled ? 1 : 0;
     }
 
 private:

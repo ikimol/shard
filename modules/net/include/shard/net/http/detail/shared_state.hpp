@@ -20,13 +20,16 @@ struct shared_state {
     using ptr = std::shared_ptr<shared_state>;
 
     void invoke_callback() const {
-        if (result.has_value() && on_success) {
-            on_success(result.value());
+        if (result.has_value()) {
+            if (on_success) {
+                on_success(result.value());
+            }
         } else if (on_error) {
             on_error(result.error());
         }
     }
 
+    bool is_cancelled = false;
     bool is_available = false;
 
     success_callback on_success;

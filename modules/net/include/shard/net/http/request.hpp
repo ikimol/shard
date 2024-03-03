@@ -53,6 +53,12 @@ public:
     /// Set the HTTP request method
     void set_method(method_t method) { m_method = method; }
 
+    /// Check if the request can be cancelled
+    bool is_cancellable() const { return m_cancellable; }
+
+    /// Make the request cancellable
+    void make_cancellable() { m_cancellable = true; }
+
     /// Add a single HTTP header
     void set_header(const std::string& key, std::optional<std::string> value) {
         if (key.empty()) {
@@ -99,6 +105,7 @@ private:
 private:
     net::url m_url;
     method_t m_method = method_get;
+    bool m_cancellable = false;
 
     header_map m_headers;
     post_fields m_post_fields;
@@ -131,6 +138,12 @@ public:
     template <typename T>
     request_builder& with_post_field(const std::string& key, T&& value) {
         m_request.set_post_field(key, SHARD_FWD(value));
+        return *this;
+    }
+
+    /// Make the request cancellable
+    request_builder& make_cancellable() {
+        m_request.make_cancellable();
         return *this;
     }
 

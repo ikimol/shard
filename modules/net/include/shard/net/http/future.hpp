@@ -13,6 +13,12 @@ class future {
     friend class client;
 
 public:
+    /// Cancel the ongoing request
+    void cancel() const {
+        std::lock_guard lock(m_state->mutex);
+        m_state->is_cancelled = true;
+    }
+
     /// Wait for the result to be available
     void wait() const {
         std::unique_lock lock(m_state->mutex);

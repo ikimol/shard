@@ -20,12 +20,11 @@ std::optional<std::string> data_to_string(const shard::memory::allocation& data)
 
 int main(int /* argc */, char* /* argv */[]) {
     http::client client;
-    // clang-format off
     auto request = http::request_builder()
-        .with_url("https://www.example.com")
-        .with_method(http::request::method_get)
-        .build();
-    // clang-format on
+                       .with_url("https://www.example.com")
+                       .with_method(http::request::method_get)
+                       .make_cancellable()
+                       .build();
     auto future = client.send_request(std::move(request));
     future.get()
         .and_then([](http::response&& r) -> http::result {
