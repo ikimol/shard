@@ -44,7 +44,7 @@ public:
     /// Get the unique ID for a type
     template <typename>
     static type_id<T> id() {
-        static const type_id<T> id = s_counter++;
+        static type_id<T> id(s_counter++);
         return id;
     }
 
