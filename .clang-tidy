@@ -146,24 +146,22 @@ readability-string-compare,
 readability-uniqueptr-delete-release,
 readability-use-anyofallof'
 CheckOptions:
-  - { key: readability-identifier-naming.ClassCase, value: 'lower_case' }
-  - { key: readability-identifier-naming.ClassMemberCase, value: 'lower_case' }
-  - { key: readability-identifier-naming.ConstexprVariableCase, value: 'lower_case' }
-  - { key: readability-identifier-naming.EnumCase, value: 'lower_case' }
-  - { key: readability-identifier-naming.EnumConstantCase, value: 'lower_case' }
-  - { key: readability-identifier-naming.GlobalConstantPrefix, value: 'g_' }
-  - { key: readability-identifier-naming.GlobalConstantPointerPrefix, value: 'g_' }
-  - { key: readability-identifier-naming.GlobalPointerPrefix, value: 'g_' }
-  - { key: readability-identifier-naming.GlobalVariablePrefix, value: 'g_' }
-  - { key: readability-identifier-naming.NamespaceCase, value: 'lower_case' }
-  - { key: readability-identifier-naming.ParameterCase, value: 'lower_case' }
-  - { key: readability-identifier-naming.PrivateMemberPrefix, value: 'm_' }
-  - { key: readability-identifier-naming.StaticVariablePrefix, value: 's_' }
-  - { key: readability-identifier-naming.StructCase, value: 'lower_case' }
-  - { key: readability-identifier-naming.TemplateParameterCase, value: 'CamelCase' }
-  - { key: readability-identifier-naming.TypeAliasCase, value: 'lower_case' }
-  - { key: readability-identifier-naming.TypedefCase, value: 'lower_case' }
-  - { key: readability-identifier-naming.UnionCase, value: 'lower_case' }
-  - { key: readability-identifier-naming.ValueTemplateParameterCase, value: 'lower_case' }
-  - { key: readability-identifier-naming.ValueTemplateParameterPrefix, value: 't_' }
-  - { key: readability-identifier-naming.VariableCase, value: 'lower_case' }
+  readability-identifier-naming.ClassCase: 'lower_case'
+  readability-identifier-naming.ClassMemberCase: 'lower_case'
+  readability-identifier-naming.ConstexprVariableCase: 'lower_case'
+  readability-identifier-naming.EnumCase: 'lower_case'
+  readability-identifier-naming.EnumConstantCase: 'lower_case'
+  readability-identifier-naming.GlobalConstantPrefix: 'g_'
+  readability-identifier-naming.GlobalConstantPointerPrefix: 'g_'
+  readability-identifier-naming.GlobalPointerPrefix: 'g_'
+  readability-identifier-naming.GlobalVariablePrefix: 'g_'
+  readability-identifier-naming.NamespaceCase: 'lower_case'
+  readability-identifier-naming.ParameterCase: 'lower_case'
+  readability-identifier-naming.PrivateMemberPrefix: 'm_'
+  readability-identifier-naming.StructCase: 'lower_case'
+  readability-identifier-naming.TemplateParameterCase: 'CamelCase'
+  readability-identifier-naming.TypeAliasCase: 'lower_case'
+  readability-identifier-naming.TypedefCase: 'lower_case'
+  readability-identifier-naming.UnionCase: 'lower_case'
+  readability-identifier-naming.ValueTemplateParameterCase: 'CamelCase'
+  readability-identifier-naming.VariableCase: 'lower_case'
