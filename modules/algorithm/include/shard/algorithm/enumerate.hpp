@@ -51,29 +51,29 @@ public:
     const value_type& value() const { return *m_iterator; }
 
 public: // structured binding support
-    template <size_t t_index>
+    template <size_t N>
     auto& get() & {
-        if constexpr (t_index == 0) {
+        if constexpr (N == 0) {
             return m_index;
-        } else if constexpr (t_index == 1) {
+        } else if constexpr (N == 1) {
             return *m_iterator;
         }
     }
 
-    template <size_t t_index>
+    template <size_t N>
     auto const& get() const& {
-        if constexpr (t_index == 0) {
+        if constexpr (N == 0) {
             return m_index;
-        } else if constexpr (t_index == 1) {
+        } else if constexpr (N == 1) {
             return *m_iterator;
         }
     }
 
-    template <size_t t_index>
+    template <size_t N>
     auto&& get() && {
-        if constexpr (t_index == 0) {
+        if constexpr (N == 0) {
             return m_index;
-        } else if constexpr (t_index == 1) {
+        } else if constexpr (N == 1) {
             return std::move(*m_iterator);
         }
     }

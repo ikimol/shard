@@ -69,10 +69,10 @@ public:
     }
 
     /// Get a piece of curl info in a type-safe manner
-    template <CURLINFO t_info>
-    std::optional<info_t<t_info>> get_info() const {
-        info_t<t_info> value {};
-        if (get_info<t_info>(value)) {
+    template <CURLINFO Info>
+    std::optional<info_t<Info>> get_info() const {
+        info_t<Info> value {};
+        if (get_info<Info>(value)) {
             return value;
         }
         return std::nullopt;

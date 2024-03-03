@@ -25,12 +25,12 @@ public:
 
 private:
     /// RAII locked access wrapper to a pointer
-    template <template <typename> class Lock, access_mode t_mode>
+    template <template <typename> class Lock, access_mode Access>
     class access {
-        static_assert(!lock_traits<Lock>::is_read_only || t_mode == access_mode::read_only);
+        static_assert(!lock_traits<Lock>::is_read_only || Access == access_mode::read_only);
 
     private:
-        static constexpr auto is_read_only = std::bool_constant<t_mode == access_mode::read_only>::value;
+        static constexpr auto is_read_only = std::bool_constant<Access == access_mode::read_only>::value;
         using const_correct_value_type = std::conditional_t<is_read_only, const value_type, value_type>;
 
     public:
@@ -54,10 +54,10 @@ private:
         access(basic_thread_safe& value, LockArgs&&... lock_args) /* NOLINT */
         : access(value.m_value, value.m_mutex, std::forward<LockArgs>(lock_args)...) {}
 
-        template <template <typename> class OtherLock, access_mode t_other_mode, typename... LockArgs>
-        access(access<OtherLock, t_other_mode>& other, LockArgs&&... lock_args) /* NOLINT */
+        template <template <typename> class OtherLock, access_mode OtherAccess, typename... LockArgs>
+        access(access<OtherLock, OtherAccess>& other, LockArgs&&... lock_args) /* NOLINT */
         : access(*other, *other.m_lock.release(), std::adopt_lock, std::forward<LockArgs>(lock_args)...) {
-            static_assert(t_other_mode == access_mode::read_write || t_other_mode == t_mode);
+            static_assert(OtherAccess == access_mode::read_write || OtherAccess == Access);
         }
 
         pointer operator->() noexcept { return m_pointer; }

@@ -12,7 +12,7 @@
 namespace shard {
 namespace concurrency {
 
-template <typename T, std::size_t t_capacity>
+template <typename T, std::size_t Capacity>
 class mpsc_queue {
 public:
     using value_type = T;
@@ -20,8 +20,8 @@ public:
 
 public:
     mpsc_queue() {
-        m_data = new std::byte[sizeof(value_type) * t_capacity];
-        m_states = new std::atomic<bool>[t_capacity];
+        m_data = new std::byte[sizeof(value_type) * Capacity];
+        m_states = new std::atomic<bool>[Capacity];
     }
 
     /// Add a new item to the queue by copying it
@@ -94,7 +94,7 @@ public:
         auto value = std::move(*reinterpret_cast<value_type*>(&m_data[offset]));
         m_states[m_tail].store(false, std::memory_order_release);
 
-        if (++m_tail >= t_capacity) {
+        if (++m_tail >= Capacity) {
             m_tail = 0;
         }
 
@@ -108,12 +108,12 @@ public:
 
     std::size_t size() const { return m_size.load(std::memory_order_relaxed); }
 
-    std::size_t capacity() const { return t_capacity; }
+    std::size_t capacity() const { return Capacity; }
 
 private:
     bool is_full() {
         auto size = m_size.fetch_add(1, std::memory_order_acquire);
-        if (size >= t_capacity) {
+        if (size >= Capacity) {
             m_size.fetch_sub(1, std::memory_order_release);
             return true;
         }
@@ -122,7 +122,7 @@ private:
 
     size_type next_head() {
         auto head = m_head.fetch_add(1, std::memory_order_acquire);
-        if (head >= t_capacity) {
+        if (head >= Capacity) {
             head = 0;
             m_head.store(1, std::memory_order_release);
         }

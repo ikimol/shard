@@ -7,14 +7,14 @@
 namespace shard {
 namespace memory {
 
-template <std::size_t t_size>
+template <std::size_t Size>
 class static_allocator : public linear_allocator {
 public:
     static_allocator() noexcept
-    : linear_allocator(m_buffer, t_size) {}
+    : linear_allocator(m_buffer, Size) {}
 
 private:
-    char m_buffer[t_size] = {};
+    char m_buffer[Size] = {};
 };
 
 } // namespace memory
