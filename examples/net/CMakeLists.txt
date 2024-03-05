@@ -14,5 +14,6 @@ shard_add_example(net.http
 
 shard_add_example(net.spotify
                   SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/spotify.cpp
-                  MODULES shard::net json
+                  COMPILE_OPTIONS "-I/opt/homebrew/include"
+                  MODULES shard::net
                   )
