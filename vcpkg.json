@@ -1,0 +1,11 @@
+{
+  "name": "shard",
+  "version": "1.19.1",
+  "description": "Collection of modern C++17 utility classes and functions",
+  "homepage": "https://github.com/ikimol/shard",
+  "dependencies": [
+    "curl",
+    "doctest",
+    "sqlite3"
+  ]
+}
