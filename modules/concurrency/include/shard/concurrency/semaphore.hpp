@@ -8,7 +8,7 @@
 #include <cassert>
 #include <cstddef>
 
-#if defined(SHARD_MACOS)
+#if defined(SHARD_APPLE)
 #include <mach/mach_types.h>
 #elif defined(SHARD_UNIX)
 #include <semaphore.h>

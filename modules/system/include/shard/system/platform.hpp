@@ -9,7 +9,7 @@
     #define SHARD_UNIX
     #define SHARD_LINUX
 #elif defined(__APPLE__)
-    #define SHARD_UNIX
+    #define SHARD_APPLE
     #include <TargetConditionals.h>
     #if defined(TARGET_OS_OSX)
         #define SHARD_MACOS
