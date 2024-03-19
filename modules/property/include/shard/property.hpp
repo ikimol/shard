@@ -107,14 +107,13 @@ public:
     }
 
     /// Converting value constructor
-    template <typename U, std::enable_if_t<std::is_constructible<T, U>::value>* = nullptr>
+    template <typename U, std::enable_if_t<std::is_constructible_v<T, U>>* = nullptr>
     property(const U& value) /* NOLINT */
     : property(T(value)) {}
 
     /// Converting binding constructor
     template <typename B,
-              std::enable_if_t<std::is_constructible<binding_type, B>::value && !std::is_constructible<T, B>::value>* =
-                  nullptr>
+              std::enable_if_t<std::is_constructible_v<binding_type, B> && !std::is_constructible_v<T, B>>* = nullptr>
     property(const B& binding) /* NOLINT */
     : property(binding_type(binding)) {}
 
@@ -134,7 +133,7 @@ public:
     }
 
     /// Converting value assignment operator
-    template <typename U, std::enable_if_t<std::is_constructible<T, U>::value>* = nullptr>
+    template <typename U, std::enable_if_t<std::is_constructible_v<T, U>>* = nullptr>
     property& operator=(const U& value) {
         *this = T(value);
         return *this;
@@ -142,8 +141,7 @@ public:
 
     /// Converting binding assignment operator
     template <typename B,
-              std::enable_if_t<std::is_constructible<binding_type, B>::value && !std::is_constructible<T, B>::value>* =
-                  nullptr>
+              std::enable_if_t<std::is_constructible_v<binding_type, B> && !std::is_constructible_v<T, B>>* = nullptr>
     property& operator=(const B& binding) {
         *this = binding_type(binding);
         return *this;

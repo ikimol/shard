@@ -50,16 +50,13 @@ private:
 // clang-format off
 template <typename T>
 using random =
-std::conditional_t<meta::is_integer<T>::value,
-    random_base<std::uniform_int_distribution<T>>,
-std::conditional_t<std::is_floating_point<T>::value,
-    random_base<std::uniform_real_distribution<T>>,
-std::conditional_t<meta::is_bool<T>::value,
-    random_base<std::bernoulli_distribution>,
-void
->
->
->;
+    std::conditional_t<meta::is_integer<T>::value,       // int
+        random_base<std::uniform_int_distribution<T>>,
+    std::conditional_t<std::is_floating_point<T>::value, // float
+        random_base<std::uniform_real_distribution<T>>,
+    std::conditional_t<meta::is_bool<T>::value,          // bool
+        random_base<std::bernoulli_distribution>,
+    void>>>;
 // clang-format on
 
 /// Seed the fast random number generator
