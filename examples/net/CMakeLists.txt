@@ -17,3 +17,9 @@ shard_add_example(net.spotify
                   COMPILE_OPTIONS "-I/opt/homebrew/include"
                   MODULES shard::net
                   )
+
+shard_add_example(net.world-time
+        SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/world_time.cpp
+        COMPILE_OPTIONS "-I/opt/homebrew/include"
+        MODULES shard::net
+)
