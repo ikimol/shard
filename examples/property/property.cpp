@@ -9,15 +9,15 @@ class widget {
 public:
     widget() = default;
 
-private:
-    void update() const { std::cout << "updated: " << *name << '\n'; }
-
 public:
-    shard::observed_property<int> id {[this] { update(); }, 0};
+    shard::observed_property<int> id = {[this](auto&) { update(); }, 0};
 
-    const shard::property<std::string> name {[this] {
+    const shard::property<std::string> name = {[this] {
         return "w." + std::to_string(*id);
     }};
+
+private:
+    void update() const { std::cout << "updated: " << *name << '\n'; }
 };
 
 int main(int /* argc */, char* /* argv */[]) {

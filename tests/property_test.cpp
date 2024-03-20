@@ -43,7 +43,7 @@ TEST_CASE("property") {
 
     SUBCASE("observed property") {
         bool did_update = false;
-        shard::observed_property<int> p = {[&] { did_update = true; }, 0};
+        shard::observed_property<int> p = {[&](auto) { did_update = true; }, 0};
         REQUIRE(p.value() == 0);
         REQUIRE_FALSE(did_update);
 

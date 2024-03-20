@@ -173,7 +173,7 @@ protected:
         notify();
     }
 
-private:
+protected:
     value_type m_value;
     binding_type m_binding;
 };
@@ -184,7 +184,7 @@ public:
     using value_type = typename property<T>::value_type;
     using binding_type = typename property<T>::binding_type;
 
-    using callback_type = std::function<void()>;
+    using callback_type = std::function<void(const value_type&)>;
 
 public:
     observed_property(callback_type callback) /* NOLINT */
@@ -203,7 +203,7 @@ public:
 protected:
     void notify() override {
         property<T>::notify();
-        m_callback();
+        m_callback(property<T>::m_value);
     }
 
 private:
