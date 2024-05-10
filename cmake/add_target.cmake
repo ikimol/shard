@@ -90,15 +90,18 @@ endmacro ()
 #
 # usage: shard_add_example(<name>
 #                          SOURCES <src>...
+#                          [COMPILE_OPTIONS <option>...]
 #                          [MODULES <module>...]
 #                          [RESOURCE_DIR <dir>]
 #                          )
 macro (shard_add_example EXAMPLE_NAME)
-    cmake_parse_arguments(LOCAL "" "RESOURCE_DIR" "SOURCES;MODULES" ${ARGN})
+    cmake_parse_arguments(LOCAL "" "RESOURCE_DIR" "SOURCES;MODULES;COMPILE_OPTIONS" ${ARGN})
 
     set(TARGET_NAME "example.${EXAMPLE_NAME}")
 
     add_executable(${TARGET_NAME} ${LOCAL_SOURCES})
+
+    target_compile_options(${TARGET_NAME} PRIVATE ${LOCAL_COMPILE_OPTIONS})
 
     # enable warnings
     shard_target_enable_warnings(${TARGET_NAME})
