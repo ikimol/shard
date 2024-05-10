@@ -1,6 +1,7 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
 #include <shard/algorithm.hpp>
+#include <shard/algorithm/functional/vector.hpp>
 
 #include <doctest.h>
 
@@ -138,6 +139,53 @@ TEST_CASE("algorithm") {
             for (int i = 0; i < 5; ++i) {
                 CHECK(array[i] == i * 4);
             }
+        }
+    }
+
+    SUBCASE("functional") {
+        std::vector chars = {'1', 'a', '2', 'b'};
+
+        SUBCASE("map") {
+            auto strings = shard::functional::map(chars, [](auto c) { return std::string(1, c); });
+            CHECK(strings.size() == 4);
+            CHECK(strings.at(0) == "1");
+            CHECK(strings.at(1) == "a");
+            CHECK(strings.at(2) == "2");
+            CHECK(strings.at(3) == "b");
+        }
+
+        SUBCASE("flat_map") {
+            auto to_int = [](char c) -> std::optional<int> {
+                if (isdigit(c)) {
+                    return c - '0';
+                }
+                return std::nullopt;
+            };
+            auto numbers = shard::functional::flat_map(chars, to_int);
+            CHECK(numbers.size() == 2);
+            CHECK(numbers.at(0) == 1);
+            CHECK(numbers.at(1) == 2);
+        }
+
+        SUBCASE("filter") {
+            auto digits = shard::functional::filter(chars, isdigit);
+            CHECK(digits.size() == 2);
+            CHECK(digits.at(0) == '1');
+            CHECK(digits.at(1) == '2');
+        }
+
+        SUBCASE("zip") {
+            std::vector names = {"1", "a", "2", "b"};
+            auto zipped = shard::functional::zip(chars, names);
+            CHECK(zipped.size() == 4);
+            for (auto& [c, s] : zipped) {
+                CHECK(std::string(1, c) == s);
+            }
+        }
+
+        SUBCASE("reduce") {
+            auto joined = shard::functional::reduce(chars, std::string(), [](auto& s, char ch) { s.push_back(ch); });
+            CHECK(joined == "1a2b");
         }
     }
 

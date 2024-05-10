@@ -7,6 +7,11 @@ shard_add_example(algorithm.enumerate
                   MODULES shard::algorithm
                   )
 
+shard_add_example(algorithm.functional
+                  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/functional.cpp
+                  MODULES shard::algorithm
+                  )
+
 shard_add_example(algorithm.variant-switch
                   SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/variant_switch.cpp
                   MODULES shard::algorithm
