@@ -12,11 +12,20 @@ set(PLATFORM_SPECIFIC_SOURCES "")
 include(${PROJECT_SOURCE_DIR}/cmake/os.cmake)
 
 if (SHARD_OS_LINUX)       # Linux
-    list(APPEND PLATFORM_SPECIFIC_SOURCES ${MODULE_SRC_DIR}/linux/semaphore.cpp)
+    list(APPEND PLATFORM_SPECIFIC_SOURCES
+         ${MODULE_SRC_DIR}/linux/semaphore.cpp
+         ${MODULE_SRC_DIR}/linux/this_thread.cpp
+         )
 elseif (SHARD_OS_DARWIN)  # Apple
-    list(APPEND PLATFORM_SPECIFIC_SOURCES ${MODULE_SRC_DIR}/darwin/semaphore.cpp)
+    list(APPEND PLATFORM_SPECIFIC_SOURCES
+         ${MODULE_SRC_DIR}/darwin/semaphore.cpp
+         ${MODULE_SRC_DIR}/darwin/this_thread.cpp
+         )
 elseif (SHARD_OS_WINDOWS) # Windows
-    list(APPEND PLATFORM_SPECIFIC_SOURCES ${MODULE_SRC_DIR}/windows/semaphore.cpp)
+    list(APPEND PLATFORM_SPECIFIC_SOURCES
+         ${MODULE_SRC_DIR}/windows/semaphore.cpp
+         ${MODULE_SRC_DIR}/windows/this_thread.cpp
+         )
 endif ()
 
 shard_add_static_library(${MODULE_NAME}

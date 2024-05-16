@@ -22,6 +22,11 @@ shard_add_example(concurrency.tbuf-value
                   MODULES shard::concurrency
                   )
 
+shard_add_example(concurrency.this-thread
+                  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/this_thread.cpp
+                  MODULES shard::concurrency
+                  )
+
 shard_add_example(concurrency.thread-pool
                   SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/thread_pool.cpp
                   MODULES shard::concurrency
