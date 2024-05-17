@@ -8,8 +8,7 @@
 
 namespace shard::concurrency {
 
-semaphore::semaphore(std::ptrdiff_t count)
-: m_handle(0) {
+semaphore::semaphore(std::ptrdiff_t count) {
     assert(count >= 0);
     auto r = sem_init(&m_handle, 0, static_cast<unsigned int>(count));
     assert(r == 0);
