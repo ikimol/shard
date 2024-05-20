@@ -29,22 +29,22 @@
         value_type m_value;                                                                                            \
     };                                                                                                                 \
                                                                                                                        \
-    inline bool operator==(const name& lhs, const name& rhs) {                                                 \
+    inline bool operator==(const name& lhs, const name& rhs) {                                                         \
         return lhs.m_value == rhs.m_value;                                                                             \
     }                                                                                                                  \
-    inline bool operator!=(const name& lhs, const name& rhs) {                                                 \
+    inline bool operator!=(const name& lhs, const name& rhs) {                                                         \
         return !(lhs == rhs);                                                                                          \
     }                                                                                                                  \
-    inline bool operator<(const name& lhs, const name& rhs) {                                                  \
+    inline bool operator<(const name& lhs, const name& rhs) {                                                          \
         return lhs.m_value < rhs.m_value;                                                                              \
     }                                                                                                                  \
-    inline bool operator<=(const name& lhs, const name& rhs) {                                                 \
+    inline bool operator<=(const name& lhs, const name& rhs) {                                                         \
         return !(rhs < lhs);                                                                                           \
     }                                                                                                                  \
-    inline bool operator>(const name& lhs, const name& rhs) {                                                  \
+    inline bool operator>(const name& lhs, const name& rhs) {                                                          \
         return rhs < lhs;                                                                                              \
     }                                                                                                                  \
-    inline bool operator>=(const name& lhs, const name& rhs) {                                                 \
+    inline bool operator>=(const name& lhs, const name& rhs) {                                                         \
         return !(lhs < rhs);                                                                                           \
     }
 
@@ -52,6 +52,6 @@
     template <>                                                                                                        \
     struct std::hash<ns::name> {                                                                                       \
         std::size_t operator()(const ns::name& id) const noexcept {                                                    \
-            return std::hash<ns::name::value_type>()(id.value());                                                      \
+            return std::hash<ns::name::value_type> {}(id.value());                                                     \
         }                                                                                                              \
     };
