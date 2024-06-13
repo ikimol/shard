@@ -2,8 +2,9 @@
 
 #pragma once
 
+#include "shard/net/curl/http_version.hpp"
+#include "shard/net/curl/proxy.hpp"
 #include "shard/net/curl/slist.hpp"
-#include "shard/net/http/version.hpp"
 #include "shard/net/url.hpp"
 
 #include <optional>
@@ -60,8 +61,16 @@ struct type_converter<url> {
 };
 
 template <>
-struct type_converter<http::version_t> {
-    using user_type = http::version_t;
+struct type_converter<http_version_t> {
+    using user_type = http_version_t;
+    using curl_type = long;
+
+    static curl_type to_curl(const user_type& value) { return static_cast<curl_type>(value); }
+};
+
+template <>
+struct type_converter<proxy_t> {
+    using user_type = proxy_t;
     using curl_type = long;
 
     static curl_type to_curl(const user_type& value) { return static_cast<curl_type>(value); }

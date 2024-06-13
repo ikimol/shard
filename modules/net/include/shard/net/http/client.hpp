@@ -3,10 +3,11 @@
 #pragma once
 
 #include "shard/net/curl/handle.hpp"
+#include "shard/net/curl/http_version.hpp"
+#include "shard/net/curl/proxy.hpp"
 #include "shard/net/http/future.hpp"
 #include "shard/net/http/request.hpp"
 #include "shard/net/http/response.hpp"
-#include "shard/net/http/version.hpp"
 
 #include <shard/concurrency/channel.hpp>
 
@@ -20,12 +21,12 @@ namespace shard::net::http {
 class client {
 public:
     /// Default constructor that starts the worker thread
-    explicit client(version_t version = version_t::http_2)
+    explicit client(curl::http_version_t version = curl::http_version_t::v_2)
     : m_timeout(std::chrono::milliseconds(0))
     , m_connection_timeout(std::chrono::milliseconds(0))
     , m_thread(&client::worker_thread, this) {
         setup_curl_handle(version);
-    };
+    }
 
     /// Destructor that joins the worker thread
     ~client() {
@@ -45,6 +46,18 @@ public:
     /// Set the connection timeout
     void set_connection_timeout(std::chrono::milliseconds value) { m_connection_timeout = value; }
 
+    /// Setup the proxy configuration
+    void setup_proxy(std::string host, std::size_t port = 0, curl::proxy_t type = curl::proxy_t::http) {
+        proxy p;
+        p.host = std::move(host);
+        p.port = port;
+        p.type = type;
+        m_proxy = std::move(p);
+    }
+
+    /// Disable the proxy
+    void disable_proxy() { m_proxy.reset(); }
+
     /// Send the HTTP request
     ///
     /// \note This does not guarantee that the request is sent immediately.
@@ -61,7 +74,7 @@ public:
     }
 
 private:
-    bool setup_curl_handle(version_t version) {
+    bool setup_curl_handle(curl::http_version_t version) {
         std::lock_guard curl_lock(m_mutex);
 
         bool result = m_curl.set_option<CURLOPT_HTTP_VERSION>(version);
@@ -108,6 +121,15 @@ private:
         setup_result = setup_result && m_curl.set_option<CURLOPT_HEADERDATA>(&response.m_header);
         setup_result = setup_result && m_curl.set_option<CURLOPT_TIMEOUT_MS>(m_timeout.count());
         setup_result = setup_result && m_curl.set_option<CURLOPT_CONNECTTIMEOUT_MS>(m_connection_timeout.count());
+
+        // setup the proxy
+        if (m_proxy.has_value()) {
+            setup_result = setup_result && m_curl.set_option<CURLOPT_PROXY>(m_proxy->host);
+            setup_result = setup_result && m_curl.set_option<CURLOPT_PROXYPORT>(m_proxy->port);
+            setup_result = setup_result && m_curl.set_option<CURLOPT_PROXYTYPE>(m_proxy->type);
+        } else {
+            setup_result = setup_result && m_curl.set_option<CURLOPT_PROXY>(std::nullopt);
+        }
 
         // cancellation
         if (request.is_cancellable()) {
@@ -205,12 +227,21 @@ private:
 private:
     using mutex_type = std::recursive_mutex;
 
+    // group proxy options
+    struct proxy {
+        std::string host;
+        std::size_t port = 0;
+        curl::proxy_t type = curl::proxy_t::http;
+    };
+
 private:
     curl::handle m_curl;
     mutex_type m_mutex;
 
     std::chrono::milliseconds m_timeout;
     std::chrono::milliseconds m_connection_timeout;
+
+    std::optional<proxy> m_proxy;
 
     shard::channel<request> m_requests;
 

@@ -2,8 +2,9 @@
 
 #pragma once
 
+#include "shard/net/curl/http_version.hpp"
+#include "shard/net/curl/proxy.hpp"
 #include "shard/net/curl/slist.hpp"
-#include "shard/net/http/version.hpp"
 #include "shard/net/url.hpp"
 
 #include <curl/curl.h>
@@ -22,7 +23,7 @@ struct option;
 
 template <> struct option<CURLOPT_URL> { using type = url; };
 
-template <> struct option<CURLOPT_HTTP_VERSION> { using type = http::version_t; };
+template <> struct option<CURLOPT_HTTP_VERSION> { using type = http_version_t; };
 
 template <> struct option<CURLOPT_FOLLOWLOCATION> { using type = bool; };
 template <> struct option<CURLOPT_CONNECT_ONLY> { using type = bool; };
@@ -56,8 +57,10 @@ template <> struct option<CURLOPT_SSL_VERIFYPEER> { using type = bool; };
 template <> struct option<CURLOPT_SSL_VERIFYHOST> { using type = long; };
 template <> struct option<CURLOPT_CAINFO> { using type = std::string; };
 
-template <> struct option<CURLOPT_PROXY> { using type = std::string; };
+template <> struct option<CURLOPT_PROXY> { using type = std::optional<std::string>; };
 template <> struct option<CURLOPT_PROXYPORT> { using type = std::size_t; };
+template <> struct option<CURLOPT_PROXYTYPE> { using type = proxy_t; };
+template <> struct option<CURLOPT_HTTPPROXYTUNNEL> { using type = bool; };
 
 template <> struct option<CURLOPT_WRITEFUNCTION> { using type = curl_write_callback; };
 template <> struct option<CURLOPT_WRITEDATA> { using type = void*; };
