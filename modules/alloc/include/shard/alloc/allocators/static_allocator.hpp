@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "shard/memory/allocators/linear_allocator.hpp"
+#include "shard/alloc/allocators/linear_allocator.hpp"
 
 namespace shard {
 namespace memory {

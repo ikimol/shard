@@ -1,7 +1,7 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#include <shard/containers/stack.hpp>
-#include <shard/memory/allocators/heap_allocator.hpp>
+#include <shard/alloc/containers/stack.hpp>
+#include <shard/alloc/allocators/heap_allocator.hpp>
 
 #include <iostream>
 

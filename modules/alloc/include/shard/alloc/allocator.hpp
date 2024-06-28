@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include <shard/utility/non_copyable.hpp>
-
 #include <cassert>
 #include <cstddef>
 #include <type_traits>

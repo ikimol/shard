@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <shard/memory/allocator.hpp>
+#include "shard/alloc/allocator.hpp"
 
 #include <algorithm>
 #include <cstddef>

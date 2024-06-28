@@ -2,8 +2,9 @@
 
 #pragma once
 
-#include "shard/memory/allocator.hpp"
-#include "shard/memory/utils.hpp"
+#include "shard/alloc/allocator.hpp"
+
+#include <shard/memory/utils.hpp>
 
 namespace shard {
 namespace memory {

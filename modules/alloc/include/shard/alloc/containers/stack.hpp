@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "shard/containers/array.hpp"
+#include "shard/alloc/containers/array.hpp"
 
 namespace shard {
 namespace containers {
 
 template <typename T>
 class stack {
-    friend bool operator==(const stack<T>&, const stack<T>&);
+    friend bool operator==(const stack&, const stack&);
 
 public:
     using container_type = array<T>;

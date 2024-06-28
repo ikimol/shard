@@ -1,11 +1,11 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#include <shard/memory/allocators/free_list_allocator.hpp>
-#include <shard/memory/allocators/heap_allocator.hpp>
-#include <shard/memory/allocators/linear_allocator.hpp>
-#include <shard/memory/allocators/pool_allocator.hpp>
-#include <shard/memory/allocators/proxy_allocator.hpp>
-#include <shard/memory/allocators/static_allocator.hpp>
+#include <shard/alloc/allocators/free_list_allocator.hpp>
+#include <shard/alloc/allocators/heap_allocator.hpp>
+#include <shard/alloc/allocators/linear_allocator.hpp>
+#include <shard/alloc/allocators/pool_allocator.hpp>
+#include <shard/alloc/allocators/proxy_allocator.hpp>
+#include <shard/alloc/allocators/static_allocator.hpp>
 
 #include <cstring>
 #include <iostream>

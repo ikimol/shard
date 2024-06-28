@@ -20,7 +20,8 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/helpers/counter.cpp
                # modules
                ${CMAKE_CURRENT_SOURCE_DIR}/algorithm_test.cpp
-               ${CMAKE_CURRENT_SOURCE_DIR}/array_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/alloc/containers/array_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/alloc/allocators_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/bit_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/concurrency_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/enums_test.cpp
@@ -37,6 +38,7 @@ add_executable(${SHARD_TEST_TARGET}
 
 target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
                       shard::algorithm
+                      shard::alloc
                       shard::bit
                       shard::concurrency
                       shard::containers
