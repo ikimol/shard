@@ -2,20 +2,31 @@
 
 #pragma once
 
-#include <vector>
+#include <shard/meta/type_traits.hpp>
 
 namespace shard {
 namespace containers {
 
+template <typename T>
+struct sparse_set_value_translator {
+    template <typename U = T, std::enable_if_t<std::is_unsigned_v<U>>* = nullptr>
+    static std::size_t translate(U value) {
+        return static_cast<std::size_t>(value);
+    }
+};
+
 /// Represents a sparse set of unsigned values
+template <typename T>
 class sparse_set {
 public:
-    using value_type = std::size_t;
+    using value_type = unqualified_t<T>;
+    using index_type = std::size_t;
     using size_type = std::size_t;
     using pointer = value_type*;
     using const_pointer = const value_type*;
     using iterator = pointer;
     using const_iterator = const_pointer;
+    using translator_type = sparse_set_value_translator<value_type>;
 
 public:
     ~sparse_set() {
@@ -26,9 +37,10 @@ public:
     /// Add a new value to the set
     void insert(value_type value) {
         if (!contains(value)) {
-            ensure_element_fits(value);
+            auto index = to_index(value);
+            ensure_element_fits(index);
             m_dense[m_size] = value;
-            m_sparse[value] = m_size;
+            m_sparse[index] = m_size;
             ++m_size;
         }
     }
@@ -36,8 +48,9 @@ public:
     /// Remove a value from the set
     void erase(value_type value) {
         if (contains(value)) {
-            m_dense[m_sparse[value]] = m_dense[m_size - 1];
-            m_sparse[m_dense[m_size - 1]] = m_sparse[value];
+            auto index = to_index(value);
+            m_dense[m_sparse[index]] = m_dense[m_size - 1];
+            m_sparse[to_index(m_dense[m_size - 1])] = m_sparse[index];
             --m_size;
         }
     }
@@ -47,8 +60,12 @@ public:
 
     /// Check if the value is present in the set
     bool contains(value_type value) {
-        return value < m_capacity && m_sparse[value] < m_size && m_dense[m_sparse[value]] == value;
+        auto index = to_index(value);
+        return index < m_capacity && m_sparse[index] < m_size && to_index(m_dense[m_sparse[index]]) == index;
     }
+
+    /// Get the index of the value in the dense set
+    index_type index_of(value_type value) const { return m_sparse[to_index(value)]; }
 
     /// Check if the set is empty
     bool is_empty() const noexcept { return m_size == 0; }
@@ -77,9 +94,9 @@ public:
     const_iterator end() const { return m_dense + m_size; }
 
 private:
-    void ensure_element_fits(value_type value) {
-        if (value + 1 > m_capacity) {
-            grow(value + 1);
+    void ensure_element_fits(index_type index) {
+        if (index + 1 > m_capacity) {
+            grow(index + 1);
         }
     }
 
@@ -108,14 +125,16 @@ private:
         }
 
         m_dense = static_cast<value_type*>(dense);
-        m_sparse = static_cast<value_type*>(sparse);
+        m_sparse = static_cast<index_type*>(sparse);
 
         m_capacity = new_capacity;
     }
 
+    static index_type to_index(value_type value) { return translator_type::translate(value); }
+
 private:
     value_type* m_dense = nullptr;  // dense set of elements
-    value_type* m_sparse = nullptr; // map of elements to dense set indices
+    index_type* m_sparse = nullptr; // map of elements to dense set indices
 
     size_type m_size = 0;
     size_type m_capacity = 0;
