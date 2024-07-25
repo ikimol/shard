@@ -4,6 +4,7 @@
 
 #include <atomic>
 #include <cstddef>
+#include <functional>
 
 namespace shard {
 namespace meta {
@@ -55,6 +56,38 @@ private:
 template <typename T>
 std::atomic<std::size_t> typespace<T>::s_counter = ATOMIC_VAR_INIT(0);
 
+// operators
+
+template <typename T>
+bool operator==(const type_id<T>& lhs, const type_id<T>& rhs) {
+    return lhs.value() == rhs.value();
+}
+
+template <typename T>
+bool operator!=(const type_id<T>& lhs, const type_id<T>& rhs) {
+    return !(lhs == rhs);
+}
+
+template <typename T>
+bool operator<(const type_id<T>& lhs, const type_id<T>& rhs) {
+    return lhs.value() < rhs.value();
+}
+
+template <typename T>
+bool operator<=(const type_id<T>& lhs, const type_id<T>& rhs) noexcept {
+    return !(rhs < lhs);
+}
+
+template <typename T>
+bool operator>(const type_id<T>& lhs, const type_id<T>& rhs) noexcept {
+    return rhs < lhs;
+}
+
+template <typename T>
+bool operator>=(const type_id<T>& lhs, const type_id<T>& rhs) noexcept {
+    return !(lhs < rhs);
+}
+
 } // namespace meta
 
 // bring symbols into parent namespace
@@ -62,6 +95,13 @@ std::atomic<std::size_t> typespace<T>::s_counter = ATOMIC_VAR_INIT(0);
 using meta::type_id;
 
 } // namespace shard
+
+template <typename T>
+struct std::hash<shard::meta::type_id<T>> {
+    std::size_t operator()(const shard::meta::type_id<T>& type_id) const noexcept {
+        return hash<std::size_t> {}(type_id.value());
+    }
+};
 
 #define SHARD_INTERNAL_TYPEID_1(T) shard::meta::typespace<shard::meta::detail::default_typespace>::id<T>()
 #define SHARD_INTERNAL_TYPEID_2(T, N) shard::meta::typespace<T>::id<N>()

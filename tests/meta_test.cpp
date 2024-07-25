@@ -181,5 +181,16 @@ TEST_CASE("meta") {
             REQUIRE(SHARD_TYPEID(char, int) == 0);
             REQUIRE(SHARD_TYPEID(char, unsigned int) == 1);
         }
+
+        SUBCASE("relational operators") {
+            REQUIRE(SHARD_TYPEID(int) == SHARD_TYPEID(int));
+            REQUIRE(SHARD_TYPEID(int) != SHARD_TYPEID(short));
+            REQUIRE(SHARD_TYPEID(int) < SHARD_TYPEID(short));
+        }
+
+        SUBCASE("hash") {
+            auto hash = std::hash<decltype(SHARD_TYPEID(int))> {}(SHARD_TYPEID(int));
+            REQUIRE(hash == SHARD_TYPEID(int));
+        }
     }
 }
