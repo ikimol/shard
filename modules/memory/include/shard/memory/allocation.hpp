@@ -21,6 +21,9 @@ public:
     , m_allocation(static_cast<std::byte*>(std::malloc(size)), std::free) {}
 
     /// Get the bytes
+    std::byte* bytes() { return m_allocation.get(); }
+
+    /// Get the bytes
     const std::byte* bytes() const { return m_allocation.get(); }
 
     /// Get the number of bytes
