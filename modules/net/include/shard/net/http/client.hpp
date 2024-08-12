@@ -207,7 +207,7 @@ private:
         auto& buffer = *static_cast<memory::dynamic_data*>(user_data);
         auto current_size = buffer.size();
         if (auto new_bytes = buffer.reallocate(current_size + total_size)) {
-            std::memcpy(&(new_bytes[current_size]), data, total_size); // write data
+            std::memcpy(&new_bytes[current_size], data, total_size); // write data
             return total_size;
         }
         return 0;
@@ -225,8 +225,6 @@ private:
     }
 
 private:
-    using mutex_type = std::recursive_mutex;
-
     // group proxy options
     struct proxy {
         std::string host;
@@ -236,7 +234,7 @@ private:
 
 private:
     curl::handle m_curl;
-    mutex_type m_mutex;
+    std::recursive_mutex m_mutex;
 
     std::chrono::milliseconds m_timeout;
     std::chrono::milliseconds m_connection_timeout;
