@@ -145,5 +145,6 @@ private:
 // bring symbols into parent namespace
 
 using containers::sparse_set;
+using containers::sparse_set_value_translator;
 
 } // namespace shard
