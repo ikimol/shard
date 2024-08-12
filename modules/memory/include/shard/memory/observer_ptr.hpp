@@ -7,47 +7,47 @@
 namespace shard {
 namespace memory {
 
+/// A safe wrapper to be used instead of raw pointer
 template <typename T>
 class observer_ptr {
 public:
     using element_type = T;
+    using pointer = element_type*;
+    using reference = element_type&;
 
 public:
     /// Default constructor
     observer_ptr() noexcept = default;
 
     /// Raw pointer constructor
-    explicit observer_ptr(element_type* ptr) noexcept
+    explicit observer_ptr(pointer ptr) noexcept
     : m_ptr(ptr) {}
 
     /// Converting constructor
-    template <typename T2>
-    /* implicit */ observer_ptr(observer_ptr<T2> other) noexcept /* NOLINT */
+    template <typename U>
+    /* implicit */ observer_ptr(observer_ptr<U> other) noexcept /* NOLINT */
     : m_ptr(other.m_ptr) {}
 
-    observer_ptr(const observer_ptr&) = default;
-    observer_ptr(observer_ptr&&) = default;
+    /// Access the underlying pointer
+    reference operator*() const { return *m_ptr; }
+
+    /// Access the underlying pointer
+    pointer operator->() const noexcept { return m_ptr; }
 
     /// Get the underlying pointer
-    element_type* get() const noexcept { return m_ptr; }
-
-    /// Access the underlying pointer
-    element_type& operator*() const { return *m_ptr; }
-
-    /// Access the underlying pointer
-    element_type* operator->() const { return m_ptr; }
+    pointer get() const noexcept { return m_ptr; }
 
     /// Check if the underlying pointer is not null
     explicit operator bool() const noexcept { return m_ptr != nullptr; }
 
     /// Pointer conversion operator
-    explicit operator element_type*() const noexcept { return m_ptr; }
+    explicit operator pointer() const noexcept { return m_ptr; }
 
     /// Release the underlying pointer and return it
-    element_type* release() noexcept { return std::exchange(m_ptr, nullptr); }
+    pointer release() noexcept { return std::exchange(m_ptr, nullptr); }
 
     /// Change the underlying pointer
-    void reset(element_type* ptr = nullptr) noexcept { m_ptr = ptr; }
+    void reset(pointer ptr = nullptr) noexcept { m_ptr = ptr; }
 
     /// Swap with another observer
     void swap(observer_ptr& other) noexcept {
@@ -56,7 +56,7 @@ public:
     }
 
 private:
-    element_type* m_ptr = nullptr;
+    pointer m_ptr = nullptr;
 };
 
 // helpers

@@ -9,6 +9,7 @@
 namespace shard {
 namespace memory {
 
+/// Manages an object inside a pre-allocated buffer
 template <typename T>
 class buffer_ptr {
 public:
@@ -19,34 +20,43 @@ public:
     using const_pointer = const value_type*;
 
 public:
+    /// Create a new object inside the given buffer
     template <typename... Args>
     explicit buffer_ptr(std::byte* buffer, Args&&... args)
     : m_buffer(buffer) {
         new (buffer) T(std::forward<Args>(args)...);
     }
 
+    // copy and move construction is disabled
     buffer_ptr(const buffer_ptr& other) = delete;
     buffer_ptr(buffer_ptr&& other) = delete;
 
+    /// Destroys the object and nulls out the original buffer
     ~buffer_ptr() {
         ptr()->~T();
         std::memset(m_buffer, '\0', sizeof(T));
     }
 
+    /// Access the underlying pointer
     reference operator*() { return *ptr(); }
 
+    /// Access the underlying pointer
     const_reference operator*() const { return *ptr(); }
 
-    pointer operator->() { return ptr(); }
+    /// Access the underlying pointer
+    pointer operator->() noexcept { return ptr(); }
 
-    const_pointer operator->() const { return ptr(); }
+    /// Access the underlying pointer
+    const_pointer operator->() const noexcept { return ptr(); }
 
-    pointer get() { return ptr(); }
+    /// Get the underlying pointer
+    pointer get() noexcept { return ptr(); }
 
-    const_pointer get() const { return ptr(); }
+    /// Get the underlying pointer
+    const_pointer get() const noexcept { return ptr(); }
 
 private:
-    inline pointer ptr() const { return reinterpret_cast<pointer>(m_buffer); }
+    pointer ptr() const { return reinterpret_cast<pointer>(m_buffer); }
 
 private:
     std::byte* m_buffer;

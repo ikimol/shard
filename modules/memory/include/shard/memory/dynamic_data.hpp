@@ -8,36 +8,43 @@
 namespace shard {
 namespace memory {
 
-class allocation {
+class dynamic_data {
 public:
     /// Create a wrapper without allocating any memory
-    allocation()
+    dynamic_data() noexcept
     : m_size(0)
     , m_allocation(nullptr, std::free) {}
 
     /// Allocate memory of the given size
-    explicit allocation(std::size_t size)
+    explicit dynamic_data(std::size_t size)
     : m_size(size)
     , m_allocation(static_cast<std::byte*>(std::malloc(size)), std::free) {}
 
     /// Get the bytes
-    std::byte* bytes() { return m_allocation.get(); }
-
-    /// Get the bytes
-    const std::byte* bytes() const { return m_allocation.get(); }
+    std::byte* bytes() const noexcept { return m_allocation.get(); }
 
     /// Get the number of bytes
-    std::size_t size() const { return m_size; }
+    std::size_t size() const noexcept { return m_size; }
 
     /// Stop managing the allocated memory
-    std::byte* release() { return m_allocation.release(); }
+    std::byte* release() noexcept {
+        m_size = 0;
+        return m_allocation.release();
+    }
 
     /// Reallocate the memory to the given size
     std::byte* reallocate(std::size_t new_size) {
-        auto p = std::realloc(m_allocation.release(), new_size);
-        m_allocation.reset(static_cast<std::byte*>(p));
-        m_size = new_size;
-        return m_allocation.get();
+        auto bytes = m_allocation.release();
+
+        if (auto p = std::realloc(bytes, new_size)) {
+            m_allocation.reset(static_cast<std::byte*>(p));
+            m_size = new_size;
+            return m_allocation.get();
+        }
+
+        m_allocation.reset(bytes);
+
+        throw std::bad_alloc();
     }
 
 private:
@@ -49,6 +56,6 @@ private:
 
 // bring symbols into parent namespace
 
-using memory::allocation;
+using memory::dynamic_data;
 
 } // namespace shard

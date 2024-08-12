@@ -12,6 +12,9 @@
 // statically allocated buffer
 static char g_buffer[BUFFER_SIZE];
 
+// size to make allocations fail
+static std::size_t g_too_much = static_cast<std::size_t>(-1);
+
 struct test_class : public shard::object {
     test_class() = default;
 
@@ -144,6 +147,73 @@ TEST_CASE("memory") {
 
                 auto padding_with_header = shard::memory::get_padding<header>(p1, 4);
                 REQUIRE(padding_with_header == 3);
+            }
+        }
+    }
+
+    SUBCASE("dynamit_data") {
+        SUBCASE("default constructor") {
+            shard::dynamic_data data;
+
+            REQUIRE(data.size() == 0);
+            REQUIRE(data.bytes() == nullptr);
+
+            SUBCASE("release") {
+                auto old_bytes = data.bytes();
+                auto bytes = data.release();
+
+                REQUIRE(old_bytes == bytes);
+                REQUIRE(bytes == nullptr);
+                REQUIRE(data.size() == 0);
+                REQUIRE(data.bytes() == nullptr);
+            }
+
+            SUBCASE("reallocate") {
+                data.reallocate(128);
+
+                REQUIRE(data.size() == 128);
+                REQUIRE(data.bytes() != nullptr);
+            }
+        }
+
+        SUBCASE("construction with size") {
+            shard::dynamic_data data(128);
+
+            REQUIRE(data.size() == 128);
+            REQUIRE(data.bytes() != nullptr);
+
+            SUBCASE("release") {
+                auto old_bytes = data.bytes();
+                auto bytes = data.release();
+
+                REQUIRE(old_bytes == bytes);
+                REQUIRE(data.size() == 0);
+                REQUIRE(data.bytes() == nullptr);
+            }
+
+            SUBCASE("reallocate") {
+                data.reallocate(256);
+
+                REQUIRE(data.size() == 256);
+                REQUIRE(data.bytes() != nullptr);
+            }
+        }
+
+        SUBCASE("error handling") {
+            shard::dynamic_data data(128);
+
+            SUBCASE("throws") {
+                REQUIRE_THROWS_AS(data.reallocate(g_too_much), std::bad_alloc);
+            }
+
+            SUBCASE("pointer remains valid after exception") {
+                auto old_bytes = data.bytes();
+
+                try {
+                    data.reallocate(g_too_much);
+                } catch (...) {}
+
+                REQUIRE(old_bytes == data.bytes());
             }
         }
     }

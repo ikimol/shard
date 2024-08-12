@@ -5,7 +5,7 @@
 #include "shard/net/http/status.hpp"
 
 #include <shard/enums/traits.hpp>
-#include <shard/memory/allocation.hpp>
+#include <shard/memory/dynamic_data.hpp>
 
 #include <optional>
 #include <string>
@@ -25,16 +25,16 @@ public:
     bool is_successful() const { return to_underlying(m_status) >= 200 && to_underlying(m_status) < 300; }
 
     /// Get the response headers
-    const memory::allocation& header() const { return m_header; }
+    const memory::dynamic_data& header() const { return m_header; }
 
     /// Get the response data
-    const memory::allocation& data() const { return m_data; }
+    const memory::dynamic_data& data() const { return m_data; }
 
 private:
     status_t m_status = status_t::unknown;
 
-    memory::allocation m_header;
-    memory::allocation m_data;
+    memory::dynamic_data m_header;
+    memory::dynamic_data m_data;
 };
 
 } // namespace shard::net::http

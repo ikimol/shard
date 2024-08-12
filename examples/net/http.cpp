@@ -8,7 +8,7 @@
 
 namespace http = shard::net::http;
 
-std::optional<std::string> data_to_string(const shard::memory::allocation& data) {
+std::optional<std::string> data_to_string(const shard::memory::dynamic_data& data) {
     if (data.bytes()) {
         std::string s(reinterpret_cast<const char*>(data.bytes()), data.size());
         shard::trim(s);
