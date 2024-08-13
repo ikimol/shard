@@ -32,11 +32,11 @@ public:
     : m_index(index)
     , m_iterator(iterator) {}
 
-    enumerator_proxy(const enumerator_proxy<T>& other)
+    enumerator_proxy(const enumerator_proxy& other)
     : m_index(other.m_index)
     , m_iterator(other.m_iterator) {}
 
-    enumerator_proxy<T>& operator=(const enumerator_proxy<T>& other) {
+    enumerator_proxy& operator=(const enumerator_proxy& other) {
         if (this != &other) {
             m_index = other.m_index;
             m_iterator = other.m_iterator;
@@ -103,10 +103,10 @@ public:
     enumerator(std::size_t index, iterator_type iterator)
     : m_result(index, iterator) {}
 
-    enumerator(const enumerator<T>& other)
+    enumerator(const enumerator& other)
     : m_result(other.m_result) {}
 
-    enumerator<T>& operator=(const enumerator<T>& other) {
+    enumerator& operator=(const enumerator& other) {
         if (this != &other) {
             m_result = other.m_result;
         }
@@ -117,21 +117,21 @@ public:
 
     const result_type& operator*() const { return m_result; }
 
-    enumerator<T>& operator++() {
+    enumerator& operator++() {
         assert(m_result.m_index != std::numeric_limits<size_t>::max());
         ++m_result.m_iterator;
         ++m_result.m_index;
         return *this;
     }
 
-    bool operator==(const enumerator<T>& other) const {
+    bool operator==(const enumerator& other) const {
         // don't compare indices here, only iterators
         // it's possible for an end iterator to have different indices depending on whether it was
         // created by calling std::end() versus incrementing a valid iterator
         return m_result.m_iterator == other.m_result.m_iterator;
     }
 
-    bool operator!=(const enumerator<T>& other) const { return !this->operator==(other); }
+    bool operator!=(const enumerator& other) const { return !this->operator==(other); }
 
 private:
     result_type m_result;

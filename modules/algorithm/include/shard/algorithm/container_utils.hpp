@@ -109,6 +109,7 @@ void values_of(const Map& m, OutputIt it) {
 template <typename Map>
 std::vector<typename Map::mapped_type> values_of(const Map& m) {
     std::vector<typename Map::mapped_type> v;
+    v.reserve(m.size());
     values_of(m, std::back_inserter(v));
     return v;
 }
