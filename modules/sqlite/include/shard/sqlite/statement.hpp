@@ -73,7 +73,7 @@ public:
     template <typename T>
     void bind(const std::string& name, T&& value) {
         auto index = sqlite3_bind_parameter_index(m_statement.get(), name.c_str());
-        bind(index, SHARD_FWD(value));
+        bind(index, std::forward<T>(value));
     }
 
     /// Step the query once
@@ -131,7 +131,7 @@ public:
         auto r = do_step();
         if (r == SQLITE_ROW) {
             int i = -1;
-            (read_value(m_statement.get(), ++i, SHARD_FWD(args)), ...);
+            (read_value(m_statement.get(), ++i, args), ...);
             return true;
         } else if (r == SQLITE_DONE) {
             return false;
@@ -252,7 +252,7 @@ private:
 template <typename... Args>
 void bind(statement& stmt, Args&&... args) {
     int i = 0;
-    (stmt.bind(++i, SHARD_FWD(args)), ...);
+    (stmt.bind(++i, std::forward<Args>(args)), ...);
 }
 
 template <typename... Args>

@@ -23,7 +23,7 @@ overloaded(Ts...) -> overloaded<Ts...>;
 /// Apply a functor based on the current value of the variant
 template <typename... Ts, typename Variant>
 auto variant_switch(Variant&& variant, Ts&&... ts) {
-    return std::visit(detail::overloaded {SHARD_FWD(ts)...}, SHARD_FWD(variant));
+    return std::visit(detail::overloaded {std::forward<Ts>(ts)...}, std::forward<Variant>(variant));
 }
 
 } // namespace algorithm

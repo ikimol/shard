@@ -79,7 +79,7 @@ public:
         if (key.empty()) {
             return;
         }
-        m_post_fields.insert_or_assign(key, shard::to_string(SHARD_FWD(value)));
+        m_post_fields.insert_or_assign(key, shard::to_string(std::forward<T>(value)));
     }
 
 private:
@@ -137,7 +137,7 @@ public:
     /// Add a single post field
     template <typename T>
     request_builder& with_post_field(const std::string& key, T&& value) {
-        m_request.set_post_field(key, SHARD_FWD(value));
+        m_request.set_post_field(key, std::forward<T>(value));
         return *this;
     }
 
