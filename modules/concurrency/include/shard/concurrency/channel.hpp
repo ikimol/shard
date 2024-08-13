@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include <shard/utility/non_copyable.hpp>
-
 #include <atomic>
 #include <condition_variable>
 #include <mutex>

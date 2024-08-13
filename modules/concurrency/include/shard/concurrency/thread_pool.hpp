@@ -20,7 +20,7 @@ public:
 public:
     /// Create a thread pool with the maximum number of physical threads
     thread_pool()
-    : thread_pool(thread_pool::max_thread_count()) {}
+    : thread_pool(max_thread_count()) {}
 
     /// Create a thread pool with the given number of threads
     explicit thread_pool(unsigned int count) {
@@ -46,8 +46,7 @@ public:
     /// Add a new task by binding the given args
     template <typename F, typename... Args>
     void run(F&& f, Args&&... args) {
-        auto bound = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
-        m_tasks.push(bound);
+        m_tasks.push(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
     }
 
     /// Stop every thread by closing the channel
@@ -61,7 +60,7 @@ public:
 
 public:
     /// Get the maximum number of physical threads
-    static unsigned int max_thread_count() noexcept { return std::max(std::thread::hardware_concurrency(), 2u) - 1u; }
+    static unsigned max_thread_count() noexcept { return std::max(std::thread::hardware_concurrency(), 2u) - 1u; }
 
 private:
     // thread function polling and executing the tasks

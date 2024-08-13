@@ -3,9 +3,7 @@
 #pragma once
 
 #include <shard/system/platform.hpp>
-#include <shard/utility/preprocessor.hpp>
 
-#include <cassert>
 #include <cstddef>
 
 #if defined(SHARD_APPLE)

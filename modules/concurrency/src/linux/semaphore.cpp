@@ -2,6 +2,9 @@
 
 #include "shard/concurrency/semaphore.hpp"
 
+#include "shard/utility/preprocessor.hpp"
+
+#include <cassert>
 #include <cerrno>
 
 #include <semaphore.h>

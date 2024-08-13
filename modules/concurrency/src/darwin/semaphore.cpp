@@ -2,6 +2,10 @@
 
 #include "shard/concurrency/semaphore.hpp"
 
+#include "shard/utility/preprocessor.hpp"
+
+#include <cassert>
+
 #include <mach/mach_init.h>
 #include <mach/semaphore.h>
 #include <mach/task.h>

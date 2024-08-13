@@ -2,6 +2,7 @@
 
 #include "shard/concurrency/semaphore.hpp"
 
+#include <cassert>
 #include <limits>
 
 #include <windows.h>
