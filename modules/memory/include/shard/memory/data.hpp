@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <utility>
+#include <cstddef>
 
 namespace shard {
 namespace memory {

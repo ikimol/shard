@@ -37,10 +37,10 @@ public:
     /// Add a new value to the set
     void insert(value_type value) {
         if (!contains(value)) {
-            auto index = to_index(value);
-            ensure_element_fits(index);
+            auto u_value = to_unsigned(value);
+            ensure_element_fits(u_value);
             m_dense[m_size] = value;
-            m_sparse[index] = m_size;
+            m_sparse[u_value] = m_size;
             ++m_size;
         }
     }
@@ -48,9 +48,9 @@ public:
     /// Remove a value from the set
     void erase(value_type value) {
         if (contains(value)) {
-            auto index = to_index(value);
-            m_dense[m_sparse[index]] = m_dense[m_size - 1];
-            m_sparse[to_index(m_dense[m_size - 1])] = m_sparse[index];
+            auto u_value = to_unsigned(value);
+            m_dense[m_sparse[u_value]] = m_dense[m_size - 1];
+            m_sparse[to_unsigned(m_dense[m_size - 1])] = m_sparse[u_value];
             --m_size;
         }
     }
@@ -60,12 +60,12 @@ public:
 
     /// Check if the value is present in the set
     bool contains(value_type value) {
-        auto index = to_index(value);
-        return index < m_capacity && m_sparse[index] < m_size && to_index(m_dense[m_sparse[index]]) == index;
+        auto u_value = to_unsigned(value);
+        return u_value < m_capacity && m_sparse[u_value] < m_size && to_unsigned(m_dense[m_sparse[u_value]]) == u_value;
     }
 
     /// Get the index of the value in the dense set
-    index_type index_of(value_type value) const { return m_sparse[to_index(value)]; }
+    index_type index_of(value_type value) const { return m_sparse[to_unsigned(value)]; }
 
     /// Check if the set is empty
     bool is_empty() const noexcept { return m_size == 0; }
@@ -109,17 +109,17 @@ private:
     }
 
     void reallocate(size_type new_capacity) {
-        if (new_capacity <= m_capacity) {
+        if (new_capacity == m_capacity) {
             return;
         }
 
         void* dense;
-        if (dense = std::realloc(m_dense, new_capacity); !dense) {
+        if (dense = std::realloc(m_dense, new_capacity * sizeof(value_type)); !dense) {
             throw std::bad_alloc();
         }
 
         void* sparse;
-        if (sparse = std::realloc(m_sparse, new_capacity); !sparse) {
+        if (sparse = std::realloc(m_sparse, new_capacity * sizeof(index_type)); !sparse) {
             std::free(dense);
             throw std::bad_alloc();
         }
@@ -130,7 +130,7 @@ private:
         m_capacity = new_capacity;
     }
 
-    static index_type to_index(value_type value) { return translator_type::translate(value); }
+    static index_type to_unsigned(value_type value) { return translator_type::translate(value); }
 
 private:
     value_type* m_dense = nullptr;  // dense set of elements

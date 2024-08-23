@@ -31,6 +31,7 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/meta_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/property_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/signal_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/sparse_set_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/string_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/utility_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/uuid_test.cpp
