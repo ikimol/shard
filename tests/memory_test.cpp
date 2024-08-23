@@ -151,7 +151,7 @@ TEST_CASE("memory") {
         }
     }
 
-    SUBCASE("dynamit_data") {
+    SUBCASE("dynamic_data") {
         SUBCASE("default constructor") {
             shard::dynamic_data data;
 
