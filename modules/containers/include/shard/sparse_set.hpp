@@ -59,7 +59,7 @@ public:
     void clear() { m_size = 0; }
 
     /// Check if the value is present in the set
-    bool contains(value_type value) {
+    bool contains(value_type value) const {
         auto u_value = to_unsigned(value);
         return u_value < m_capacity && m_sparse[u_value] < m_size && to_unsigned(m_dense[m_sparse[u_value]]) == u_value;
     }
