@@ -162,7 +162,7 @@ public:
     : m_slots(std::move(other.m_slots)) {}
 
     /// Destructor
-    ~signal() { disconnect_all(); }
+    ~signal() override { disconnect_all(); }
 
     /// Move assignment operator
     signal& operator=(signal&& other) noexcept {
@@ -229,7 +229,7 @@ public:
     }
 
 protected:
-    void disconnect(const std::shared_ptr<slot_base>& slot) final {
+    void disconnect(const std::shared_ptr<slot_base>& slot) override {
         if (auto it = std::find(m_slots.begin(), m_slots.end(), slot); it != m_slots.end()) {
             m_slots.erase(it);
         }
