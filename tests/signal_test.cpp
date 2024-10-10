@@ -27,37 +27,12 @@ struct event_handler {
 };
 
 TEST_CASE("signal") {
-    SUBCASE("move") {
-        shard::signal<int> event;
-
-        SUBCASE("constructor") {
-            int last_i = 0;
-            event.connect([&last_i](int i) { last_i = i; });
-            REQUIRE(event.slot_count() == 1);
-
-            auto other = std::move(event);
-            REQUIRE(other.slot_count() == 1);
-            REQUIRE(event.slot_count() == 0); /* NOLINT */
-        }
-
-        SUBCASE("assignment") {
-            int last_i = 0;
-            event.connect([&last_i](int i) { last_i = i; });
-            REQUIRE(event.slot_count() == 1);
-
-            shard::signal<int> other;
-            other = std::move(event);
-            REQUIRE(other.slot_count() == 1);
-            REQUIRE(event.slot_count() == 0); /* NOLINT */
-        }
-    }
-
     SUBCASE("slots") {
         shard::signal<int> event;
 
         SUBCASE("free function") {
-            event.connect(on_event);
-            event.connect(on_empty_event);
+            auto c1 = event.connect(on_event);
+            auto c2 = event.connect(on_empty_event);
             event.emit(42);
             REQUIRE(g_last_i == 42);
             REQUIRE(g_handled);
@@ -65,15 +40,15 @@ TEST_CASE("signal") {
 
         SUBCASE("lambda") {
             int last_i = 0;
-            event.connect([&last_i](int i) { last_i = i; });
+            auto c = event.connect([&last_i](int i) { last_i = i; });
             event.emit(42);
             REQUIRE(last_i == 42);
         }
 
         SUBCASE("member function") {
             event_handler handler;
-            event.connect(&event_handler::on_event, &handler);
-            event.connect(&event_handler::on_empty_event, &handler);
+            auto c1 = event.connect(shard::bind(&handler, &event_handler::on_event));
+            auto c2 = event.connect(shard::bind(&handler, &event_handler::on_empty_event));
             event.emit(42);
             REQUIRE(handler.last_i == 42);
             REQUIRE(handler.handled);
@@ -83,18 +58,18 @@ TEST_CASE("signal") {
     SUBCASE("connections") {
         shard::signal<int> event;
 
-        SUBCASE("disable") {
+        SUBCASE("set_enabled") {
             int last_i = 0;
             auto c = event.connect([&](int i) { last_i = i; });
             REQUIRE(event.slot_count() == 1);
 
-            c.disable();
+            c.set_enabled(false);
             REQUIRE(event.slot_count() == 1);
 
             event.emit(42);
             REQUIRE(last_i == 0);
 
-            c.enable();
+            c.set_enabled(true);
             REQUIRE(event.slot_count() == 1);
 
             event.emit(21);
@@ -113,12 +88,12 @@ TEST_CASE("signal") {
             REQUIRE(last_i == 0);
         }
 
-        SUBCASE("scoped") {
+        SUBCASE("scoping") {
             int last_i = 0;
 
             REQUIRE(event.slot_count() == 0);
             {
-                shard::scoped_connection c = event.connect([&](int i) { last_i = i; });
+                auto c = event.connect([&](int i) { last_i = i; });
                 REQUIRE(event.slot_count() == 1);
 
                 event.emit(42);

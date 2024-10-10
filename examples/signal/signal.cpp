@@ -9,7 +9,7 @@ struct widget {
     explicit widget(const char* name)
     : name(name) {}
 
-    void foo() { std::cout << name << '\n'; }
+    void foo() const { std::cout << name << '\n'; }
 
     const char* name;
 };
@@ -25,17 +25,17 @@ int main(int /* argc */, char* /* argv */[]) {
     shard::signal<int> event;
 
     // connect a lambda
-    auto c = event.connect([](int i) { std::cout << i << '\n'; });
+    auto c_l = event.connect([](int i) { std::cout << i << '\n'; });
 
     // emit the signal
     event.emit(1);
 
     // disable the connected slot
-    c.set_enabled(false);
+    c_l.set_enabled(false);
 
     // connect a member function
     receiver r;
-    event.connect(&receiver::on_event, &r);
+    auto c_t = event.connect(shard::bind(&r, &receiver::on_event));
 
     // can also use the call operator
     event(2);
@@ -44,7 +44,7 @@ int main(int /* argc */, char* /* argv */[]) {
     assert(r.received);
 
     // re-enable the connected slot
-    c.set_enabled(true);
+    c_l.set_enabled(true);
 
     {
         widget w("foo");
@@ -55,7 +55,7 @@ int main(int /* argc */, char* /* argv */[]) {
         };
 
         // the slot will be disconnected at the end of the scope
-        shard::scoped_connection sc = event.connect(lambda);
+        auto c_s = event.connect(lambda);
         event.emit(3);
     }
 

@@ -4,10 +4,8 @@
 
 #include <shard/meta/type_traits.hpp>
 
-#include <algorithm>
 #include <functional>
 #include <memory>
-#include <utility>
 #include <vector>
 
 namespace shard {
@@ -17,10 +15,8 @@ class slot_base;
 
 class connection {
 public:
+    /// Default constructor
     connection() = default;
-
-    /// Copy constructor
-    connection(const connection& other) = default;
 
     /// Move constructor
     connection(connection&& other) noexcept
@@ -35,9 +31,6 @@ public:
     : m_signal(signal)
     , m_slot(slot) {}
 
-    /// Copy assignment operator
-    connection& operator=(const connection& other) = default;
-
     /// Move assignment operator
     connection& operator=(connection&& other) noexcept {
         m_signal = other.m_signal;
@@ -47,11 +40,11 @@ public:
         return *this;
     }
 
-    /// Check if this connection is correctly hooked up
-    bool is_valid() { return m_signal && !m_slot.expired(); }
+    /// Destroy the connection disconnecting the underlying slot from its signal
+    ~connection() { disconnect(); }
 
-    /// Disconnect the underlying slot from its signal
-    void disconnect();
+    /// Check if the connection is alive
+    bool is_alive() const { return !m_slot.expired(); }
 
     /// Check if the slot is enabled
     bool is_enabled() const;
@@ -59,52 +52,24 @@ public:
     /// Temporarily enable or disable the slot
     void set_enabled(bool enabled);
 
-    /// Convenience function to disable the slot
-    void disable() { set_enabled(false); }
-
-    /// Convenience function to enable the slot
-    void enable() { set_enabled(true); }
+    /// Disconnect the underlying slot from its signal
+    void disconnect();
 
 private:
     signal_base* m_signal = nullptr;
     std::weak_ptr<slot_base> m_slot;
 };
 
-class scoped_connection {
-public:
-    scoped_connection() = default;
-
-    /// Implicit constructor from a non-scoped rvalue connection
-    scoped_connection(connection&& connection) /* NOLINT */
-    : m_connection(std::move(connection)) {}
-
-    /// Assignment operator from a non-scoped connection
-    scoped_connection& operator=(connection&& other) noexcept {
-        m_connection = std::move(other);
-        return *this;
-    }
-
-    /// Destructor
-    ~scoped_connection() { m_connection.disconnect(); }
-
-private:
-    connection m_connection;
-};
-
 class slot_base {
 public:
-    slot_base() = default;
+    // check if the slot is enabled
+    bool is_enabled() const { return m_enabled; }
 
-    virtual ~slot_base() = default;
+    // set if the slot should be enabled
+    void set_enabled(bool enabled) { m_enabled = enabled; }
 
-    /// Disabled copy constructor
-    slot_base(const slot_base& other) = delete;
-
-    /// Disabled copy assignment operator
-    slot_base& operator=(const slot_base& other) = delete;
-
-public:
-    bool enabled = true;
+private:
+    bool m_enabled = true;
 };
 
 template <typename... Args>
@@ -113,14 +78,14 @@ public:
     using function_type = std::function<void(Args...)>;
 
 public:
-    /// Construct a slot with a function pointer
+    // construct a slot with a function pointer
     explicit slot(function_type function)
     : m_function(std::move(function)) {}
 
-    /// Invoke the function pointer
+    // invoke the stored function
     template <typename... CallArgs>
-    void operator()(CallArgs&&... args) {
-        if (enabled && m_function) {
+    void invoke(CallArgs&&... args) {
+        if (is_enabled()) {
             m_function(std::forward<CallArgs>(args)...);
         }
     }
@@ -141,88 +106,49 @@ protected:
 
 template <typename... Args>
 class signal final : public signal_base {
-public:
+private:
     using slot_type = slot<Args...>;
-    using slot_type_noarg = slot<>;
 
     using function_type = typename slot_type::function_type;
-    using function_type_noarg = typename slot_type_noarg::function_type;
-
-    // clang-format off
-    template <typename T> using member_function_type = void (T::*)(Args...);
-    template <typename T> using member_function_type_noarg = void (T::*)();
-    // clang-format on
+    using function_type_noarg = slot<>::function_type;
 
 public:
-    /// Default constructor
     signal() = default;
 
-    /// Move constructor
-    signal(signal&& other) noexcept
-    : m_slots(std::move(other.m_slots)) {}
-
     /// Destructor
-    ~signal() override { disconnect_all(); }
+    ~signal() override = default;
 
-    /// Move assignment operator
-    signal& operator=(signal&& other) noexcept {
-        m_slots = std::move(other.m_slots);
-        return *this;
-    }
+    signal(const signal&) = delete;
+    signal(signal&&) = delete;
+
+    signal& operator=(const signal&) = delete;
+    signal& operator=(signal&&) = delete;
 
     /// Get the number of connected slots
     std::size_t slot_count() const { return m_slots.size(); }
 
     /// Connect a function object as a slot
-    connection connect(function_type function) {
-        m_slots.push_back(std::make_shared<slot_type>(std::move(function)));
-        return {this, m_slots.back()};
+    [[nodiscard]] connection connect(function_type fn) {
+        m_slots.push_back(std::make_shared<slot_type>(std::move(fn)));
+        return connection {this, m_slots.back()};
     }
 
     /// Connect a function object taking no arguments as a slot
-    template <meta::disable_if_t<meta::is_empty<Args...>::value>* = nullptr>
-    connection connect(function_type_noarg function) /* NOLINT */ {
-        auto wrapper = [=](Args&&...) -> void {
-            function();
-        };
-        m_slots.push_back(std::make_shared<slot_type>(wrapper));
-        return {this, m_slots.back()};
+    template <disable_if_t<is_empty_v<Args...>>* = nullptr>
+    [[nodiscard]] connection connect(function_type_noarg fn) /* NOLINT */ {
+        m_slots.push_back(std::make_shared<slot_type>([fn = std::move(fn)](Args&&...) -> void { fn(); }));
+        return connection {this, m_slots.back()};
     }
-
-    /// Connect a member function as a slot
-    template <typename T>
-    connection connect(member_function_type<T> member_function, T* object) {
-        auto wrapper = [=](Args&&... args) -> void {
-            (object->*member_function)(std::forward<Args>(args)...);
-        };
-        m_slots.push_back(std::make_shared<slot_type>(wrapper));
-        return {this, m_slots.back()};
-    }
-
-    /// Connect a member function taking no arguments as a slot
-    template <typename T, meta::disable_if_t<meta::is_empty<Args...>::value>* = nullptr>
-    connection connect(member_function_type_noarg<T> member_function, T* object) {
-        auto wrapper = [=](Args&&...) -> void {
-            (object->*member_function)();
-        };
-        m_slots.push_back(std::make_shared<slot_type>(wrapper));
-        return {this, m_slots.back()};
-    }
-
-    /// Disconnect every slot
-    void disconnect_all() { m_slots.clear(); }
 
     /// Emit the signal calling every enabled slot
     template <typename... CallArgs>
     void emit(CallArgs&&... args) {
         for (const auto& slot : m_slots) {
-            if (slot) {
-                (*slot)(std::forward<CallArgs>(args)...);
-            }
+            slot->invoke(std::forward<CallArgs>(args)...);
         }
     }
 
-    /// Call operator to emit the signal
+    /// Emit the signal calling every enabled slot
     template <typename... CallArgs>
     void operator()(CallArgs&&... args) {
         emit(std::forward<CallArgs>(args)...);
@@ -230,31 +156,40 @@ public:
 
 protected:
     void disconnect(const std::shared_ptr<slot_base>& slot) override {
-        if (auto it = std::find(m_slots.begin(), m_slots.end(), slot); it != m_slots.end()) {
-            m_slots.erase(it);
-        }
+        m_slots.erase(std::remove(m_slots.begin(), m_slots.end(), slot), m_slots.end());
     }
 
 private:
     std::vector<std::shared_ptr<slot_type>> m_slots;
 };
 
-inline void connection::disconnect() {
-    if (auto slot = m_slot.lock()) {
-        m_signal->disconnect(slot);
-    }
+// helpers
+
+template <class T, typename... Args>
+std::function<void(Args...)> bind(T* object, void (T::*method)(Args...)) {
+    return [object, method](Args&&... args) {
+        return (object->*method)(std::forward<Args>(args)...);
+    };
 }
+
+// implementation
 
 inline bool connection::is_enabled() const {
     if (auto slot = m_slot.lock()) {
-        return (*slot).enabled;
+        return slot->is_enabled();
     }
     return false;
 }
 
 inline void connection::set_enabled(bool enabled) {
     if (auto slot = m_slot.lock()) {
-        (*slot).enabled = enabled;
+        slot->set_enabled(enabled);
+    }
+}
+
+inline void connection::disconnect() {
+    if (auto slot = m_slot.lock()) {
+        m_signal->disconnect(slot);
     }
 }
 

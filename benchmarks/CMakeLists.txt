@@ -12,6 +12,12 @@ shard_add_benchmark(random
                     MODULES shard::random
                     )
 
+shard_add_benchmark(signal
+                    SOURCES signal.cpp main.cpp
+                    INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+                    MODULES shard::signal
+                    )
+
 shard_add_benchmark(string.fmt
                     SOURCES fmt.cpp main.cpp
                     INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
