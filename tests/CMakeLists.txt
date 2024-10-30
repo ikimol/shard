@@ -24,6 +24,7 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/alloc/allocators_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/bit_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/concurrency_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/containers/dynamic_bitset_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/enums_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/expected_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/math_test.cpp
