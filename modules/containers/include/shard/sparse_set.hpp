@@ -4,6 +4,7 @@
 
 #include <shard/meta/type_traits.hpp>
 
+#include <cstring>
 #include <memory>
 
 namespace shard {
