@@ -7,13 +7,15 @@
 
 #include <doctest.h>
 
+#include <cstdint>
+
 #define BUFFER_SIZE 512
 
 // statically allocated buffer
 static char g_buffer[BUFFER_SIZE];
 
 // size to make allocations fail
-static std::size_t g_too_much = static_cast<std::size_t>(-1);
+static std::size_t g_too_much = PTRDIFF_MAX;
 
 struct test_class : public shard::object {
     test_class() = default;
