@@ -4,20 +4,16 @@
 
 #include <shard/meta/type_traits.hpp>
 
+#include <memory>
+
 namespace shard {
 namespace containers {
-
-template <typename T>
-struct sparse_set_value_translator {
-    template <typename U = T, std::enable_if_t<std::is_unsigned_v<U>>* = nullptr>
-    static std::size_t translate(U value) {
-        return static_cast<std::size_t>(value);
-    }
-};
 
 /// Represents a sparse set of unsigned values
 template <typename T>
 class sparse_set {
+    static_assert(std::is_constructible_v<T, std::size_t> || std::is_convertible_v<T, std::size_t>);
+
 public:
     using value_type = unqualified_t<T>;
     using index_type = std::size_t;
@@ -26,12 +22,49 @@ public:
     using const_pointer = const value_type*;
     using iterator = pointer;
     using const_iterator = const_pointer;
-    using translator_type = sparse_set_value_translator<value_type>;
 
 public:
-    ~sparse_set() {
-        std::free(m_dense);
-        std::free(m_sparse);
+    /// Default constructor
+    sparse_set() = default;
+
+    /// Copy constructor
+    sparse_set(const sparse_set& other)
+    : m_size(other.m_size)
+    , m_capacity(other.m_capacity) {
+        copy_from(other, m_capacity);
+    }
+
+    /// Move constructor
+    sparse_set(sparse_set&& other) noexcept
+    : m_dense(std::move(other.m_dense))
+    , m_sparse(std::move(other.m_sparse))
+    , m_size(other.m_size)
+    , m_capacity(other.m_capacity) {
+        other.m_size = 0;
+        other.m_capacity = 0;
+    }
+
+    /// Copy assignment operator
+    sparse_set& operator=(const sparse_set& other) {
+        if (this != &other) {
+            m_size = other.m_size;
+            m_capacity = other.m_capacity;
+            copy_from(other, m_capacity);
+        }
+        return *this;
+    }
+
+    /// Move assignment operator
+    sparse_set& operator=(sparse_set&& other) noexcept {
+        if (this != &other) {
+            m_dense = std::move(other.m_dense);
+            m_sparse = std::move(other.m_sparse);
+            m_size = other.m_size;
+            m_capacity = other.m_capacity;
+            other.m_size = 0;
+            other.m_capacity = 0;
+        }
+        return *this;
     }
 
     /// Add a new value to the set
@@ -85,15 +118,39 @@ public:
 
     // iterators
 
-    iterator begin() { return m_dense; }
+    iterator begin() { return m_dense.get(); }
 
-    const_iterator begin() const { return m_dense; }
+    const_iterator begin() const { return m_dense.get(); }
 
-    iterator end() { return m_dense + m_size; }
+    iterator end() { return m_dense.get() + m_size; }
 
-    const_iterator end() const { return m_dense + m_size; }
+    const_iterator end() const { return m_dense.get() + m_size; }
 
 private:
+    struct free_deleter {
+        void operator()(void* ptr) const { std::free(ptr); }
+    };
+
+private:
+    void copy_from(const sparse_set& other, std::size_t capacity) {
+        void* dense;
+        if (dense = std::malloc(capacity * sizeof(value_type)); !dense) {
+            throw std::bad_alloc();
+        }
+
+        void* sparse;
+        if (sparse = std::malloc(capacity * sizeof(index_type)); !sparse) {
+            std::free(dense);
+            throw std::bad_alloc();
+        }
+
+        std::memcpy(dense, other.m_dense.get(), capacity * sizeof(value_type));
+        m_dense.reset(static_cast<value_type*>(dense));
+
+        std::memcpy(sparse, other.m_sparse.get(), capacity * sizeof(index_type));
+        m_sparse.reset(static_cast<index_type*>(sparse));
+    }
+
     void ensure_element_fits(index_type index) {
         if (index + 1 > m_capacity) {
             grow(index + 1);
@@ -109,32 +166,31 @@ private:
     }
 
     void reallocate(size_type new_capacity) {
-        if (new_capacity == m_capacity) {
-            return;
-        }
-
         void* dense;
-        if (dense = std::realloc(m_dense, new_capacity * sizeof(value_type)); !dense) {
+        if (dense = std::realloc(m_dense.get(), new_capacity * sizeof(value_type)); !dense) /* NOLINT */ {
             throw std::bad_alloc();
         }
 
         void* sparse;
-        if (sparse = std::realloc(m_sparse, new_capacity * sizeof(index_type)); !sparse) {
+        if (sparse = std::realloc(m_sparse.get(), new_capacity * sizeof(index_type)); !sparse) /* NOLINT */ {
             std::free(dense);
             throw std::bad_alloc();
         }
 
-        m_dense = static_cast<value_type*>(dense);
-        m_sparse = static_cast<index_type*>(sparse);
+        m_dense.release(); // avoid freeing memory
+        m_dense.reset(static_cast<value_type*>(dense));
+
+        m_sparse.release(); // avoid freeing memory
+        m_sparse.reset(static_cast<index_type*>(sparse));
 
         m_capacity = new_capacity;
     }
 
-    static index_type to_unsigned(value_type value) { return translator_type::translate(value); }
+    static index_type to_unsigned(value_type value) { return static_cast<std::size_t>(value); }
 
 private:
-    value_type* m_dense = nullptr;  // dense set of elements
-    index_type* m_sparse = nullptr; // map of elements to dense set indices
+    std::unique_ptr<value_type[], free_deleter> m_dense;  // dense set of elements
+    std::unique_ptr<index_type[], free_deleter> m_sparse; // map of elements to dense set indices
 
     size_type m_size = 0;
     size_type m_capacity = 0;
@@ -145,6 +201,5 @@ private:
 // bring symbols into parent namespace
 
 using containers::sparse_set;
-using containers::sparse_set_value_translator;
 
 } // namespace shard

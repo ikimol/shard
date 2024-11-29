@@ -11,15 +11,12 @@ struct widget_id {
     widget_id(std::size_t value) /* NOLINT */
     : value(value) {}
 
+    explicit operator std::size_t() const { return value; }
+
     std::size_t value = 0;
 };
 
 } // namespace example
-
-template <>
-struct shard::containers::sparse_set_value_translator<example::widget_id> {
-    static std::size_t translate(example::widget_id widget_id) { return widget_id.value; }
-};
 
 int main(int /* argc */, char* /* argv */[]) {
     shard::sparse_set<example::widget_id> set;

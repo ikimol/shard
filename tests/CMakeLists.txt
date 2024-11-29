@@ -25,6 +25,7 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/bit_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/concurrency_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/containers/dynamic_bitset_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/containers/sparse_set_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/enums_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/expected_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/math_test.cpp
@@ -32,7 +33,6 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/meta_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/property_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/signal_test.cpp
-               ${CMAKE_CURRENT_SOURCE_DIR}/sparse_set_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/string_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/utility_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/uuid_test.cpp
