@@ -35,7 +35,7 @@ public:
     std::byte* reallocate(std::size_t new_size) {
         if (auto p = std::realloc(m_allocation.get(), new_size)) /* NOLINT */ {
             m_allocation.release(); /* NOLINT */
-            m_allocation.reset(static_cast<std::byte*>(p));
+            m_allocation.reset(p);
             m_size = new_size;
             return static_cast<std::byte*>(m_allocation.get());
         }
