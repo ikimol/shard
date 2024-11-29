@@ -131,6 +131,16 @@ struct has_key_value_pair : std::bool_constant<detail::has_key_value_pair_impl<T
 template <typename T>
 inline constexpr bool has_key_value_pair_v = has_key_value_pair<T>::value;
 
+// is_explicitly_convertible
+
+template <typename From, typename To>
+struct is_explicitly_convertible {
+    static constexpr bool value = std::is_constructible_v<To, From> && !std::is_convertible_v<From, To>;
+};
+
+template <typename From, typename To>
+inline constexpr bool is_explicitly_convertible_v = is_explicitly_convertible<From, To>::value;
+
 // is_empty
 
 template <typename... Args>
