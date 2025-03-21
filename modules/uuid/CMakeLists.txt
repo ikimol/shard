@@ -23,8 +23,12 @@ elseif (SHARD_OS_WINDOWS) # Windows
     list(APPEND PLATFORM_SPECIFIC_SOURCES ${MODULE_SRC_DIR}/win/generator.cpp)
 endif ()
 
+set(MODULE_SOURCES
+    ${MODULE_SRC_DIR}/uuid.cpp
+    )
+
 shard_add_static_library(${MODULE_NAME}
-                         SOURCES ${PLATFORM_SPECIFIC_SOURCES}
+                         SOURCES ${MODULE_SOURCES} ${PLATFORM_SPECIFIC_SOURCES}
                          INCLUDE_DIR ${MODULE_INCLUDE_DIR}
                          )
 

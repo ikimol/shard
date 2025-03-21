@@ -2,16 +2,13 @@
 
 #pragma once
 
-#include <shard/algorithm/enumerate.hpp>
 #include <shard/utility/hash_value.hpp>
 
-#include <algorithm>
 #include <array>
-#include <cassert>
-#include <cctype>
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <string_view>
 
 namespace shard {
 
@@ -46,29 +43,20 @@ public:
     uuid() noexcept = default;
 
     /// Create a UUID from a raw array of bytes
-    explicit uuid(value_type (&data)[16]) noexcept {
-        std::copy(std::cbegin(data), std::cend(data), std::begin(m_data));
-    }
+    explicit uuid(const value_type (&data)[16]) noexcept;
 
     /// Create a UUID from an array of bytes
-    constexpr explicit uuid(const std::array<value_type, 16>& data) noexcept
-    : m_data(data) {}
+    constexpr explicit uuid(const std::array<value_type, 16>& data) noexcept;
 
     /// Create a UUID from a pair of iterators
     template <typename Iterator>
-    explicit uuid(Iterator first, Iterator last) {
-        if (std::distance(first, last) == 16) {
-            std::copy(first, last, std::begin(m_data));
-        }
-    }
+    explicit uuid(Iterator first, Iterator last);
 
     /// Create a UUID from its string representation
-    static std::optional<uuid> from_string(const std::string& str) noexcept;
+    static std::optional<uuid> from_string(const std::string_view& str) noexcept;
 
     /// Check if every byte of the UUID is zero
-    bool is_null() const {
-        return std::all_of(std::cbegin(m_data), std::cend(m_data), [](auto i) { return i == 0; });
-    }
+    bool is_null() const;
 
     /// Get the version of the UUID
     version version() const;
@@ -77,18 +65,7 @@ public:
     variant variant() const;
 
     /// Convert the UUID to its string representation
-    std::string to_string() const {
-        std::string buffer(36, '#');
-        std::size_t index = 0;
-        for (auto [i, b] : enumerate(m_data)) {
-            buffer[index++] = to_char((b >> 4) & 0xf);
-            buffer[index++] = to_char((b >> 0) & 0xf);
-            if (needs_hyphen(i)) {
-                buffer[index++] = '-';
-            }
-        }
-        return buffer;
-    }
+    std::string to_string() const;
 
     /// Swap the value of the UUID with another
     void swap(uuid& other) noexcept { m_data.swap(other.m_data); }
@@ -99,27 +76,7 @@ public:
     static uuid make_system_uuid();
 
 private:
-    static bool needs_hyphen(std::uint8_t b) { return b == 3 || b == 5 || b == 7 || b == 9; }
-
-    static char to_char(std::uint8_t nibble) {
-        constexpr char characters[] = "0123456789abcdef";
-        assert(nibble >= 0x0 && nibble <= 0xf);
-        return characters[nibble & 0xf];
-    }
-
-    static std::uint8_t to_nibble(const char ch) noexcept {
-        if (ch >= '0' && ch <= '9') {
-            return static_cast<std::uint8_t>(ch - '0');
-        } else if (ch >= 'a' && ch <= 'f') {
-            return static_cast<std::uint8_t>(10 + ch - 'a');
-        } else if (ch >= 'A' && ch <= 'F') {
-            return static_cast<std::uint8_t>(10 + ch - 'A');
-        }
-        return 0;
-    }
-
-private:
-    alignas(8) std::array<value_type, 16> m_data = {0};
+    alignas(8) std::array<value_type, 16> m_data = {};
 };
 
 // operators
@@ -143,75 +100,10 @@ inline bool operator<(const uuid& lhs, const uuid& rhs) noexcept {
 
 // implementation
 
-inline std::optional<uuid> uuid::from_string(const std::string& str) noexcept {
-    if (str.empty()) {
-        return std::nullopt;
-    }
-
-    std::size_t has_braces = 0;
-    if (str.front() == '{') {
-        has_braces = 1;
-    }
-    if (has_braces && str.back() != '}') {
-        return std::nullopt;
-    }
-
-    std::array<std::uint8_t, 16> data = {0};
-
-    bool first_digit = true;
-    std::size_t index = 0;
-
-    for (std::size_t i = has_braces; i < str.size() - has_braces; ++i) {
-        if (str[i] == '-') {
-            continue;
-        }
-
-        if (index >= 16 || !std::isxdigit(str[i])) {
-            return std::nullopt;
-        }
-
-        if (first_digit) {
-            data[index] = to_nibble(str[i]) << 4;
-            first_digit = false;
-        } else {
-            data[index] = data[index] | to_nibble(str[i]);
-            index++;
-            first_digit = true;
-        }
-    }
-
-    if (index < 16) {
-        return std::nullopt;
-    }
-
-    return uuid(data);
-}
-
-inline enum uuid::version uuid::version() const {
-    if ((m_data[6] & 0xf0) == 0x10) {
-        return version::time_based;
-    } else if ((m_data[6] & 0xf0) == 0x20) {
-        return version::dce_security;
-    } else if ((m_data[6] & 0xf0) == 0x30) {
-        return version::name_based_md5;
-    } else if ((m_data[6] & 0xf0) == 0x40) {
-        return version::random_number_based;
-    } else if ((m_data[6] & 0xf0) == 0x50) {
-        return version::name_based_sha1;
-    } else {
-        return version::none;
-    }
-}
-
-inline enum uuid::variant uuid::variant() const {
-    if ((m_data[8] & 0x80) == 0x00) {
-        return variant::ncs;
-    } else if ((m_data[8] & 0xc0) == 0x80) {
-        return variant::rfc;
-    } else if ((m_data[8] & 0xe0) == 0xc0) {
-        return variant::microsoft;
-    } else {
-        return variant::reserved;
+template <typename Iterator>
+uuid::uuid(Iterator first, Iterator last) {
+    if (std::distance(first, last) == 16) {
+        std::copy(first, last, std::begin(m_data));
     }
 }
 
