@@ -50,8 +50,8 @@ int main(int /* argc */, char* /* argv */[]) {
         widget w("foo");
 
         // bind a function that takes no arguments
-        auto lambda = [obj = &w] {
-            obj->foo();
+        auto lambda = [&] {
+            w.foo();
         };
 
         // the slot will be disconnected at the end of the scope

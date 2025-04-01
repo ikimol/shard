@@ -6,6 +6,7 @@
 
 #include <functional>
 #include <memory>
+#include <type_traits>
 #include <vector>
 
 namespace shard {
@@ -109,9 +110,6 @@ class signal final : public signal_base {
 private:
     using slot_type = slot<Args...>;
 
-    using function_type = typename slot_type::function_type;
-    using function_type_noarg = slot<>::function_type;
-
 public:
     signal() = default;
 
@@ -128,15 +126,15 @@ public:
     std::size_t slot_count() const { return m_slots.size(); }
 
     /// Connect a function object as a slot
-    [[nodiscard]] connection connect(function_type fn) {
-        m_slots.push_back(std::make_shared<slot_type>(std::move(fn)));
-        return connection {this, m_slots.back()};
-    }
-
-    /// Connect a function object taking no arguments as a slot
-    template <disable_if_t<is_empty_v<Args...>>* = nullptr>
-    [[nodiscard]] connection connect(function_type_noarg fn) /* NOLINT */ {
-        m_slots.push_back(std::make_shared<slot_type>([fn = std::move(fn)](Args&&...) -> void { fn(); }));
+    template <typename Function>
+    [[nodiscard]] connection connect(Function&& fn) {
+        std::shared_ptr<slot_type> slot;
+        if constexpr (std::is_invocable_v<Function, Args...>) {
+            slot = std::make_shared<slot_type>(std::forward<Function>(fn));
+        } else {
+            slot = std::make_shared<slot_type>([fn = std::forward<std::decay_t<Function>>(fn)](auto&&...) { fn(); });
+        }
+        m_slots.push_back(std::move(slot));
         return connection {this, m_slots.back()};
     }
 
