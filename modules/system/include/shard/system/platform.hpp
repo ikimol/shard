@@ -9,6 +9,7 @@
     #define SHARD_UNIX
     #define SHARD_LINUX
 #elif defined(__APPLE__)
+    #define SHARD_UNIX
     #define SHARD_APPLE
     #include <TargetConditionals.h>
     #if defined(TARGET_OS_OSX)
@@ -28,10 +29,10 @@
 namespace shard::system {
 
 enum platform_t {
-    platform_linux,
     platform_android,
-    platform_macos,
     platform_ios,
+    platform_linux,
+    platform_macos,
     platform_windows,
 };
 
