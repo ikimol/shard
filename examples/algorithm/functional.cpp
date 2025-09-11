@@ -23,7 +23,7 @@ int main(int /* argc */, char* /* argv */[]) {
     auto numbers = shard::functional::flat_map(strings, parse_int);
     auto even_numbers = shard::functional::filter(numbers, [](auto i) { return i % 2 == 0; });
     std::vector names = {"foo", "bar", "baz"};
-    auto pairs = shard::algorithm::functional::zip(names, even_numbers);
+    auto pairs = shard::functional::zip(names, even_numbers);
 
     for (const auto& [s, i] : pairs) {
         std::cout << s << ": " << i << '\n';

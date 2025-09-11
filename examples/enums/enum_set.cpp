@@ -6,6 +6,8 @@
 
 enum class target : char { player, enemy, bullet };
 
+std::array g_target_name = {"player", "enemy", "bullet"};
+
 int main(int /* argc */, char* /* argv */[]) {
     std::cout << "sizeof(target): " << sizeof(target) << '\n';
 
@@ -21,11 +23,12 @@ int main(int /* argc */, char* /* argv */[]) {
     std::cout << "enemy: " << targets.test(target::enemy) << '\n';
     std::cout << "bullet: " << targets.test(target::bullet) << '\n';
 
-    targets[target::enemy] = false;
+    targets[target::player] = false;
+    targets[target::enemy] = true;
     targets[target::bullet] = true;
 
     for (auto t : targets) {
-        std::cout << (int)(t) << '\n';
+        std::cout << g_target_name[static_cast<int>(t)] << '\n';
     }
 
     return 0;

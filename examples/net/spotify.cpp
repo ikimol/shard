@@ -259,7 +259,7 @@ int main(int /* argc */, char* /* argv */[]) {
     if (track) {
         std::cout << "track: " << track->name << '\n';
     } else {
-        std::cerr << "failed to get track: " << shard::to_underlying(album.error()) << '\n';
+        std::cerr << "failed to get track: " << shard::to_underlying(track.error()) << '\n';
     }
 
     return 0;
