@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include "shard/memory/data.hpp"
+
 #include <cstdlib>
 #include <memory>
 
@@ -42,6 +44,8 @@ public:
 
         throw std::bad_alloc();
     }
+
+    /* implicit */ operator data() const noexcept /* NOLINT */ { return data(m_allocation.get(), m_size); }
 
 private:
     struct free_deleter {

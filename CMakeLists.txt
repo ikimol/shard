@@ -36,6 +36,7 @@ option(SHARD_BUILD_DOCS "Enable to build the documentation" OFF)
 # optional module building
 # ------------------------------------------------------------------------------
 
+option(SHARD_BUILD_CRYPTO_MODULE "Enable to build the 'crypto' module" ON)
 option(SHARD_BUILD_NET_MODULE "Enable to build the 'net' module" ON)
 option(SHARD_BUILD_SQLITE_MODULE "Enable to build the 'sqlite' module" ON)
 
