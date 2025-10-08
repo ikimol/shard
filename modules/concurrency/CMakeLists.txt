@@ -23,8 +23,8 @@ elseif (SHARD_OS_DARWIN)  # Apple
          )
 elseif (SHARD_OS_WINDOWS) # Windows
     list(APPEND PLATFORM_SPECIFIC_SOURCES
-         ${MODULE_SRC_DIR}/windows/semaphore.cpp
-         ${MODULE_SRC_DIR}/windows/this_thread.cpp
+         ${MODULE_SRC_DIR}/win/semaphore.cpp
+         ${MODULE_SRC_DIR}/win/this_thread.cpp
          )
 endif ()
 
