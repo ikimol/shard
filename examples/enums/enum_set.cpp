@@ -2,6 +2,7 @@
 
 #include <shard/enums/enum_set.hpp>
 
+#include <array>
 #include <iostream>
 
 enum class target : char { player, enemy, bullet };
