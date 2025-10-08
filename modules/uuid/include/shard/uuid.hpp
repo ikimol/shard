@@ -6,6 +6,7 @@
 
 #include <array>
 #include <cstdint>
+#include <iosfwd>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -81,22 +82,13 @@ private:
 
 // operators
 
-inline void swap(uuid& lhs, uuid& rhs) noexcept {
-    lhs.swap(rhs);
-}
+void swap(uuid& lhs, uuid& rhs) noexcept;
 
-inline std::ostream& operator<<(std::ostream& os, const uuid& u) {
-    os << u.to_string();
-    return os;
-}
+std::ostream& operator<<(std::ostream& os, const uuid& u);
 
-inline bool operator==(const uuid& lhs, const uuid& rhs) noexcept {
-    return lhs.m_data == rhs.m_data;
-}
+bool operator==(const uuid& lhs, const uuid& rhs) noexcept;
 
-inline bool operator<(const uuid& lhs, const uuid& rhs) noexcept {
-    return lhs.m_data < rhs.m_data;
-}
+bool operator<(const uuid& lhs, const uuid& rhs) noexcept;
 
 // implementation
 

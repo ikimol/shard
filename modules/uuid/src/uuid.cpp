@@ -7,11 +7,13 @@
 #include <algorithm>
 #include <cassert>
 #include <cctype>
+#include <cstddef>
+#include <ostream>
 
 namespace shard {
 namespace {
 
-bool needs_hyphen(std::uint8_t b) {
+bool needs_hyphen(std::size_t b) {
     return b == 3 || b == 5 || b == 7 || b == 9;
 }
 
@@ -128,6 +130,23 @@ std::string uuid::to_string() const {
         }
     }
     return {buffer.data(), buffer.size()};
+}
+
+void swap(uuid& lhs, uuid& rhs) noexcept {
+    lhs.swap(rhs);
+}
+
+std::ostream& operator<<(std::ostream& os, const uuid& u) {
+    os << u.to_string();
+    return os;
+}
+
+bool operator==(const uuid& lhs, const uuid& rhs) noexcept {
+    return lhs.m_data == rhs.m_data;
+}
+
+bool operator<(const uuid& lhs, const uuid& rhs) noexcept {
+    return lhs.m_data < rhs.m_data;
 }
 
 } // namespace shard
