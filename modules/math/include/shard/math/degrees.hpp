@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <cmath>
+#include "shard/math/constants.hpp"
 
 namespace shard {
 namespace math {
@@ -10,13 +10,13 @@ namespace math {
 /// Convert degrees into radians
 template <typename T>
 constexpr T rad(T degrees) noexcept {
-    return (M_PI / 180.0) * degrees;
+    return pi / 180.0 * degrees;
 }
 
 /// Convert radians into degrees
 template <typename T>
 constexpr T deg(T radians) noexcept {
-    return (180.0 / M_PI) * radians;
+    return 180.0 / pi * radians;
 }
 
 } // namespace math

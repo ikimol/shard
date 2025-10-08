@@ -6,8 +6,8 @@
 
 TEST_CASE("math") {
     SUBCASE("degrees") {
-        REQUIRE(shard::deg(M_PI) == doctest::Approx(180.0));
-        REQUIRE(shard::deg(M_PI / 2.0) == doctest::Approx(90.0));
+        REQUIRE(shard::deg(shard::math::pi) == doctest::Approx(180.0));
+        REQUIRE(shard::deg(shard::math::pi / 2.0) == doctest::Approx(90.0));
 
         REQUIRE(shard::rad(180.0) == doctest::Approx(3.14159));
         REQUIRE(shard::rad(90.0) == doctest::Approx(1.570795));
