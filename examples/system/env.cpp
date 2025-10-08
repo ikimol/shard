@@ -1,11 +1,22 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
 #include <shard/system/env.hpp>
+#include <shard/system/platform.hpp>
 
 #include <iostream>
 
+namespace {
+
+#if defined(SHARD_UNIX)
+constexpr auto g_home_var = "HOME";
+#elif defined(SHARD_WINDOWS)
+constexpr auto g_home_var = "HOMEPATH";
+#endif
+
+} // namespace
+
 int main(int /* argc */, char* /* argv */[]) {
-    if (auto home = shard::env::get("HOME")) {
+    if (auto home = shard::env::get(g_home_var)) {
         std::cout << "home directory: " << *home << '\n';
     }
 
