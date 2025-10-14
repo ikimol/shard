@@ -2,8 +2,7 @@
 
 #pragma once
 
-#include <shard/meta/type_traits.hpp>
-
+#include <algorithm>
 #include <functional>
 #include <memory>
 #include <type_traits>

@@ -6,6 +6,8 @@
 #include <openssl/buffer.h>
 #include <openssl/evp.h>
 
+#include <cstring>
+
 namespace shard::crypto {
 
 dynamic_data base64_encode(const data& data) {
