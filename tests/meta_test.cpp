@@ -15,16 +15,16 @@
 #include <unordered_map>
 #include <vector>
 
-struct Widget {
+struct printable {
     const char* name = "?";
 };
 
-struct Gizmo {
+struct non_printable {
     int id = 0;
 };
 
-inline std::ostream& operator<<(std::ostream& os, const Widget& w) {
-    os << "Widget(" << w.name << ')';
+inline std::ostream& operator<<(std::ostream& os, const printable& p) {
+    os << "printable(" << p.name << ')';
     return os;
 }
 
@@ -78,9 +78,8 @@ TEST_CASE("meta") {
             REQUIRE(shard::is_streamable_v<std::ostream, void*>);
             REQUIRE(shard::is_streamable_v<std::ostream, std::nullptr_t>);
 
-            REQUIRE(shard::is_streamable_v<std::ostream, Widget>);
-
-            REQUIRE_FALSE(shard::is_streamable_v<std::ostream, Gizmo>);
+            REQUIRE(shard::is_streamable_v<std::ostream, printable>);
+            REQUIRE_FALSE(shard::is_streamable_v<std::ostream, non_printable>);
         }
 
         SUBCASE("is_specialization_of") {
