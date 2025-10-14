@@ -104,7 +104,7 @@ struct std::hash<shard::meta::type_id<T>> {
 };
 
 #define SHARD_INTERNAL_TYPEID_1(T) shard::meta::typespace<shard::meta::detail::default_typespace>::id<T>()
-#define SHARD_INTERNAL_TYPEID_2(T, N) shard::meta::typespace<T>::id<N>()
+#define SHARD_INTERNAL_TYPEID_2(N, T) shard::meta::typespace<N>::id<T>()
 
 #define SHARD_INTERNAL_TYPEID_SELECT(_1, _2, MACRO, ...) MACRO
 #define SHARD_TYPEID(...)                                                                                              \

@@ -162,7 +162,7 @@ TEST_CASE("meta") {
 
     SUBCASE("type_id") {
         SUBCASE("conversion") {
-            shard::type_id<void> id = SHARD_TYPEID(void, int);
+            auto id = shard::meta::typespace<void>::id<int>();
             std::size_t value = id;
             REQUIRE(value == 0);
         }
@@ -175,11 +175,11 @@ TEST_CASE("meta") {
         }
 
         SUBCASE("separate typespaces") {
-            REQUIRE(SHARD_TYPEID(void, int) == 0);
-            REQUIRE(SHARD_TYPEID(void, unsigned int) == 1);
+            REQUIRE(shard::meta::typespace<void>::id<int>() == 0);
+            REQUIRE(shard::meta::typespace<void>::id<unsigned int>() == 1);
 
-            REQUIRE(SHARD_TYPEID(char, int) == 0);
-            REQUIRE(SHARD_TYPEID(char, unsigned int) == 1);
+            REQUIRE(shard::meta::typespace<char>::id<int>() == 0);
+            REQUIRE(shard::meta::typespace<char>::id<unsigned int>() == 1);
         }
 
         SUBCASE("relational operators") {

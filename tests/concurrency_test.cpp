@@ -7,6 +7,7 @@
 
 #include <doctest.h>
 
+#include <chrono>
 #include <thread>
 
 static void channel_writer(shard::channel<int>* channel, int i) {

@@ -5,6 +5,8 @@
 #include <cassert>
 #include <limits>
 
+#define NOMINMAX
+
 #include <windows.h>
 
 namespace shard::concurrency {
