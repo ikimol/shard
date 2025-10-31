@@ -34,7 +34,7 @@ inline std::string fmt(const char* format, ...) {
     return result;
 }
 
-inline std::string fmt(const char* format, va_list ap) {
+inline std::string vfmt(const char* format, va_list ap) {
     std::va_list args_copy;
     va_copy(args_copy, ap);
     const auto size = std::vsnprintf(nullptr, 0, format, args_copy);

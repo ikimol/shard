@@ -13,7 +13,7 @@
 static std::string format_helper(const char* format, ...) {
     va_list ap;
     va_start(ap, format);
-    auto message = shard::fmt(format, ap);
+    auto message = shard::vfmt(format, ap);
     va_end(ap);
     return message;
 }
