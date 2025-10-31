@@ -188,8 +188,9 @@ TEST_CASE("meta") {
         }
 
         SUBCASE("hash") {
-            auto hash = std::hash<decltype(SHARD_TYPEID(int))> {}(SHARD_TYPEID(int));
-            REQUIRE(hash == SHARD_TYPEID(int));
+            auto type_id = SHARD_TYPEID(int);
+            auto hash = std::hash<decltype(type_id)> {}(type_id);
+            REQUIRE(hash == std::hash<std::size_t> {}(type_id.value()));
         }
     }
 }
