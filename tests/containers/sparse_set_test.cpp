@@ -6,7 +6,7 @@
 
 #include <doctest.h>
 
-TEST_CASE("sparse_set") {
+TEST_CASE("containers.sparse_set") {
     SUBCASE("default constructor") {
         shard::sparse_set<unsigned> set;
 
