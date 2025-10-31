@@ -101,6 +101,8 @@ uuid::uuid(Iterator first, Iterator last) {
 
 } // namespace shard
 
+// std::hash compatibility
+
 template <>
 struct std::hash<shard::uuid> {
     std::size_t operator()(const shard::uuid& id) const noexcept {

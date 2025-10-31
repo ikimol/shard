@@ -96,6 +96,8 @@ using meta::type_id;
 
 } // namespace shard
 
+// std::hash compatibility
+
 template <typename T>
 struct std::hash<shard::meta::type_id<T>> {
     std::size_t operator()(const shard::meta::type_id<T>& type_id) const noexcept {
