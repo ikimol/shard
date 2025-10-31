@@ -30,10 +30,6 @@ endif ()
 
 shard_add_static_library(${MODULE_NAME}
                          SOURCES ${PLATFORM_SPECIFIC_SOURCES}
-                         INCLUDE_DIR ${MODULE_INCLUDE_DIR})
-
-target_link_libraries(${MODULE_NAME} PUBLIC
-                      shard::meta
-                      shard::utility
-                      shard::system
-                      )
+                         INCLUDE_DIR ${MODULE_INCLUDE_DIR}
+                         LIBRARIES shard::meta shard::utility shard::system
+                         )

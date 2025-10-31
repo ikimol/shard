@@ -2,6 +2,8 @@
 # shard :: modules :: crypto :: CMakeLists.txt
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+find_package(OpenSSL REQUIRED)
+
 set(MODULE_NAME crypto)
 
 set(MODULE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/modules/crypto/include)
@@ -15,12 +17,5 @@ set(MODULE_SOURCES
 shard_add_static_library(${MODULE_NAME}
                          SOURCES ${MODULE_SOURCES}
                          INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include
+                         LIBRARIES shard::memory OpenSSL::Crypto
                          )
-
-find_package(OpenSSL REQUIRED)
-
-target_link_libraries(${MODULE_NAME} PUBLIC
-                      shard::memory
-                      # third party
-                      OpenSSL::Crypto
-                      )

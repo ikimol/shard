@@ -15,9 +15,10 @@ include(${PROJECT_SOURCE_DIR}/cmake/utility.cmake)
 # usage: shard_add_static_library(<name>
 #                                 SOURCES <src>...
 #                                 INCLUDE_DIR <dir>
+#                                 [LIBRARIES <lib>...]
 #                                 )
 macro (shard_add_static_library MODULE_NAME)
-    cmake_parse_arguments(LOCAL "" "INCLUDE_DIR" "SOURCES" ${ARGN})
+    cmake_parse_arguments(LOCAL "" "INCLUDE_DIR" "SOURCES;LIBRARIES" ${ARGN})
 
     set(TARGET_NAME "shard-${MODULE_NAME}")
 
@@ -42,6 +43,9 @@ macro (shard_add_static_library MODULE_NAME)
                                $<BUILD_INTERFACE:${LOCAL_INCLUDE_DIR}>
                                $<INSTALL_INTERFACE:include>
                                )
+
+    # link libraries
+    target_link_libraries(${TARGET_NAME} ${LOCAL_LIBRARIES})
 
     # define SHARD_STATIC if the build type is not set to 'shared'
     if (NOT BUILD_SHARED_LIBS)
