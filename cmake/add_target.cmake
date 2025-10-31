@@ -19,32 +19,33 @@ include(${PROJECT_SOURCE_DIR}/cmake/utility.cmake)
 macro (shard_add_static_library MODULE_NAME)
     cmake_parse_arguments(LOCAL "" "INCLUDE_DIR" "SOURCES" ${ARGN})
 
-    add_library(${MODULE_NAME} STATIC)
-    add_library(shard::${MODULE_NAME} ALIAS ${MODULE_NAME})
+    set(TARGET_NAME "shard-${MODULE_NAME}")
+
+    add_library("shard-${MODULE_NAME}" STATIC)
+    add_library(shard::${MODULE_NAME} ALIAS ${TARGET_NAME})
 
     # enable warnings
-    shard_target_enable_warnings(${MODULE_NAME})
+    shard_target_enable_warnings(${TARGET_NAME})
 
-    target_sources(${MODULE_NAME} PRIVATE ${LOCAL_SOURCES})
+    target_sources(${TARGET_NAME} PRIVATE ${LOCAL_SOURCES})
 
     # define the export symbol of the module
     string(REPLACE "-" "_" NAME_UPPER "${MODULE_NAME}")
     string(TOUPPER "${NAME_UPPER}" NAME_UPPER)
-    set_target_properties(${MODULE_NAME} PROPERTIES
+    set_target_properties(${TARGET_NAME} PROPERTIES
                           DEFINE_SYMBOL ${NAME_UPPER}_EXPORTS
-                          PREFIX "shard_"
-                          DEBUG_POSTFIX "_debug"
+                          DEBUG_POSTFIX "-d"
                           )
 
     # add the main include directory
-    target_include_directories(${MODULE_NAME} PUBLIC
+    target_include_directories(${TARGET_NAME} PUBLIC
                                $<BUILD_INTERFACE:${LOCAL_INCLUDE_DIR}>
                                $<INSTALL_INTERFACE:include>
                                )
 
     # define SHARD_STATIC if the build type is not set to 'shared'
     if (NOT BUILD_SHARED_LIBS)
-        target_compile_definitions(${MODULE_NAME} PUBLIC "SHARD_STATIC")
+        target_compile_definitions(${TARGET_NAME} PUBLIC "SHARD_STATIC")
     endif ()
 
     # setup the install rules
@@ -54,7 +55,7 @@ macro (shard_add_static_library MODULE_NAME)
             FILES_MATCHING PATTERN "*.hpp" PATTERN "*.inl"
             )
 
-    install(TARGETS ${MODULE_NAME} EXPORT ${SHARD_CONFIG_EXPORT_NAME}
+    install(TARGETS ${TARGET_NAME} EXPORT ${SHARD_CONFIG_EXPORT_NAME}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # dynamic library
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # static library
             PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
