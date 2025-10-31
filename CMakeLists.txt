@@ -12,16 +12,20 @@ set(SHARD_VERSION 1.28.0)
 
 project(shard VERSION ${SHARD_VERSION})
 
-message(STATUS "${PROJECT_NAME} version ${PROJECT_VERSION}")
+message(STATUS "Building ${PROJECT_NAME} (${PROJECT_VERSION})")
 
-set(CMAKE_CXX_STANDARD 17)
+if (PROJECT_IS_TOP_LEVEL)
+    set(CMAKE_CXX_STANDARD 17)
+endif ()
 
 # ------------------------------------------------------------------------------
 # system information
 # ------------------------------------------------------------------------------
 
-math(EXPR SHARD_SYSTEM_ARCH "${CMAKE_SIZEOF_VOID_P} * 8")
-message(STATUS "Building on ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_VERSION} (${SHARD_SYSTEM_ARCH}-bit)")
+if (PROJECT_IS_TOP_LEVEL)
+    math(EXPR SHARD_SYSTEM_ARCH "${CMAKE_SIZEOF_VOID_P} * 8")
+    message(STATUS "Platform: ${CMAKE_SYSTEM_NAME} ${CMAKE_SYSTEM_VERSION} (${SHARD_SYSTEM_ARCH}-bit)")
+endif ()
 
 # ------------------------------------------------------------------------------
 # build options
@@ -50,20 +54,20 @@ add_subdirectory(modules)
 
 # add examples
 
-if (SHARD_BUILD_EXAMPLES)
+if (SHARD_BUILD_EXAMPLES AND PROJECT_IS_TOP_LEVEL)
     add_subdirectory(examples)
 endif ()
 
 # add tests
 
-if (SHARD_BUILD_TESTS)
+if (SHARD_BUILD_TESTS AND PROJECT_IS_TOP_LEVEL)
     enable_testing()
     add_subdirectory(tests)
 endif ()
 
 # add benchmarks
 
-if (SHARD_BUILD_BENCHMARKS)
+if (SHARD_BUILD_BENCHMARKS AND PROJECT_IS_TOP_LEVEL)
     add_subdirectory(benchmarks)
 endif ()
 
