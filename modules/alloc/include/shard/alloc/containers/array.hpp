@@ -58,7 +58,7 @@ public:
             m_capacity = il.size();
             auto p = m_data;
             for (auto it = il.begin(); it != il.end(); ++it, ++p) {
-                *p = *it;
+                new (p) value_type(*it);
             }
         } else {
             m_data = nullptr;
