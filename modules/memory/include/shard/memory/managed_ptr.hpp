@@ -42,6 +42,9 @@ public:
     /// Check if the underlying pointer is not null
     explicit operator bool() const noexcept { return m_ptr != nullptr; }
 
+    /// Pointer conversion operator
+    explicit operator pointer() const noexcept { return m_ptr; }
+
     /// Release the underlying pointer and return it
     pointer release() noexcept { return m_ptr.release(); }
 
