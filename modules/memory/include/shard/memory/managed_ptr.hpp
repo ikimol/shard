@@ -25,6 +25,10 @@ public:
     explicit managed_ptr(pointer ptr) noexcept
     : m_ptr(ptr, DeleteFunction) {}
 
+    /// Create using null
+    explicit managed_ptr(std::nullptr_t) noexcept
+    : m_ptr(nullptr, DeleteFunction) {}
+
     /// Converting constructor
     template <typename U, auto OtherDeleteFunction>
     /* implicit */ managed_ptr(managed_ptr<U, OtherDeleteFunction> other) noexcept /* NOLINT */

@@ -23,6 +23,10 @@ public:
     explicit observer_ptr(pointer ptr) noexcept
     : m_ptr(ptr) {}
 
+    /// Create using null
+    explicit observer_ptr(std::nullptr_t) noexcept
+    : m_ptr(nullptr) {}
+
     /// Converting constructor
     template <typename U>
     /* implicit */ observer_ptr(observer_ptr<U> other) noexcept /* NOLINT */
