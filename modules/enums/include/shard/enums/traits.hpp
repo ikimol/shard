@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <array>
 #include <algorithm>
 #include <optional>
 #include <string_view>
