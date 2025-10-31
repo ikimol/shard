@@ -26,7 +26,7 @@ struct enum_traits<EnumType> {
 
 /// Get the name of an enum value
 template <typename E>
-std::optional<const char*> enum_name(E e) noexcept {
+std::optional<std::string_view> enum_name(E e) noexcept {
     using traits = enum_traits<E>;
     auto it = std::find(std::begin(traits::values), std::end(traits::values), e);
     if (it == std::end(traits::values)) {
