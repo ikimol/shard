@@ -4,12 +4,8 @@
 
 #include "shard/net/http/status.hpp"
 
-#include <shard/enums/traits.hpp>
+#include <shard/enums/type.hpp>
 #include <shard/memory/dynamic_data.hpp>
-
-#include <optional>
-#include <string>
-#include <utility>
 
 namespace shard::net::http {
 
