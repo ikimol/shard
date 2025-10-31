@@ -1,37 +1,59 @@
-// Copyright (c) 2023 Miklos Molnar. All rights reserved.
+// Copyright (c) 2025 Miklos Molnar. All rights reserved.
 
 #pragma once
 
-#include <type_traits>
+#include <algorithm>
+#include <optional>
+#include <string_view>
 
 namespace shard {
 namespace enums {
-namespace detail {
 
-template <typename... Args>
-struct are_enum : std::true_type {};
+/// Template to be specialized for enums
+template <typename E>
+struct enum_traits;
 
-template <typename T>
-struct are_enum<T> : std::is_enum<T> {};
+/*
 
-template <typename T, typename... Args>
-struct are_enum<T, Args...> : std::bool_constant<std::is_enum<T>::value && are_enum<Args...>::value> {};
+template <>
+struct enum_traits<EnumType> {
+    static constexpr std::array values = {...};
+    static constexpr std::array names = {...};
+};
 
-template <typename... Args>
-using enable_if_enum = std::enable_if_t<are_enum<std::remove_reference_t<Args>...>::value>;
+*/
 
-} // namespace detail
+/// Get the name of an enum value
+template <typename E>
+std::optional<const char*> enum_name(E e) noexcept {
+    using traits = enum_traits<E>;
+    auto it = std::find(std::begin(traits::values), std::end(traits::values), e);
+    if (it == std::end(traits::values)) {
+        return std::nullopt;
+    }
+    return traits::names[it - std::begin(traits::values)];
+}
 
-/// Cast an enum to its underlying type
-template <typename E, typename T = typename std::underlying_type<E>::type, typename = detail::enable_if_enum<E>>
-constexpr T to_underlying(E e) noexcept {
-    return static_cast<T>(e);
+/// Get the enum value from its name
+template <typename E>
+std::optional<E> enum_value(std::string_view name) noexcept {
+    using traits = enum_traits<E>;
+    auto matcher = [name](const char* n) {
+        return name == n;
+    };
+    auto it = std::find_if(std::begin(traits::names), std::end(traits::names), matcher);
+    if (it == std::end(traits::names)) {
+        return std::nullopt;
+    }
+    return traits::values[it - std::begin(traits::names)];
 }
 
 } // namespace enums
 
 // bring symbols into parent namespace
 
-using enums::to_underlying;
+using enums::enum_name;
+using enums::enum_traits;
+using enums::enum_value;
 
 } // namespace shard

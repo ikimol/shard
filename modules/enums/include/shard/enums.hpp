@@ -6,3 +6,4 @@
 #include "shard/enums/flags.hpp"
 #include "shard/enums/operators.hpp"
 #include "shard/enums/traits.hpp"
+#include "shard/enums/type.hpp"

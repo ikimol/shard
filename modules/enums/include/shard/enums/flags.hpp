@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "shard/enums/traits.hpp"
+#include "shard/enums/type.hpp"
 
 namespace shard {
 namespace enums {
@@ -23,7 +23,7 @@ private:
 
 template <typename E>
 class flags {
-    static_assert(std::is_unsigned<std::underlying_type_t<E>>::value, "cannot use signed values as flags");
+    static_assert(std::is_unsigned_v<std::underlying_type_t<E>>, "cannot use signed values as flags");
 
 public:
     using enum_type = E;

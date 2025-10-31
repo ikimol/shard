@@ -160,6 +160,20 @@ struct are_same<T, U, Args...> : std::bool_constant<std::is_same<T, U>::value &&
 template <typename... Args>
 inline constexpr bool are_same_v = are_same<Args...>::value;
 
+// enums
+
+template <typename...>
+struct are_enum : std::true_type {};
+
+template <typename E>
+struct are_enum<E> : std::is_enum<E> {};
+
+template <typename E, typename... Args>
+struct are_enum<E, Args...> : std::bool_constant<std::is_enum_v<E> && are_enum<Args...>::value> {};
+
+template <typename E, typename... Args>
+inline constexpr bool are_enum_v = are_enum<E, Args...>::value;
+
 // unqualified
 
 template <typename T>
@@ -275,6 +289,9 @@ using meta::are_same;
 using meta::are_same_v;
 using meta::is_empty;
 using meta::is_empty_v;
+
+using meta::are_enum;
+using meta::are_enum_v;
 
 using meta::unqualified_t;
 

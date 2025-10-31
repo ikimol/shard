@@ -13,6 +13,12 @@ enum class side : unsigned int {
 SHARD_DECLARE_FLAGS(margin, side);
 SHARD_DECLARE_FLAG_OPERATORS(margin)
 
+template <>
+struct shard::enum_traits<side> {
+    constexpr static std::array values = {side::left, side::top, side::right, side::bottom};
+    constexpr static std::array names = {"left", "top", "right", "bottom"};
+};
+
 TEST_CASE("enums") {
     SUBCASE("flags") {
         margin m = (side::left | side::right);
@@ -32,11 +38,36 @@ TEST_CASE("enums") {
         REQUIRE((1 != side::bottom));
     }
 
-    SUBCASE("traits") {
+    SUBCASE("to_underlying") {
         REQUIRE(shard::to_underlying(side::left) == 1);
         REQUIRE(shard::to_underlying(side::top) == 2);
         REQUIRE(shard::to_underlying(side::right) == 4);
         REQUIRE(shard::to_underlying(side::bottom) == 8);
+
+        std::optional<side> s;
+        REQUIRE(shard::to_underlying(s) == std::nullopt);
+
+        s = side::left;
+        REQUIRE(shard::to_underlying(s) == 1);
+    }
+
+    SUBCASE("enum_cast") {
+        REQUIRE(shard::enum_cast<side>(1) == side::left);
+        REQUIRE(shard::enum_cast<side>(2) == side::top);
+        REQUIRE(shard::enum_cast<side>(4) == side::right);
+        REQUIRE(shard::enum_cast<side>(8) == side::bottom);
+    }
+
+    SUBCASE("traits") {
+        REQUIRE(shard::enum_name(side::left) == "left");
+        REQUIRE(shard::enum_name(side::top) == "top");
+        REQUIRE(shard::enum_name(side::right) == "right");
+        REQUIRE(shard::enum_name(side::bottom) == "bottom");
+
+        REQUIRE(shard::enum_value<side>("left") == side::left);
+        REQUIRE(shard::enum_value<side>("top") == side::top);
+        REQUIRE(shard::enum_value<side>("right") == side::right);
+        REQUIRE(shard::enum_value<side>("bottom") == side::bottom);
     }
 
     SUBCASE("enum_set") {
