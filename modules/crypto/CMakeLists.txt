@@ -2,8 +2,6 @@
 # shard :: modules :: crypto :: CMakeLists.txt
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-find_package(OpenSSL REQUIRED)
-
 set(MODULE_NAME crypto)
 
 set(MODULE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/modules/crypto/include)
@@ -13,6 +11,8 @@ set(MODULE_SOURCES
     ${MODULE_SRC_DIR}/base64.cpp
     ${MODULE_SRC_DIR}/sha.cpp
     )
+
+find_package(OpenSSL REQUIRED)
 
 shard_add_static_library(${MODULE_NAME}
                          SOURCES ${MODULE_SOURCES}
