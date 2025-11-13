@@ -19,6 +19,14 @@ struct shard::enum_traits<side> {
     constexpr static std::array names = {"left", "top", "right", "bottom"};
 };
 
+enum class dummy { foobar };
+
+template <>
+struct shard::enum_traits<dummy> {
+    constexpr static std::array<dummy, 0> values = {};
+    constexpr static std::array<const char*, 0> names = {};
+};
+
 TEST_CASE("enums") {
     SUBCASE("flags") {
         margin m = (side::left | side::right);
@@ -64,10 +72,14 @@ TEST_CASE("enums") {
         REQUIRE(shard::enum_name(side::right) == "right");
         REQUIRE(shard::enum_name(side::bottom) == "bottom");
 
+        REQUIRE_THROWS_AS(shard::enum_name(dummy::foobar), shard::incomplete_enum_traits);
+
         REQUIRE(shard::enum_value<side>("left") == side::left);
         REQUIRE(shard::enum_value<side>("top") == side::top);
         REQUIRE(shard::enum_value<side>("right") == side::right);
         REQUIRE(shard::enum_value<side>("bottom") == side::bottom);
+
+        REQUIRE_THROWS_AS(shard::enum_value<dummy>("foobar"), shard::incomplete_enum_traits);
     }
 
     SUBCASE("enum_set") {
