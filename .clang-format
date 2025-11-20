@@ -1,35 +1,47 @@
 ---
-Language:        Cpp
-BasedOnStyle:  WebKit
+Language: Cpp
+BasedOnStyle: WebKit
 AlignAfterOpenBracket: Align
+AlignArrayOfStructures: Right
 AlignConsecutiveBitFields: Consecutive
-AlignOperands:   Align
-AlignTrailingComments: true
+AlignOperands: AlignAfterOperator
+AlignTrailingComments:
+  Kind: Always
+AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortFunctionsOnASingleLine: Inline
-AllowShortLambdasOnASingleLine: Inline
 AlwaysBreakBeforeMultilineStrings: true
-AlwaysBreakTemplateDeclarations: Yes
+BreakTemplateDeclarations: Yes
 BinPackArguments: false
-BinPackParameters: false
-BraceWrapping:
-  AfterFunction:   false
-  SplitEmptyFunction: false
-  SplitEmptyRecord: false
-  SplitEmptyNamespace: false
-BreakBeforeBinaryOperators: NonAssignment
+BinPackParameters: OnePerLine
 BreakBeforeBraces: Attach
-BreakInheritanceList: AfterColon
-ColumnLimit:     120
+BreakInheritanceList: AfterComma
+ColumnLimit: 120
 ConstructorInitializerIndentWidth: 0
-ContinuationIndentWidth: 4
 Cpp11BracedListStyle: true
 FixNamespaceComments: true
-IncludeIsMainRegex: '$'
-KeepEmptyLinesAtTheStartOfBlocks: false
+KeepEmptyLines:
+  AtStartOfBlock: false
+  AtEndOfFile: false
+InsertNewlineAtEOF: true
+InsertTrailingCommas: Wrapped
+IntegerLiteralSeparator:
+  Binary: 4
+  BinaryMinDigits: 0
+  Decimal: 3
+  DecimalMinDigits: 5
+  Hex: 0
+  HexMinDigits: 0
 NamespaceIndentation: None
+PackConstructorInitializers: Never
+PenaltyReturnTypeOnItsOwnLine: 1000
+QualifierAlignment: Left
+SeparateDefinitionBlocks: Always
+ShortNamespaceLines: 0
 SpaceInEmptyBlock: false
-Standard:        c++14
-TabWidth:        4
+SpaceAfterCStyleCast: true
+SpacesInLineCommentPrefix:
+  Maximum: 1
+Standard: c++17
 ...
 
