@@ -11,7 +11,7 @@ uuid uuid::make_system_uuid() {
     auto id_bytes = CFUUIDGetUUIDBytes(id);
     CFRelease(id);
 
-    std::array<std::uint8_t, 16> bytes = {{
+    std::array<std::uint8_t, 16> bytes = {
         id_bytes.byte0,
         id_bytes.byte1,
         id_bytes.byte2,
@@ -28,7 +28,7 @@ uuid uuid::make_system_uuid() {
         id_bytes.byte13,
         id_bytes.byte14,
         id_bytes.byte15,
-    }};
+    };
 
     return uuid {std::begin(bytes), std::end(bytes)};
 }

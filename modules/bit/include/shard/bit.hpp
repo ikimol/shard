@@ -33,7 +33,7 @@ void toggle(T& n, T p) {
 /// Check if the bit in \a n at position \a p is set
 template <typename T, typename = std::enable_if_t<detail::can_store_bits<T>::value>>
 bool is_set(T n, T p) {
-    return (bool)(n & (1 << p));
+    return (bool) (n & (1 << p));
 }
 
 /// Set the last bit set to 0

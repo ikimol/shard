@@ -10,7 +10,7 @@ uuid uuid::make_system_uuid() {
     uuid_t id;
     uuid_generate(id);
 
-    std::array<std::uint8_t, 16> bytes = {{
+    std::array<std::uint8_t, 16> bytes = {
         id[0],
         id[1],
         id[2],
@@ -27,7 +27,7 @@ uuid uuid::make_system_uuid() {
         id[13],
         id[14],
         id[15],
-    }};
+    };
 
     return uuid {std::begin(bytes), std::end(bytes)};
 }

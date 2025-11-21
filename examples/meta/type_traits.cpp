@@ -3,12 +3,12 @@
 #include <shard/meta/type_traits.hpp>
 #include <shard/utility/preprocessor.hpp>
 
-static int func(double) { return 0; }
+static int func(double) {
+    return 0;
+}
 
 int main(int /* argc */, char* /* argv */[]) {
-    auto lambda = [](int i, const char* ptr) -> bool {
-        return i > 0 && ptr != nullptr;
-    };
+    auto lambda = [](int i, const char* ptr) -> bool { return i > 0 && ptr != nullptr; };
     SHARD_UNUSED(lambda);
     SHARD_UNUSED(func);
 

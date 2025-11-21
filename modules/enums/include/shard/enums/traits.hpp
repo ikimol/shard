@@ -45,9 +45,7 @@ std::string_view enum_name(E e) {
 template <typename E>
 E enum_value(std::string_view name) {
     using traits = enum_traits<E>;
-    auto matcher = [name](const char* n) {
-        return name == n;
-    };
+    auto matcher = [name](const char* n) { return name == n; };
     auto it = std::find_if(std::begin(traits::names), std::end(traits::names), matcher);
     if (it == std::end(traits::names)) {
         throw incomplete_enum_traits();

@@ -6,7 +6,7 @@
 
 TEST_CASE("bit") {
     SUBCASE("set") {
-        auto n = 0b01001u; // 9
+        auto n = 0b0'1001u; // 9
 
         shard::bit::set(n, 1u);
         REQUIRE(n == 11);
@@ -16,7 +16,7 @@ TEST_CASE("bit") {
     }
 
     SUBCASE("unset") {
-        auto n = 0b01001u; // 9
+        auto n = 0b0'1001u; // 9
 
         shard::bit::unset(n, 0u);
         REQUIRE(n == 8);
@@ -26,7 +26,7 @@ TEST_CASE("bit") {
     }
 
     SUBCASE("toggle") {
-        auto n = 0b01001u; // 9
+        auto n = 0b0'1001u; // 9
 
         shard::bit::toggle(n, 2u);
         REQUIRE(n == 13);
@@ -36,7 +36,7 @@ TEST_CASE("bit") {
     }
 
     SUBCASE("is_set") {
-        auto n = 0b01001u; // 9
+        auto n = 0b0'1001u; // 9
 
         REQUIRE(shard::bit::is_set(n, 0u));
         REQUIRE(shard::bit::is_set(n, 3u));
@@ -44,7 +44,7 @@ TEST_CASE("bit") {
     }
 
     SUBCASE("strip_last") {
-        auto n = 0b01001u; // 9
+        auto n = 0b0'1001u; // 9
 
         shard::bit::strip_last(n);
         REQUIRE(n == 8);
@@ -54,7 +54,7 @@ TEST_CASE("bit") {
     }
 
     SUBCASE("lowest") {
-        auto n = 0b01011u; // 11
+        auto n = 0b0'1011u; // 11
 
         REQUIRE(shard::bit::lowest(n) == 1);
         shard::bit::strip_last(n);
@@ -66,7 +66,7 @@ TEST_CASE("bit") {
     }
 
     SUBCASE("count") {
-        auto n = 0b01011u; // 11
+        auto n = 0b0'1011u; // 11
 
         REQUIRE(shard::bit::count(n) == 3);
         shard::bit::strip_last(n);

@@ -48,6 +48,7 @@ private:
 };
 
 // clang-format off
+
 template <typename T>
 using random =
     std::conditional_t<meta::is_integer<T>::value,       // int
@@ -57,6 +58,7 @@ using random =
     std::conditional_t<meta::is_bool<T>::value,          // bool
         random_base<std::bernoulli_distribution>,
     void>>>;
+
 // clang-format on
 
 /// Seed the fast random number generator

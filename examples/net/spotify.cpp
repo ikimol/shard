@@ -122,8 +122,9 @@ shard::expected<api::token_result, error_code> get_access_token(http::client& cl
         .transform(api::parse_token_result);
 }
 
-shard::expected<api::artist_result, error_code>
-get_artist(http::client& client, std::string access_token, std::string id) {
+shard::expected<api::artist_result, error_code> get_artist(http::client& client,
+                                                           std::string access_token,
+                                                           std::string id) {
     auto request = http::request_builder()
                        .with_url("https://api.spotify.com/v1/artists/" + std::move(id))
                        .with_method(http::request::method_get)
@@ -137,8 +138,9 @@ get_artist(http::client& client, std::string access_token, std::string id) {
         .transform(api::parse_artist_result);
 }
 
-shard::expected<api::album_result, error_code>
-get_album(http::client& client, std::string access_token, std::string id) {
+shard::expected<api::album_result, error_code> get_album(http::client& client,
+                                                         std::string access_token,
+                                                         std::string id) {
     auto request = http::request_builder()
                        .with_url("https://api.spotify.com/v1/albums/" + std::move(id))
                        .with_method(http::request::method_get)
@@ -152,8 +154,9 @@ get_album(http::client& client, std::string access_token, std::string id) {
         .transform(api::parse_album_result);
 }
 
-shard::expected<api::track_result, error_code>
-get_track(http::client& client, std::string access_token, std::string id) {
+shard::expected<api::track_result, error_code> get_track(http::client& client,
+                                                         std::string access_token,
+                                                         std::string id) {
     auto request = http::request_builder()
                        .with_url("https://api.spotify.com/v1/tracks/" + std::move(id))
                        .with_method(http::request::method_get)
@@ -223,16 +226,16 @@ int main(int /* argc */, char* /* argv */[]) {
     http::client client;
 
     auto path = std::filesystem::current_path() / "token.txt";
-    auto access_token =
-        load_access_token(path).or_else([&](error_code) { return get_and_store_access_token(client, path); });
+    auto access_token
+        = load_access_token(path).or_else([&](error_code) { return get_and_store_access_token(client, path); });
 
     std::array artists = {
         "7Eu1txygG6nJttLHbZdQOh", // Four Tet
         "4Z8W4fKeB5YxbusRsdQVPb", // Radiohead
         "13ubrt8QOOCPljQ2FL1Kca", // A$AP Rocky
     };
-    auto artist =
-        access_token.and_then([&](std::string token) { return get_artist(client, std::move(token), artists[0]); });
+    auto artist
+        = access_token.and_then([&](std::string token) { return get_artist(client, std::move(token), artists[0]); });
     if (artist) {
         std::cout << "artist: " << artist->name << '\n';
     } else {
@@ -243,8 +246,8 @@ int main(int /* argc */, char* /* argv */[]) {
         "2a7NyNVcy7eJSeUzzOOF4x", // Sad Night Dynamite
         "4gaNWHu5Caj3ItkYZ5i6uh", // In Colour
     };
-    auto album =
-        access_token.and_then([&](std::string token) { return get_album(client, std::move(token), albums[0]); });
+    auto album
+        = access_token.and_then([&](std::string token) { return get_album(client, std::move(token), albums[0]); });
     if (album) {
         std::cout << "album: " << album->name << '\n';
     } else {
@@ -254,8 +257,8 @@ int main(int /* argc */, char* /* argv */[]) {
     std::array tracks = {
         "0AQquaENerGps8BQmbPw14", // Big Iron
     };
-    auto track =
-        access_token.and_then([&](std::string token) { return get_track(client, std::move(token), tracks[0]); });
+    auto track
+        = access_token.and_then([&](std::string token) { return get_track(client, std::move(token), tracks[0]); });
     if (track) {
         std::cout << "track: " << track->name << '\n';
     } else {

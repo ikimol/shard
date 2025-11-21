@@ -3,6 +3,7 @@
 #pragma once
 
 // clang-format off
+
 #if defined(__ANDROID__)
     #define SHARD_ANDROID
 #elif defined(linux) || defined(__linux) || defined(__linux__) || defined(__TOS_LINUX__)
@@ -24,6 +25,7 @@
 #else
     #error "unknown operating system"
 #endif
+
 // clang-format on
 
 namespace shard::system {

@@ -39,6 +39,7 @@ public:
         }
 
         bool operator==(const iterator& other) const { return m_value == other.m_value; };
+
         bool operator!=(const iterator& other) const { return m_value != other.m_value; };
 
     private:
@@ -125,7 +126,7 @@ private:
 
     static constexpr inline underlying_type to_index(value_type value) {
         auto index = static_cast<underlying_type>(value);
-        assert(index < (underlying_type)(N));
+        assert(index < (underlying_type) (N));
         return index;
     }
 
@@ -139,7 +140,7 @@ private:
     }
 
     underlying_type next_bit(underlying_type after) const {
-        while (after < (underlying_type)(N) && !m_bits.test(after)) {
+        while (after < (underlying_type) (N) && !m_bits.test(after)) {
             ++after;
         }
         return after;

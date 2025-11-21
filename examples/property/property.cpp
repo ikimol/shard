@@ -12,9 +12,7 @@ public:
 public:
     shard::observed_property<int> id = {[this](auto&) { update(); }, 0};
 
-    const shard::property<std::string> name = {[this] {
-        return "w." + std::to_string(*id);
-    }};
+    const shard::property<std::string> name = {[this] { return "w." + std::to_string(*id); }};
 
 private:
     void update() const { std::cout << "updated: " << *name << '\n'; }

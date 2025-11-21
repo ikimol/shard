@@ -34,21 +34,21 @@ public:
 
 private:
     template <typename T2, typename E2>
-    using is_convertible =
-        std::conjunction<std::is_constructible<T2, const T2&>,
-                         std::is_constructible<E2, const E2&>,
-                         std::negation<std::is_constructible<T, expected<T2, E2>&>>,
-                         std::negation<std::is_constructible<T, expected<T2, E2>>>,
-                         std::negation<std::is_constructible<T, const expected<T2, E2>&>>,
-                         std::negation<std::is_constructible<T, const expected<T2, E2>>>,
-                         std::negation<std::is_convertible<expected<T2, E2>&, T>>,
-                         std::negation<std::is_convertible<expected<T2, E2>&&, T>>,
-                         std::negation<std::is_convertible<const expected<T2, E2>&, T>>,
-                         std::negation<std::is_convertible<const expected<T2, E2>&&, T>>,
-                         std::negation<std::is_constructible<unexpected<E>, expected<T2, E2>&>>,
-                         std::negation<std::is_constructible<unexpected<E>, expected<T2, E2>>>,
-                         std::negation<std::is_constructible<unexpected<E>, const expected<T2, E2>&>>,
-                         std::negation<std::is_constructible<unexpected<E>, const expected<T2, E2>>>>;
+    using is_convertible
+        = std::conjunction<std::is_constructible<T2, const T2&>,
+                           std::is_constructible<E2, const E2&>,
+                           std::negation<std::is_constructible<T, expected<T2, E2>&>>,
+                           std::negation<std::is_constructible<T, expected<T2, E2>>>,
+                           std::negation<std::is_constructible<T, const expected<T2, E2>&>>,
+                           std::negation<std::is_constructible<T, const expected<T2, E2>>>,
+                           std::negation<std::is_convertible<expected<T2, E2>&, T>>,
+                           std::negation<std::is_convertible<expected<T2, E2>&&, T>>,
+                           std::negation<std::is_convertible<const expected<T2, E2>&, T>>,
+                           std::negation<std::is_convertible<const expected<T2, E2>&&, T>>,
+                           std::negation<std::is_constructible<unexpected<E>, expected<T2, E2>&>>,
+                           std::negation<std::is_constructible<unexpected<E>, expected<T2, E2>>>,
+                           std::negation<std::is_constructible<unexpected<E>, const expected<T2, E2>&>>,
+                           std::negation<std::is_constructible<unexpected<E>, const expected<T2, E2>>>>;
 
     template <typename T2>
     using is_constructible_from = std::conjunction<std::negation<std::is_same<unqualified_t<T2>, std::in_place_t>>,
@@ -476,13 +476,13 @@ public:
 
 private:
     template <typename T2, typename E2>
-    using is_convertible =
-        std::conjunction<std::is_void<T2>,
-                         std::is_constructible<E2, const E2&>,
-                         std::negation<std::is_constructible<unexpected<E>, expected<T2, E2>&>>,
-                         std::negation<std::is_constructible<unexpected<E>, expected<T2, E2>>>,
-                         std::negation<std::is_constructible<unexpected<E>, const expected<T2, E2>&>>,
-                         std::negation<std::is_constructible<unexpected<E>, const expected<T2, E2>>>>;
+    using is_convertible
+        = std::conjunction<std::is_void<T2>,
+                           std::is_constructible<E2, const E2&>,
+                           std::negation<std::is_constructible<unexpected<E>, expected<T2, E2>&>>,
+                           std::negation<std::is_constructible<unexpected<E>, expected<T2, E2>>>,
+                           std::negation<std::is_constructible<unexpected<E>, const expected<T2, E2>&>>,
+                           std::negation<std::is_constructible<unexpected<E>, const expected<T2, E2>>>>;
 
 public:
     /// Default constructor

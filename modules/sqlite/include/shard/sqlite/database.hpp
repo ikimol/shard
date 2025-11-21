@@ -29,7 +29,7 @@ public:
     database(std::string filename, open_mode mode)
     : m_filename(std::move(filename)) {
         sqlite3* db;
-        auto r = sqlite3_open_v2(m_filename.c_str(), &db, (int)(mode.value()), nullptr);
+        auto r = sqlite3_open_v2(m_filename.c_str(), &db, (int) (mode.value()), nullptr);
         assert(r == SQLITE_OK);
         m_handle.reset(db);
     }

@@ -31,8 +31,10 @@ public:
                 new_state |= load_index << temp_index_shift; // temp := load
                 new_state &= ~has_ready_flag;                // clear the ready flag
 
-                if (!m_state.compare_exchange_weak(
-                        state, new_state, std::memory_order_release, std::memory_order_acquire)) {
+                if (!m_state.compare_exchange_weak(state,
+                                                   new_state,
+                                                   std::memory_order_release,
+                                                   std::memory_order_acquire)) {
                     load_index = (state & load_index_mask) >> load_index_shift;
                 } else {
                     load_index = temp_index;
@@ -65,21 +67,21 @@ public:
     }
 
 private:
-    constexpr static int store_index_mask = 0b00000011;
+    constexpr static int store_index_mask = 0b0000'0011;
     constexpr static int store_index_shift = 0;
 
-    constexpr static int temp_index_mask = 0b00001100;
+    constexpr static int temp_index_mask = 0b0000'1100;
     constexpr static int temp_index_shift = 2;
 
-    constexpr static int load_index_mask = 0b00110000;
+    constexpr static int load_index_mask = 0b0011'0000;
     constexpr static int load_index_shift = 4;
 
-    constexpr static int has_ready_flag = 0b01000000;
+    constexpr static int has_ready_flag = 0b0100'0000;
 
 private:
     T m_value[3] = {};
-    std::atomic<std::uint_fast8_t> m_state =
-        ATOMIC_VAR_INIT((0 << store_index_shift) | (1 << temp_index_shift) | (2 << temp_index_shift));
+    std::atomic<std::uint_fast8_t> m_state
+        = ATOMIC_VAR_INIT((0 << store_index_shift) | (1 << temp_index_shift) | (2 << temp_index_shift));
 };
 
 } // namespace concurrency

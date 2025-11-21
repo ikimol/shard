@@ -9,8 +9,8 @@ int main(int /* argc */, char* /* argv */[]) {
     auto id = shard::uuid::make_system_uuid();
 
     std::cout << "uuid: " << id << '\n';
-    std::cout << "variant: " << (int)(id.variant()) << '\n';
-    std::cout << "version: " << (int)(id.version()) << '\n';
+    std::cout << "variant: " << (int) (id.variant()) << '\n';
+    std::cout << "version: " << (int) (id.version()) << '\n';
 
     std::unordered_map<shard::uuid, int> map;
     map[id] = 42;

@@ -42,12 +42,12 @@ template <typename UnaryPredicate, typename T>
 using flat_map_predicate_result_t = typename std::invoke_result_t<UnaryPredicate, cref_arg_t<T>>::value_type;
 
 template <typename Predicate, typename T>
-inline constexpr bool is_filter_predicate_v =
-    std::is_nothrow_constructible_v<T, std::invoke_result_t<Predicate, cref_arg_t<T>>>;
+inline constexpr bool is_filter_predicate_v
+    = std::is_nothrow_constructible_v<T, std::invoke_result_t<Predicate, cref_arg_t<T>>>;
 
 template <typename Predicate, typename T, typename U>
-inline constexpr bool is_reduce_predicate_v =
-    std::is_void_v<std::invoke_result_t<Predicate, std::add_lvalue_reference_t<unqualified_t<U>>, cref_arg_t<T>>>;
+inline constexpr bool is_reduce_predicate_v
+    = std::is_void_v<std::invoke_result_t<Predicate, std::add_lvalue_reference_t<unqualified_t<U>>, cref_arg_t<T>>>;
 
 } // namespace detail
 

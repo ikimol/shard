@@ -12,6 +12,7 @@ namespace meta {
 namespace detail {
 
 // clang-format off
+
 template <typename T> struct is_integer_impl : std::false_type {};
 
 // signed
@@ -27,6 +28,7 @@ template <> struct is_integer_impl<unsigned short> : std::true_type {};
 template <> struct is_integer_impl<unsigned int> : std::true_type {};
 template <> struct is_integer_impl<unsigned long> : std::true_type {};
 template <> struct is_integer_impl<unsigned long long> : std::true_type {};
+
 // clang-format on
 
 template <typename S, typename T>
@@ -220,8 +222,10 @@ using enable_if_any_t = std::enable_if_t<or_t<Args...>::value, int>;
 // disable_if
 
 // clang-format off
+
 template <bool, typename T = void> struct disable_if {};
 template <typename T> struct disable_if<false, T> { using type = T; };
+
 // clang-format on
 
 template <bool Bool, typename T = void>
@@ -230,9 +234,11 @@ using disable_if_t = typename disable_if<Bool, T>::type;
 // function traits
 
 // clang-format off
+
 template <typename> struct result_of;
 template <class R, class... Args> struct result_of<R(Args...)> { using type = R; };
 template <typename R, typename... Args> struct result_of<R(*)(Args...)> { using type = R; };
+
 // clang-format on
 
 template <typename T>

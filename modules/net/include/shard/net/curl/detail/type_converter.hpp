@@ -87,8 +87,10 @@ struct type_converter<std::optional<std::string>> {
 // convenience typedefs
 
 // clang-format off
+
 template <typename T> using user_t = typename type_converter<T>::user_type;
 template <typename T> using curl_t = typename type_converter<T>::curl_type;
+
 // clang-format on
 
 } // namespace shard::net::curl::detail

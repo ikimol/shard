@@ -164,9 +164,7 @@ private:
 
 template <class T, typename... Args>
 std::function<void(Args...)> bind(T* object, void (T::*method)(Args...)) {
-    return [object, method](Args&&... args) {
-        return (object->*method)(std::forward<Args>(args)...);
-    };
+    return [object, method](Args&&... args) { return (object->*method)(std::forward<Args>(args)...); };
 }
 
 // implementation

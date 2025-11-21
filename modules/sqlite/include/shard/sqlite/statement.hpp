@@ -42,22 +42,22 @@ public:
 
     /// Bind a raw string array
     void bind(int index, const char* value) {
-        sqlite3_bind_text(m_statement.get(), index, value, (int)(std::strlen(value)), SQLITE_TRANSIENT);
+        sqlite3_bind_text(m_statement.get(), index, value, (int) (std::strlen(value)), SQLITE_TRANSIENT);
     }
 
     /// Bind a string value
     void bind(int index, const std::string& value) {
-        sqlite3_bind_text(m_statement.get(), index, value.c_str(), (int)(value.length()), SQLITE_TRANSIENT);
+        sqlite3_bind_text(m_statement.get(), index, value.c_str(), (int) (value.length()), SQLITE_TRANSIENT);
     }
 
     /// Bind raw data
     void bind(int index, const void* value, std::size_t size) {
-        sqlite3_bind_blob(m_statement.get(), index, value, (int)(size), SQLITE_TRANSIENT);
+        sqlite3_bind_blob(m_statement.get(), index, value, (int) (size), SQLITE_TRANSIENT);
     }
 
     /// Bind raw data
     void bind(int index, const memory::data& data) {
-        sqlite3_bind_blob(m_statement.get(), index, data.bytes(), (int)(data.size()), SQLITE_TRANSIENT);
+        sqlite3_bind_blob(m_statement.get(), index, data.bytes(), (int) (data.size()), SQLITE_TRANSIENT);
     }
 
     /// Bind an optional value as the value or null
@@ -170,9 +170,7 @@ private:
         sqlite3_stmt* statement;
         sqlite3_prepare_v2(m_db.handle(), m_sql.c_str(), static_cast<int>(m_sql.size()), &statement, nullptr);
         // TODO: Handle possible error
-        auto deleter = [](sqlite3_stmt* statement) {
-            sqlite3_finalize(statement);
-        };
+        auto deleter = [](sqlite3_stmt* statement) { sqlite3_finalize(statement); };
         return {statement, deleter};
     }
 

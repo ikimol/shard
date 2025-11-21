@@ -9,7 +9,7 @@
 #define SHARD_VA_TAIL(x, ...) __VA_ARGS__
 
 /// Denote a variable as unused to avoid compiler warnings
-#define SHARD_UNUSED(x) ((void)(x))
+#define SHARD_UNUSED(x) ((void) (x))
 
 /// Concatenate the two arguments
 #define SHARD_INTERNAL_CONCAT(a, b) a##b

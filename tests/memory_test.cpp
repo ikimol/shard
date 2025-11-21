@@ -100,7 +100,7 @@ TEST_CASE("memory") {
             REQUIRE(o->ref_count() == 1);
             REQUIRE(o->id == 42);
             REQUIRE((*o).name == doctest::String("foo"));
-            REQUIRE((bool)(o));
+            REQUIRE((bool) (o));
 
             SUBCASE("copying") {
                 auto copied_to = o;

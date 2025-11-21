@@ -61,7 +61,7 @@ public: // structured binding support
     }
 
     template <size_t N>
-    auto const& get() const& {
+    const auto& get() const& {
         if constexpr (N == 0) {
             return m_index;
         } else if constexpr (N == 1) {

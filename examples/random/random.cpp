@@ -25,7 +25,7 @@ int main(int /* argc */, char* /* argv */[]) {
     shard::random<bool> r_bool(0.25);
     r_bool.reseed();
     std::map<bool, int> histogram;
-    for (int n = 0; n < 10000; ++n) {
+    for (int n = 0; n < 10'000; ++n) {
         ++histogram[r_bool.next()];
     }
     for (auto [value, count] : histogram) {

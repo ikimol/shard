@@ -80,7 +80,7 @@ public:
 
     /// URL encode the given string
     std::string escape(const std::string& string) const {
-        auto encoded = curl_easy_escape(m_curl, string.c_str(), (int)(string.size()));
+        auto encoded = curl_easy_escape(m_curl, string.c_str(), (int) (string.size()));
         std::string result(encoded);
         curl_free(encoded);
         return result;

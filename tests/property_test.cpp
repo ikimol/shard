@@ -11,9 +11,7 @@ TEST_CASE("property") {
         shard::property<int> p1 = 42;
         REQUIRE(p1.value() == 42);
 
-        shard::property<std::string> p2 = [] {
-            return "foobar";
-        };
+        shard::property<std::string> p2 = [] { return "foobar"; };
         REQUIRE(p2.value() == "foobar");
     }
 
@@ -26,9 +24,7 @@ TEST_CASE("property") {
     SUBCASE("dependencies") {
         shard::property<int> p1 = 3;
         shard::property<int> p2 = 5;
-        shard::property<double> p3 = [&] {
-            return p1 / double(p2);
-        };
+        shard::property<double> p3 = [&] { return p1 / double(p2); };
 
         REQUIRE(p3.value() == 0.6);
         p1 = 2;

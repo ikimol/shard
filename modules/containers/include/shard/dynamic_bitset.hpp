@@ -393,8 +393,11 @@ public:
 
     dynamic_bitset& operator-=(const dynamic_bitset& other) {
         assert(size() == other.size());
-        std::transform(
-            m_blocks.cbegin(), m_blocks.cend(), other.m_blocks.cbegin(), m_blocks.begin(), detail::bit_diff {});
+        std::transform(m_blocks.cbegin(),
+                       m_blocks.cend(),
+                       other.m_blocks.cbegin(),
+                       m_blocks.begin(),
+                       detail::bit_diff {});
         return *this;
     }
 
@@ -441,16 +444,21 @@ private:
     static constexpr auto one_block = block_type(~zero_block);
 
     static size_type block_index(size_type index) noexcept { return index / bits_per_block; }
+
     static block_width_type bit_index(size_type index) noexcept { return index % bits_per_block; }
+
     static block_type bit_mask(size_type index) noexcept { return block_type(1) << bit_index(index); }
+
     static size_type blocks_required(size_type size) noexcept { return (size + bits_per_block - 1) / bits_per_block; }
 
 private:
     block_type& last_block() { return m_blocks[m_blocks.size() - 1]; }
+
     block_type last_block() const { return m_blocks[m_blocks.size() - 1]; }
 
     // used & unused bits in the last block
     size_type extra_bit_count() const { return bit_index(m_size); }
+
     size_type unused_bit_count() const { return bits_per_block - extra_bit_count(); }
 
     static size_type count_bits_in_block(block_type block) noexcept {
@@ -494,6 +502,7 @@ private:
     }
 
     bool check_size() const noexcept { return blocks_required(size()) == m_blocks.size(); }
+
     bool check_consistency() const noexcept { return check_unused_bits() && check_size(); }
 
 private:

@@ -10,9 +10,7 @@ struct addresser {
     explicit addresser(const T* p)
     : ptr(p) {}
 
-    const T** operator&() { /* NOLINT */
-        return &ptr;
-    }
+    const T** operator&() { /* NOLINT */ return &ptr; }
 
     const T* ptr;
 };

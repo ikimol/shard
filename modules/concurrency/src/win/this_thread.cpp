@@ -5,17 +5,19 @@
 #include <windows.h>
 
 #pragma pack(push, 8)
+
 struct THREADNAME_INFO {
     DWORD dwType;
     LPCSTR szName;
     DWORD dwThreadID;
     DWORD dwFlags;
 };
+
 #pragma pack(pop)
 
 void SetThreadName(const THREADNAME_INFO& info) {
     __try {
-        RaiseException(0x406D1388, 0, sizeof(info) / sizeof(ULONG_PTR), (ULONG_PTR*)&info);
+        RaiseException(0x406D1388, 0, sizeof(info) / sizeof(ULONG_PTR), (ULONG_PTR*) &info);
     } __except (EXCEPTION_EXECUTE_HANDLER) {}
 }
 

@@ -56,7 +56,11 @@ TEST_CASE("algorithm") {
         }
 
         SUBCASE("get_value") {
-            std::map<std::string, int> map = {{"one", 1}, {"two", 2}, {"three", 3}};
+            std::map<std::string, int> map = {
+                {  "one", 1},
+                {  "two", 2},
+                {"three", 3}
+            };
             auto value = shard::get_value(map, "one");
             REQUIRE(value);
             REQUIRE(value.value() == 1);
@@ -66,7 +70,11 @@ TEST_CASE("algorithm") {
         }
 
         SUBCASE("contains") {
-            std::map<std::string, int> map = {{"one", 1}, {"two", 2}, {"three", 3}};
+            std::map<std::string, int> map = {
+                {  "one", 1},
+                {  "two", 2},
+                {"three", 3}
+            };
             REQUIRE(shard::contains(map, "one"));
             REQUIRE_FALSE(shard::contains(map, "four"));
 
@@ -76,7 +84,11 @@ TEST_CASE("algorithm") {
         }
 
         SUBCASE("keys_of") {
-            std::map<std::string, int> map = {{"one", 1}, {"two", 2}, {"three", 3}};
+            std::map<std::string, int> map = {
+                {  "one", 1},
+                {  "two", 2},
+                {"three", 3}
+            };
             std::set<std::string> keys;
             shard::keys_of(map, std::inserter(keys, keys.end()));
 
@@ -87,7 +99,11 @@ TEST_CASE("algorithm") {
         }
 
         SUBCASE("values_of") {
-            std::map<std::string, int> map = {{"one", 1}, {"two", 2}, {"three", 3}};
+            std::map<std::string, int> map = {
+                {  "one", 1},
+                {  "two", 2},
+                {"three", 3}
+            };
             std::vector<int> values;
             shard::values_of(map, std::back_inserter(values));
 
