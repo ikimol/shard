@@ -22,7 +22,7 @@ macro (shard_add_static_library MODULE_NAME)
 
     set(TARGET_NAME "shard-${MODULE_NAME}")
 
-    add_library("shard-${MODULE_NAME}" STATIC)
+    add_library(${TARGET_NAME} STATIC)
     add_library(shard::${MODULE_NAME} ALIAS ${TARGET_NAME})
 
     # enable warnings
