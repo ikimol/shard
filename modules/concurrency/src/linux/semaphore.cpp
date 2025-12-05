@@ -2,7 +2,7 @@
 
 #include "shard/concurrency/semaphore.hpp"
 
-#include "shard/utility/preprocessor.hpp"
+#include <shard/preprocessor.hpp>
 
 #include <cassert>
 #include <cerrno>

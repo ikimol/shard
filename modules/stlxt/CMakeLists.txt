@@ -1,8 +1,8 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# shard :: modules :: stl_extras :: CMakeLists.txt
+# shard :: modules :: stlxt :: CMakeLists.txt
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-set(MODULE_NAME stl_extras)
+set(MODULE_NAME stlxt)
 
 set(MODULE_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/modules/stlxt/include)
 

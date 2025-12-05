@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include <shard/utility/preprocessor.hpp>
-
 #include <variant>
 
 namespace shard {

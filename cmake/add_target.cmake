@@ -68,16 +68,26 @@ endmacro ()
 
 # add a new header-only library target
 #
-# usage: shard_add_header_only_library(<name> <include_dir>)
+# usage: shard_add_header_only_library(<name>
+#                                      <include_dir>
+#                                      [LIBRARIES <lib>...]
+#                                      )
 macro (shard_add_header_only_library MODULE_NAME INCLUDE_DIR)
-    add_library(${MODULE_NAME} INTERFACE)
-    add_library(shard::${MODULE_NAME} ALIAS ${MODULE_NAME})
+    cmake_parse_arguments(LOCAL "" "" "LIBRARIES" ${ARGN})
+
+    set(TARGET_NAME "shard-${MODULE_NAME}")
+
+    add_library(${TARGET_NAME} INTERFACE)
+    add_library(shard::${MODULE_NAME} ALIAS ${TARGET_NAME})
 
     # add the main include directory
-    target_include_directories(${MODULE_NAME} INTERFACE
+    target_include_directories(${TARGET_NAME} INTERFACE
                                $<BUILD_INTERFACE:${INCLUDE_DIR}>
                                $<INSTALL_INTERFACE:include>
                                )
+
+    # link libraries
+    target_link_libraries(${TARGET_NAME} INTERFACE ${LOCAL_LIBRARIES})
 
     # setup the install rules
 
@@ -86,7 +96,7 @@ macro (shard_add_header_only_library MODULE_NAME INCLUDE_DIR)
             FILES_MATCHING PATTERN "*.hpp" PATTERN "*.inl"
             )
 
-    install(TARGETS ${MODULE_NAME} EXPORT ${SHARD_CONFIG_EXPORT_NAME}
+    install(TARGETS ${TARGET_NAME} EXPORT ${SHARD_CONFIG_EXPORT_NAME}
             PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
             )
 endmacro ()

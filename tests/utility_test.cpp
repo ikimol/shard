@@ -2,7 +2,6 @@
 
 #include <shard/utility/defer.hpp>
 #include <shard/utility/exception_guard.hpp>
-#include <shard/utility/hash_value.hpp>
 #include <shard/utility/lazy.hpp>
 
 #include <stdexcept>
@@ -41,16 +40,6 @@ TEST_CASE("utility") {
             }
             REQUIRE_FALSE(did_rollback);
         }
-    }
-
-    SUBCASE("hashing") {
-        auto i1 = shard::hash_value(1, 2, 3);
-        auto i2 = shard::hash_value(1, 2, 3);
-        REQUIRE(i1 == i2);
-
-        auto str1 = shard::hash_value(std::string("foo"));
-        auto str2 = shard::hash_value(std::string("FOO"));
-        REQUIRE(str1 != str2);
     }
 
     SUBCASE("lazy") {

@@ -1,6 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#include <shard/utility/hash_value.hpp>
+#include <shard/hash_value.hpp>
 
 #include <iostream>
 

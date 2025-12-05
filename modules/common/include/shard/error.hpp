@@ -7,9 +7,8 @@
 #include <utility>
 
 namespace shard {
-namespace utility {
 
-template <typename T, typename = std::enable_if_t<std::is_integral<T>::value>>
+template <typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
 class basic_error : public std::runtime_error {
 public:
     basic_error(T code, const char* message)
@@ -29,11 +28,5 @@ private:
 };
 
 using error = basic_error<int>;
-
-} // namespace utility
-
-// bring symbols into parent namespace
-
-using utility::error;
 
 } // namespace shard

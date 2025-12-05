@@ -1,18 +1,23 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# shard :: examples :: utility :: CMakeLists.txt
+# shard :: examples :: common :: CMakeLists.txt
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-shard_add_example(utility.hash-value
+shard_add_example(hash-value
                   SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/hash_value.cpp
-                  MODULES shard::utility
+                  MODULES shard::common
                   )
 
-shard_add_example(utility.error
+shard_add_example(error
                   SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/error.cpp
-                  MODULES shard::utility
+                  MODULES shard::common
                   )
 
-shard_add_example(utility.timer
+shard_add_example(runtime-id
+                  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/runtime_id.cpp
+                  MODULES shard::common
+                  )
+
+shard_add_example(timer
                   SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/timer.cpp
-                  MODULES shard::utility
+                  MODULES shard::common
                   )

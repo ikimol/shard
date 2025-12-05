@@ -30,5 +30,5 @@ set(MODULE_SOURCES
 shard_add_static_library(${MODULE_NAME}
                          SOURCES ${MODULE_SOURCES} ${PLATFORM_SPECIFIC_SOURCES}
                          INCLUDE_DIR ${MODULE_INCLUDE_DIR}
-                         LIBRARIES shard::algorithm shard::utility ${PLATFORM_SPECIFIC_LIBS}
+                         LIBRARIES shard::common shard::algorithm ${PLATFORM_SPECIFIC_LIBS}
                          )

@@ -4,5 +4,5 @@
 
 shard_add_example(meta.type-traits
                   SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/type_traits.cpp
-                  MODULES shard::meta shard::utility
+                  MODULES shard::common shard::meta
                   )

@@ -6,7 +6,6 @@
 #include <functional>
 
 namespace shard {
-namespace utility {
 
 /// Append the hash of multiple values to the seed
 template <typename T, typename... Args>
@@ -22,11 +21,5 @@ std::size_t hash_value(const Args&... args) {
     hash_combine(seed, args...);
     return seed;
 }
-
-} // namespace utility
-
-// bring symbols into parent namespace
-
-using utility::hash_value;
 
 } // namespace shard

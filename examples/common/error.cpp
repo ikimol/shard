@@ -1,6 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#include <shard/utility/error.hpp>
+#include <shard/error.hpp>
 
 #include <iostream>
 

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <shard/utility/hash_value.hpp>
+#include <shard/hash_value.hpp>
 
 #include <array>
 #include <cstdint>

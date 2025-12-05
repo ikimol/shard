@@ -4,9 +4,6 @@
 
 #define SHARD_RUNTIME_ID(name, T, ...)                                                                                 \
     class name {                                                                                                       \
-        friend bool operator==(const name&, const name&);                                                              \
-        friend bool operator<(const name&, const name&);                                                               \
-                                                                                                                       \
     public:                                                                                                            \
         using value_type = T;                                                                                          \
                                                                                                                        \
@@ -30,13 +27,13 @@
     };                                                                                                                 \
                                                                                                                        \
     inline bool operator==(const name& lhs, const name& rhs) {                                                         \
-        return lhs.m_value == rhs.m_value;                                                                             \
+        return lhs.value() == rhs.value();                                                                             \
     }                                                                                                                  \
     inline bool operator!=(const name& lhs, const name& rhs) {                                                         \
         return !(lhs == rhs);                                                                                          \
     }                                                                                                                  \
     inline bool operator<(const name& lhs, const name& rhs) {                                                          \
-        return lhs.m_value < rhs.m_value;                                                                              \
+        return lhs.value() < rhs.value();                                                                              \
     }                                                                                                                  \
     inline bool operator<=(const name& lhs, const name& rhs) {                                                         \
         return !(rhs < lhs);                                                                                           \

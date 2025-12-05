@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <shard/utility/error.hpp>
+#include <shard/error.hpp>
 
 #include <sqlite3.h>
 
