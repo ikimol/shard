@@ -16,11 +16,16 @@ static bool operator==(const error& lhs, const error& rhs) {
     return lhs.code == rhs.code;
 }
 
+static shard::expected<void, error> empty() {
+    return {};
+}
+
 static shard::expected<int, error> succeed(int value = 0) {
     return value;
 }
 
-static shard::expected<int, error> fail(int error_code = -1) {
+template <typename R>
+static shard::expected<R, error> fail(int error_code = -1) {
     return shard::unexpected(error {error_code});
 }
 
@@ -54,12 +59,6 @@ TEST_CASE("expected") {
             auto moved_to = std::move(ex);
             REQUIRE(test::counter::move_constructor == 1);
             REQUIRE(test::counter::instances == 2);
-        }
-
-        SUBCASE("unexpected") {
-            auto ex = fail(-1);
-            REQUIRE_FALSE(ex.has_value());
-            REQUIRE(ex.error().code == -1);
         }
 
         SUBCASE("value") {
@@ -129,14 +128,6 @@ TEST_CASE("expected") {
         }
     }
 
-    SUBCASE("operator bool") {
-        auto ex1 = succeed();
-        REQUIRE(bool(ex1));
-
-        auto ex2 = fail();
-        REQUIRE_FALSE(ex2);
-    }
-
     SUBCASE("value access") {
         shard::expected<test::widget, error> ex;
         REQUIRE(ex->a == 0);
@@ -171,7 +162,7 @@ TEST_CASE("expected") {
             REQUIRE(called);
 
             called = false;
-            fail().and_then(handler);
+            fail<int>().and_then(handler);
             REQUIRE_FALSE(called);
         }
 
@@ -182,7 +173,7 @@ TEST_CASE("expected") {
                 return shard::unexpected(e);
             };
 
-            fail().or_else(handler);
+            fail<int>().or_else(handler);
             REQUIRE(called);
 
             called = false;
@@ -202,30 +193,102 @@ TEST_CASE("expected") {
             REQUIRE(*result == 42);
 
             called = false;
-            fail().transform(handler);
+            fail<int>().transform(handler);
             REQUIRE_FALSE(called);
         }
     }
+}
 
-    SUBCASE("void") {
-        shard::expected<void, error> ex;
-        REQUIRE(ex.has_value());
-        REQUIRE(std::is_void_v<decltype(ex.value())>);
-
-        SUBCASE("equality") {
-            shard::expected<void, error> ex1;
-            shard::expected<void, error> ex2;
-            REQUIRE(ex1 == ex2);
-
-            REQUIRE(ex1 != shard::unexpected(error {}));
+TEST_CASE_TEMPLATE("expected", T, void) {
+    SUBCASE("constructors") {
+        SUBCASE("default") {
+            shard::expected<void, error> ex;
+            REQUIRE(ex.has_value());
+            REQUIRE(std::is_void_v<decltype(empty().value())>);
         }
+    }
 
-        SUBCASE("monadic") {
+    SUBCASE("equality") {
+        shard::expected<void, error> ex1;
+        shard::expected<void, error> ex2;
+        REQUIRE(ex1 == ex2);
+
+        REQUIRE(ex1 != shard::unexpected(error {}));
+    }
+
+    SUBCASE("monadic") {
+        SUBCASE("and_then") {
             auto called = false;
-            ex.and_then([&]() -> shard::expected<void, error> {
+            auto handler = [&]() -> shard::expected<void, error> {
                 called = true;
                 return {};
-            });
+            };
+
+            empty().and_then(handler);
+            REQUIRE(called);
+
+            called = false;
+            fail<T>().and_then(handler);
+            REQUIRE_FALSE(called);
         }
+
+        SUBCASE("or_else") {
+            auto called = false;
+            auto handler = [&](const error& e) -> shard::expected<void, error> {
+                called = true;
+                return shard::unexpected(e);
+            };
+
+            fail<T>().or_else(handler);
+            REQUIRE(called);
+
+            called = false;
+            empty().or_else(handler);
+            REQUIRE_FALSE(called);
+        }
+
+        SUBCASE("transform") {
+            auto called = false;
+            auto handler = [&]() -> int {
+                called = true;
+                return 42;
+            };
+
+            auto result = empty().transform(handler);
+            REQUIRE(called);
+            REQUIRE(*result == 42);
+
+            called = false;
+            fail<T>().transform(handler);
+            REQUIRE_FALSE(called);
+        }
+
+        SUBCASE("transfor<void>") {
+            auto called = false;
+            auto handler = [&]() -> void { called = true; };
+
+            empty().transform(handler);
+            REQUIRE(called);
+
+            called = false;
+            fail<T>().transform(handler);
+            REQUIRE_FALSE(called);
+        }
+    }
+}
+
+TEST_CASE_TEMPLATE("expected", T, void, int) {
+    SUBCASE("operator bool") {
+        auto good = shard::expected<T, error>();
+        REQUIRE(good);
+
+        auto bad = fail<T>();
+        REQUIRE_FALSE(bad);
+    }
+
+    SUBCASE("unexpected") {
+        auto ex = fail<T>(-1);
+        REQUIRE_FALSE(ex.has_value());
+        REQUIRE(ex.error().code == -1);
     }
 }

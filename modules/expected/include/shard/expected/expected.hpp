@@ -699,7 +699,12 @@ public:
         using R = expected<U, E>;
 
         if (m_has_value) {
-            return R(std::in_place, std::forward<F>(f));
+            if constexpr (!std::is_same_v<U, void>) {
+                return expected<U, E>(std::in_place, std::invoke(std::forward<F>(f)));
+            } else {
+                std::invoke(std::forward<F>(f));
+                return expected<U, E>();
+            }
         } else {
             return R(unexpect, m_storage.error);
         }
@@ -712,7 +717,12 @@ public:
         using R = expected<U, E>;
 
         if (m_has_value) {
-            return R(std::in_place, std::forward<F>(f));
+            if constexpr (!std::is_same_v<U, void>) {
+                return expected<U, E>(std::in_place, std::invoke(std::forward<F>(f)));
+            } else {
+                std::invoke(std::forward<F>(f));
+                return expected<U, E>();
+            }
         } else {
             return R(unexpect, std::move(m_storage.error));
         }
