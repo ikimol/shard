@@ -16,8 +16,3 @@ shard_add_example(runtime-id
                   SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/runtime_id.cpp
                   MODULES shard::common
                   )
-
-shard_add_example(timer
-                  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/timer.cpp
-                  MODULES shard::common
-                  )

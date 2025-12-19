@@ -1,6 +1,6 @@
 // Copyright (c) 2023 Miklos Molnar. All rights reserved.
 
-#include <shard/timer.hpp>
+#include <shard/utility/timer.hpp>
 
 #include <iostream>
 #include <thread>
