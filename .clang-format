@@ -38,7 +38,7 @@ PenaltyReturnTypeOnItsOwnLine: 1000
 QualifierAlignment: Left
 SeparateDefinitionBlocks: Always
 ShortNamespaceLines: 0
-SpaceInEmptyBlock: false
+SpaceInEmptyBraces: Never
 SpaceAfterCStyleCast: true
 SpacesInLineCommentPrefix:
   Maximum: 1
