@@ -29,6 +29,7 @@ add_executable(${SHARD_TEST_TARGET}
                ${CMAKE_CURRENT_SOURCE_DIR}/containers/sparse_set_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/enums_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/expected_test.cpp
+               ${CMAKE_CURRENT_SOURCE_DIR}/io_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/math_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/memory_test.cpp
                ${CMAKE_CURRENT_SOURCE_DIR}/meta_test.cpp
@@ -48,6 +49,7 @@ target_link_libraries(${SHARD_TEST_TARGET} PRIVATE
                       shard::containers
                       shard::enums
                       shard::expected
+                      shard::io
                       shard::math
                       shard::memory
                       shard::meta
