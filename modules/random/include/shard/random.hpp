@@ -51,11 +51,11 @@ private:
 
 template <typename T>
 using random =
-    std::conditional_t<meta::is_integer<T>::value,       // int
+    std::conditional_t<is_integer_v<T>,       // int
         random_base<std::uniform_int_distribution<T>>,
-    std::conditional_t<std::is_floating_point<T>::value, // float
+    std::conditional_t<std::is_floating_point_v<T>, // float
         random_base<std::uniform_real_distribution<T>>,
-    std::conditional_t<meta::is_bool<T>::value,          // bool
+    std::conditional_t<is_bool_v<T>,          // bool
         random_base<std::bernoulli_distribution>,
     void>>>;
 

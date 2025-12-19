@@ -13,7 +13,7 @@ namespace detail {
 
 // clang-format off
 
-template <typename T> struct is_integer_impl : std::false_type {};
+template <typename> struct is_integer_impl : std::false_type {};
 
 // signed
 template <> struct is_integer_impl<char> : std::true_type {};
@@ -157,7 +157,7 @@ template <typename T, typename...>
 struct are_same : std::true_type {};
 
 template <typename T, typename U, typename... Args>
-struct are_same<T, U, Args...> : std::bool_constant<std::is_same<T, U>::value && are_same<T, Args...>::value> {};
+struct are_same<T, U, Args...> : std::bool_constant<std::is_same_v<T, U> && are_same<T, Args...>::value> {};
 
 template <typename... Args>
 inline constexpr bool are_same_v = are_same<Args...>::value;
@@ -195,7 +195,7 @@ using if_t = std::conditional_t<Condition::value, Then, Else>;
 template <typename Condition, typename Then, typename Else>
 inline constexpr bool if_v = if_t<Condition, Then, Else>::value;
 
-template <typename... Args>
+template <typename...>
 struct and_t : std::bool_constant<true> {};
 
 template <typename T, typename... Args>
@@ -204,7 +204,7 @@ struct and_t<T, Args...> : if_t<T, and_t<Args...>, std::bool_constant<false>> {}
 template <typename... Args>
 inline constexpr bool and_v = and_t<Args...>::value;
 
-template <typename... Args>
+template <typename...>
 struct or_t : std::bool_constant<false> {};
 
 template <typename T, typename... Args>
@@ -214,10 +214,10 @@ template <typename... Args>
 inline constexpr bool or_v = or_t<Args...>::value;
 
 template <typename... Args>
-using enable_if_all_t = std::enable_if_t<and_t<Args...>::value, int>;
+using enable_if_all_t = std::enable_if_t<and_v<Args...>, int>;
 
 template <typename... Args>
-using enable_if_any_t = std::enable_if_t<or_t<Args...>::value, int>;
+using enable_if_any_t = std::enable_if_t<or_v<Args...>, int>;
 
 // disable_if
 
@@ -245,7 +245,7 @@ template <typename T>
 using result_of_t = typename result_of<T>::type;
 
 template <typename T>
-struct functor_traits : public functor_traits<decltype(&T::operator())> {};
+struct functor_traits : functor_traits<decltype(&T::operator())> {};
 
 template <typename T, typename R, typename... Args>
 struct functor_traits<R (T::*)(Args...) const> {
@@ -256,7 +256,7 @@ struct functor_traits<R (T::*)(Args...) const> {
     using function_type = std::function<R(Args...)>;
 
     template <std::size_t N>
-    using arg_type = typename std::tuple_element<N, args_type>::type;
+    using arg_type = std::tuple_element_t<N, args_type>;
 };
 
 template <typename R, typename... Args>
@@ -268,7 +268,7 @@ struct functor_traits<R(Args...)> {
     using function_type = std::function<R(Args...)>;
 
     template <std::size_t N>
-    using arg_type = typename std::tuple_element<N, args_type>::type;
+    using arg_type = std::tuple_element_t<N, args_type>;
 };
 
 } // namespace meta

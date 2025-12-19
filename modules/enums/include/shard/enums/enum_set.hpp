@@ -155,7 +155,7 @@ private:
 template <typename E, std::size_t N>
 template <typename... Args>
 constexpr enum_set<E, N>::enum_set(Args&&... args) {
-    static_assert(are_same<E, Args...>::value, "mismatched value types");
+    static_assert(are_same_v<E, Args...>, "mismatched value types");
     E values[sizeof...(args)] = {std::forward<Args>(args)...};
     m_bits = to_index_set(std::begin(values), std::end(values));
 }

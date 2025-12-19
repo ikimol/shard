@@ -28,7 +28,7 @@ public:
     }
 
     /// Implicit value constructor from compatible type
-    template <typename T, typename = std::enable_if_t<std::is_convertible<T, std::string>::value>>
+    template <typename T, typename = std::enable_if_t<std::is_convertible_v<T, std::string>>>
     url(T&& value) /* NOLINT */
     : m_url(std::forward<T>(value)) {
         parse();
@@ -52,7 +52,7 @@ public:
     }
 
     /// Value assignment operator from compatible type
-    template <typename T, typename = std::enable_if_t<std::is_convertible<T, std::string>::value>>
+    template <typename T, typename = std::enable_if_t<std::is_convertible_v<T, std::string>>>
     url& operator=(T&& value) {
         m_url = std::forward<T>(value);
         parse();

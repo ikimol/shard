@@ -33,7 +33,7 @@ inline std::string to_string(std::string value) {
 }
 
 /// Convert an arbitrary value to a string using a stream
-template <typename T, typename = std::enable_if_t<meta::is_streamable<std::ostream, T>::value>>
+template <typename T, typename = std::enable_if_t<is_streamable_v<std::ostream, T>>>
 std::string to_string(const T& value) {
     std::ostringstream oss;
     oss << value;

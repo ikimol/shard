@@ -8,7 +8,7 @@ namespace shard::bit {
 namespace detail {
 
 template <typename T>
-using can_store_bits = std::bool_constant<std::is_integral<T>::value && std::is_unsigned<T>::value>;
+using can_store_bits = std::bool_constant<std::is_integral_v<T> && std::is_unsigned_v<T>>;
 
 } // namespace detail
 
