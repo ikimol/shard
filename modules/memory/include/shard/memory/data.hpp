@@ -13,7 +13,7 @@ public:
     data() = default;
 
     /// Create a wrapper for data with the given bytes and size
-    data(const void* bytes, std::size_t size)
+    data(const void* bytes, std::size_t size) noexcept
     : m_bytes(bytes)
     , m_size(size) {}
 
