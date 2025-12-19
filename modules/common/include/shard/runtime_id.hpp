@@ -8,13 +8,9 @@
         using value_type = T;                                                                                          \
                                                                                                                        \
     public:                                                                                                            \
-        static name next() {                                                                                           \
-            return name(s_counter++);                                                                                  \
-        }                                                                                                              \
+        static name next() { return name(s_counter++); }                                                               \
                                                                                                                        \
-        [[nodiscard]] value_type value() const {                                                                       \
-            return m_value;                                                                                            \
-        }                                                                                                              \
+        [[nodiscard]] value_type value() const { return m_value; }                                                     \
                                                                                                                        \
     private:                                                                                                           \
         explicit name(value_type value)                                                                                \

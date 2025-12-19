@@ -31,7 +31,7 @@ public:
 
     /// Move constructor
     file(file&& other) noexcept
-    : m_handle(std::exchange(other.m_handle, nullptr)) { }
+    : m_handle(std::exchange(other.m_handle, nullptr)) {}
 
     /// Move assignment operator
     file& operator=(file&& other) noexcept {

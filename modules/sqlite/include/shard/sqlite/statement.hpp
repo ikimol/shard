@@ -6,9 +6,9 @@
 #include "shard/sqlite/database.hpp"
 #include "shard/sqlite/error.hpp"
 
-#include <shard/preprocessor.hpp>
 #include <shard/memory/data.hpp>
 #include <shard/meta/type_traits.hpp>
+#include <shard/preprocessor.hpp>
 
 #include <cstdint>
 #include <memory>

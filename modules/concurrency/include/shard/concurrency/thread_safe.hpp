@@ -30,7 +30,7 @@ private:
         static_assert(!lock_traits<Lock>::is_read_only || Access == access_mode::read_only);
 
     private:
-        static constexpr auto is_read_only = std::bool_constant < Access == access_mode::read_only > ::value;
+        static constexpr auto is_read_only = std::bool_constant<Access == access_mode::read_only>::value;
         using const_correct_value_type = std::conditional_t<is_read_only, const value_type, value_type>;
 
     public:
