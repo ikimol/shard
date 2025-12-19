@@ -7,7 +7,12 @@ shard_add_example(crypto.base64
                   MODULES shard::crypto
                   )
 
-shard_add_example(crypto.sha
-                  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/sha.cpp
+shard_add_example(crypto.md5
+                  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/md5.cpp
+                  MODULES shard::crypto
+                  )
+
+shard_add_example(crypto.sha256
+                  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/sha256.cpp
                   MODULES shard::crypto
                   )

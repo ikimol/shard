@@ -45,6 +45,7 @@ public:
         throw std::bad_alloc();
     }
 
+    /// Conversion operator to immutable data type
     /* implicit */ operator data() const noexcept /* NOLINT */ { return data(m_allocation.get(), m_size); }
 
 private:
