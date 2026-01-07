@@ -44,7 +44,7 @@ constexpr float pct(T x, T min, T max) noexcept {
 /// Returns true if the given values are approximately equal
 template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
 constexpr bool approx(T a, T b) noexcept {
-    return std::fabs(a - b) <= std::fabs(a) * std::numeric_limits<T>::epsilon();
+    return std::abs(a - b) <= std::abs(a) * std::numeric_limits<T>::epsilon();
 }
 
 } // namespace math
