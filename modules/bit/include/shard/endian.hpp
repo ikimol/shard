@@ -5,6 +5,7 @@
 namespace shard {
 namespace bit {
 
+/// Indicates the endianness of scalar types
 enum class endian {
 #if defined(_MSC_VER) && !defined(__clang__)
     little = 0,
