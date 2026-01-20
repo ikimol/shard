@@ -12,11 +12,13 @@ namespace shard::crypto {
 /// Represents the result of a hash algorithm
 class hash {
     friend hash md5(const data&);
+    friend hash sha1(const data&);
     friend hash sha256(const data&);
 
 public:
     enum class algorithm {
         md5,    ///< MD5 algorithm
+        sha1,   ///< SHA-1 algorithm
         sha256, ///< SHA-256 algorithm
     };
 
@@ -33,5 +35,8 @@ private:
 private:
     dynamic_data m_digest;
 };
+
+/// Convenience function type alias
+using hash_function_t = hash (*)(const data&);
 
 } // namespace shard::crypto

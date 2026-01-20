@@ -39,6 +39,18 @@ public:
         name_based_sha1 = 5,     ///< The name-based version using SHA-1
     };
 
+    // predefined UUIDs
+
+    static uuid nil; ///< UUID with all bits set to '0'
+    static uuid max; ///< UUID with all bits set to '1'
+
+    // predefined namespace IDs for v3 and v5 UUIDs
+
+    static uuid namespace_dns;  ///< The name is a fully-qualified domain name
+    static uuid namespace_url;  ///< The name is a URL
+    static uuid namespace_oid;  ///< The name is an ISO OID
+    static uuid namespace_x500; ///< The name is an X.500 DN in DER or a text output format
+
 public:
     /// Default constructor
     uuid() noexcept = default;
@@ -54,19 +66,24 @@ public:
     explicit uuid(Iterator first, Iterator last);
 
     /// Create a UUID from its string representation
-    static std::optional<uuid> from_string(const std::string_view& str) noexcept;
+    static std::optional<uuid> from_string(std::string_view str) noexcept;
 
     /// Check if every byte of the UUID is zero
-    bool is_null() const;
+    bool is_nil() const;
 
     /// Get the version of the UUID
-    version version() const;
+    version get_version() const;
 
     /// Get the variant of the UUID
-    variant variant() const;
+    variant get_variant() const;
 
     /// Convert the UUID to its string representation
     std::string to_string() const;
+
+    /// Get the raw byte array
+    ///
+    /// \note The size of the array is guaranteed to be 16.
+    const value_type* bytes() const { return m_data.data(); }
 
     /// Swap the value of the UUID with another
     void swap(uuid& other) noexcept { m_data.swap(other.m_data); }
@@ -75,6 +92,12 @@ public:
 
     /// Get a new UUID created by the system
     static uuid make_system_uuid();
+
+    /// Get a new UUID V3 by hashing the given namespace and name using MD5
+    static uuid make_v3_uuid(const uuid& ns, std::string_view name);
+
+    /// Get a new UUID V5 by hashing the given namespace and name using SHA-1
+    static uuid make_v5_uuid(const uuid& ns, std::string_view name);
 
 private:
     alignas(8) std::array<value_type, 16> m_data = {};

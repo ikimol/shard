@@ -3,12 +3,16 @@
 #include "shard/uuid.hpp"
 
 #include <shard/algorithm/enumerate.hpp>
+#include <shard/crypto/md5.hpp>
+#include <shard/crypto/sha1.hpp>
+#include <shard/memory/data.hpp>
 
 #include <algorithm>
 #include <cassert>
 #include <cctype>
 #include <cstddef>
 #include <ostream>
+#include <vector>
 
 namespace shard {
 namespace {
@@ -34,7 +38,49 @@ std::uint8_t to_nibble(const char ch) noexcept {
     return 0;
 }
 
+uuid generate_name_uuid(const uuid& ns, std::string_view name, crypto::hash_function_t hasher, std::uint8_t version) {
+    // concatenate namespace bytes with name bytes
+    std::vector<uuid::value_type> buffer;
+    buffer.reserve(16 + name.size());
+    for (std::size_t i = 0; i < 16; ++i) {
+        buffer.push_back(ns.bytes()[i]);
+    }
+    for (auto c : name) {
+        buffer.push_back(static_cast<uuid::value_type>(c));
+    }
+
+    // compute hash
+    auto hash = hasher(data(buffer.data(), buffer.size()));
+    auto digest = reinterpret_cast<const uuid::value_type*>(hash.digest().bytes());
+
+    // copy first 16 bytes of hash
+    std::array<uuid::value_type, 16> result_data {};
+    std::copy_n(digest, 16, result_data.begin());
+
+    // set version and variant
+    result_data[6] = (result_data[6] & 0x0f) | version;
+    result_data[8] = (result_data[8] & 0x3f) | 0x80;
+
+    return uuid(result_data);
+}
+
 } // namespace
+
+uuid uuid::nil = uuid({0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00});
+
+uuid uuid::max = uuid({0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff});
+
+uuid uuid::namespace_dns
+    = uuid({0x6b, 0xa7, 0xb8, 0x10, 0x9d, 0xad, 0x11, 0xd1, 0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8});
+
+uuid uuid::namespace_url
+    = uuid({0x6b, 0xa7, 0xb8, 0x11, 0x9d, 0xad, 0x11, 0xd1, 0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8});
+
+uuid uuid::namespace_oid
+    = uuid({0x6b, 0xa7, 0xb8, 0x12, 0x9d, 0xad, 0x11, 0xd1, 0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8});
+
+uuid uuid::namespace_x500
+    = uuid({0x6b, 0xa7, 0xb8, 0x14, 0x9d, 0xad, 0x11, 0xd1, 0x80, 0xb4, 0x00, 0xc0, 0x4f, 0xd4, 0x30, 0xc8});
 
 uuid::uuid(const value_type (&data)[16]) noexcept {
     std::copy(std::cbegin(data), std::cend(data), std::begin(m_data));
@@ -43,7 +89,7 @@ uuid::uuid(const value_type (&data)[16]) noexcept {
 constexpr uuid::uuid(const std::array<value_type, 16>& data) noexcept
 : m_data(data) {}
 
-std::optional<uuid> uuid::from_string(const std::string_view& str) noexcept {
+std::optional<uuid> uuid::from_string(std::string_view str) noexcept {
     if (str.empty()) {
         return std::nullopt;
     }
@@ -87,11 +133,11 @@ std::optional<uuid> uuid::from_string(const std::string_view& str) noexcept {
     return uuid(data);
 }
 
-bool uuid::is_null() const {
+bool uuid::is_nil() const {
     return std::all_of(std::cbegin(m_data), std::cend(m_data), [](auto i) { return i == 0; });
 }
 
-enum uuid::version uuid::version() const {
+uuid::version uuid::get_version() const {
     if ((m_data[6] & 0xf0) == 0x10) {
         return version::time_based;
     } else if ((m_data[6] & 0xf0) == 0x20) {
@@ -107,7 +153,7 @@ enum uuid::version uuid::version() const {
     }
 }
 
-enum uuid::variant uuid::variant() const {
+uuid::variant uuid::get_variant() const {
     if ((m_data[8] & 0x80) == 0x00) {
         return variant::ncs;
     } else if ((m_data[8] & 0xc0) == 0x80) {
@@ -130,6 +176,14 @@ std::string uuid::to_string() const {
         }
     }
     return {buffer.data(), buffer.size()};
+}
+
+uuid uuid::make_v3_uuid(const uuid& ns, std::string_view name) {
+    return generate_name_uuid(ns, name, &crypto::md5, 0x30);
+}
+
+uuid uuid::make_v5_uuid(const uuid& ns, std::string_view name) {
+    return generate_name_uuid(ns, name, &crypto::sha1, 0x50);
 }
 
 void swap(uuid& lhs, uuid& rhs) noexcept {

@@ -9,7 +9,6 @@ namespace shard {
 uuid uuid::make_system_uuid() {
     auto id = CFUUIDCreate(nullptr);
     auto id_bytes = CFUUIDGetUUIDBytes(id);
-    CFRelease(id);
 
     std::array<std::uint8_t, 16> bytes = {
         id_bytes.byte0,
@@ -29,6 +28,8 @@ uuid uuid::make_system_uuid() {
         id_bytes.byte14,
         id_bytes.byte15,
     };
+
+    CFRelease(id);
 
     return uuid {std::begin(bytes), std::end(bytes)};
 }

@@ -11,7 +11,7 @@
 namespace shard::crypto {
 namespace {
 
-std::array g_algorithms = {EVP_md5, EVP_sha256};
+std::array g_algorithms = {EVP_md5, EVP_sha1, EVP_sha256};
 
 } // namespace
 
