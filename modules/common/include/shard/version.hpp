@@ -7,31 +7,31 @@
 #include <shard/string/fmt.hpp>
 
 #include <array>
+#include <charconv>
 #include <functional>
 #include <optional>
 #include <string>
 
 namespace shard {
 
-template <typename T>
-class basic_version {
+class version {
 public:
-    using value_type = T;
+    using value_type = int;
 
 public:
     /// Create the a version with 0 as its elements
-    constexpr basic_version() noexcept = default;
+    constexpr version() noexcept = default;
 
     /// Create a version from the given elements
-    constexpr basic_version(value_type major, value_type minor, value_type patch) noexcept {
+    constexpr version(value_type major, value_type minor, value_type patch) noexcept {
         m_values[0] = major;
         m_values[1] = minor;
         m_values[2] = patch;
     }
 
     /// Try to create a version from a string
-    static std::optional<basic_version> from_string(std::string_view v) noexcept {
-        basic_version result;
+    static std::optional<version> from_string(std::string_view v) noexcept {
+        version result;
 
         // strip build metadata if present (e.g. '+001')
         if (auto i = v.find('+'); i != std::string_view::npos) {
@@ -58,7 +58,7 @@ public:
                 s = v.substr(i);
             }
 
-            if (!parse_int(s, *it++)) {
+            if (auto [ptr, ec] = std::from_chars(s.data(), s.data() + s.length(), *it++); ec != std::errc()) {
                 return std::nullopt;
             }
         }
@@ -79,42 +79,20 @@ public:
     std::string to_string() const noexcept { return shard::fmt("%d.%d.%d", m_values[0], m_values[1], m_values[2]); }
 
 private:
-    static bool parse_int(std::string_view s, value_type& out) noexcept {
-        if (s.empty()) {
-            return false;
-        }
-        value_type value = 0;
-        for (auto ch : s) {
-            if (ch < '0' || ch > '9') {
-                return false;
-            }
-            value = static_cast<value_type>(value * 10 + (ch - '0'));
-        }
-        out = value;
-        return true;
-    }
-
-private:
     std::array<value_type, 3> m_values = {};
 };
 
-/// Represents a version number
-using version = basic_version<int>;
-
 // operators
 
-template <typename T>
-bool operator==(const basic_version<T>& lhs, const basic_version<T>& rhs) {
+inline bool operator==(const version& lhs, const version& rhs) {
     return lhs.major() == rhs.major() && lhs.minor() == rhs.minor() && lhs.patch() == rhs.patch();
 }
 
-template <typename T>
-bool operator!=(const basic_version<T>& lhs, const basic_version<T>& rhs) {
+inline bool operator!=(const version& lhs, const version& rhs) {
     return !(lhs == rhs);
 }
 
-template <typename T>
-bool operator<(const basic_version<T>& lhs, const basic_version<T>& rhs) {
+inline bool operator<(const version& lhs, const version& rhs) {
     if (lhs.major() != rhs.major()) {
         return lhs.major() < rhs.major();
     } else if (lhs.minor() != rhs.minor()) {
@@ -124,18 +102,15 @@ bool operator<(const basic_version<T>& lhs, const basic_version<T>& rhs) {
     }
 }
 
-template <typename T>
-bool operator<=(const basic_version<T>& lhs, const basic_version<T>& rhs) {
+inline bool operator<=(const version& lhs, const version& rhs) {
     return !(rhs < lhs);
 }
 
-template <typename T>
-bool operator>(const basic_version<T>& lhs, const basic_version<T>& rhs) {
+inline bool operator>(const version& lhs, const version& rhs) {
     return rhs < lhs;
 }
 
-template <typename T>
-bool operator>=(const basic_version<T>& lhs, const basic_version<T>& rhs) {
+inline bool operator>=(const version& lhs, const version& rhs) {
     return !(lhs < rhs);
 }
 
@@ -143,9 +118,9 @@ bool operator>=(const basic_version<T>& lhs, const basic_version<T>& rhs) {
 
 // std::hash compatibility
 
-template <typename T>
-struct std::hash<shard::basic_version<T>> {
-    std::size_t operator()(const shard::basic_version<T>& v) const noexcept {
+template <>
+struct std::hash<shard::version> {
+    std::size_t operator()(const shard::version& v) const noexcept {
         return shard::hash_value(v.major(), v.minor(), v.patch());
     }
 };
