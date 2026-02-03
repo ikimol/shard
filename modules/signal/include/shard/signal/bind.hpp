@@ -8,7 +8,7 @@ namespace shard {
 
 /// Bind a class method as a function
 template <typename T, typename... Args>
-std::function<void(Args...)> bind(T* object, void (T::*method)(Args...)) {
+auto bind(T* object, void (T::*method)(Args...)) {
     return [object, method](Args&&... args) { return (object->*method)(std::forward<Args>(args)...); };
 }
 
