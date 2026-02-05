@@ -2,6 +2,8 @@
 
 #pragma once
 
+#include <shard/bit.hpp>
+
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
@@ -208,21 +210,11 @@ public:
     bool none() const { return !any(); }
 
     /// Count the number of bits set to '1'
-    size_type count() const {
-        size_type count = 0;
-
-        // full blocks
-        for (auto i = 0ul; i < m_blocks.size() - 1; ++i) {
-            count += count_bits_in_block(m_blocks[i]);
+    size_type count() const noexcept {
+        std::size_t count = 0;
+        for (auto block : m_blocks) {
+            count += count_bits_in_block(block);
         }
-
-        // last block
-        if (extra_bit_count() == 0) {
-            count += count_bits_in_block(last_block());
-        } else {
-            count += count_bits_in_block(last_block(), extra_bit_count());
-        }
-
         return count;
     }
 
@@ -332,7 +324,7 @@ public:
     // iteration
 
     /// Find the first set bit
-    size_type find_first() const {
+    size_type find_first() const noexcept {
         for (auto i = 0ul; i < m_blocks.size(); ++i) {
             if (m_blocks[i] != zero_block) {
                 return i * bits_per_block + count_trailing_zero_bits_in_block(m_blocks[i]);
@@ -342,27 +334,43 @@ public:
     }
 
     /// Find the next set bit starting at the given position
-    size_type find_next(size_type start_index) const {
-        if (empty() || start_index >= size() - 1) {
+    size_type find_next(size_type start_index) const noexcept {
+        ++start_index;
+
+        // check if we've gone past the end
+        if (start_index >= m_size) {
             return npos;
         }
 
-        auto first_bit = start_index + 1;
-        auto first_block = block_index(first_bit);
-        auto first_bit_index = bit_index(first_bit);
-        auto first_block_shifted = block_type(m_blocks[first_block] >> first_bit_index);
+        // calculate block and bit indices
+        const auto block_index = start_index / bits_per_block;
+        const auto bit_index = start_index % bits_per_block;
 
-        if (first_block_shifted != zero_block) {
-            return first_bit + count_trailing_zero_bits_in_block(first_block_shifted);
+        // check remaining bits in the current block
+        const block_type remaining_bits = m_blocks[block_index] >> bit_index;
+        if (remaining_bits != zero_block) {
+            return start_index + count_trailing_zero_bits_in_block(remaining_bits);
         }
 
-        for (auto i = first_block + 1; i < m_blocks.size(); ++i) {
+        // scan subsequent blocks
+        for (auto i = block_index + 1; i < m_blocks.size(); ++i) {
             if (m_blocks[i] != zero_block) {
                 return i * bits_per_block + count_trailing_zero_bits_in_block(m_blocks[i]);
             }
         }
 
         return npos;
+    }
+
+    /// Check if this bitset contains all bits of some other bitset
+    bool contains(const dynamic_bitset& other) const noexcept {
+        assert(size() == other.size());
+        for (auto i = 0ul; i < m_blocks.size(); ++i) {
+            if ((m_blocks[i] & other.m_blocks[i]) != other.m_blocks[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // operators
@@ -461,29 +469,22 @@ private:
 
     size_type unused_bit_count() const { return bits_per_block - extra_bit_count(); }
 
-    static size_type count_bits_in_block(block_type block) noexcept {
-        return count_bits_in_block(block, bits_per_block);
-    }
+    static size_type count_bits_in_block(block_type block) noexcept { return bit::popcount(block); }
 
     static size_type count_bits_in_block(block_type block, size_type bit_count) noexcept {
-        size_type count = 0;
-        block_type mask = 1;
-        for (auto i = 0ul; i < bit_count; ++i) {
-            count += (block & mask) != zero_block ? 1 : 0;
-            mask = block_type(mask << 1);
+        if (bit_count >= bits_per_block) {
+            return bit::popcount(block);
         }
-        return count;
+        // mask to only count the first bit_count bits
+        block_type mask = (block_type(1) << bit_count) - 1;
+        return bit::popcount(block & mask);
     }
 
     static size_type count_trailing_zero_bits_in_block(block_type block) noexcept {
-        block_type mask = 1;
-        for (auto i = 0ul; i < bits_per_block; ++i) {
-            if ((block & mask) != zero_block) {
-                return i;
-            }
-            mask = block_type(mask << 1);
+        if (block == zero_block) {
+            return npos;
         }
-        return npos;
+        return bit::countr_zero(block);
     }
 
     // reset unused bits to 0

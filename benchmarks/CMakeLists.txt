@@ -23,3 +23,9 @@ shard_add_benchmark(string.fmt
                     INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
                     MODULES shard::string
                     )
+
+shard_add_benchmark(containers.dynamic-bitset
+                    SOURCES dynamic_bitset.cpp main.cpp
+                    INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}
+                    MODULES shard::containers
+                    )

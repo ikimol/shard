@@ -4,6 +4,7 @@
 
 #include <shard/meta/type_traits.hpp>
 
+#include <cassert>
 #include <cstdlib>
 #include <cstring>
 #include <memory>
@@ -14,7 +15,8 @@ namespace containers {
 /// Represents a sparse set of unsigned values
 template <typename T>
 class sparse_set {
-    static_assert(std::is_constructible_v<T, std::size_t> || std::is_convertible_v<T, std::size_t>);
+    static_assert(std::is_trivially_copyable_v<T>);
+    static_assert(std::is_convertible_v<T, std::size_t>);
 
 public:
     using value_type = unqualified_t<T>;
@@ -91,7 +93,7 @@ public:
     }
 
     /// Empty the set
-    void clear() { m_size = 0; }
+    void clear() noexcept { m_size = 0; }
 
     /// Check if the value is present in the set
     bool contains(value_type value) const {
@@ -100,16 +102,19 @@ public:
     }
 
     /// Get the index of the value in the dense set
-    index_type index_of(value_type value) const { return m_sparse[to_unsigned(value)]; }
+    index_type index_of(value_type value) const {
+        assert(contains(value));
+        return m_sparse[to_unsigned(value)];
+    }
 
     /// Check if the set is empty
     bool is_empty() const noexcept { return m_size == 0; }
 
     /// Get the number of elements in the set
-    size_type size() const { return m_size; }
+    size_type size() const noexcept { return m_size; }
 
     /// Get the number of elements memory is reserved for
-    size_type capacity() const { return m_capacity; }
+    size_type capacity() const noexcept { return m_capacity; }
 
     /// Reserve memory if (needed) for more elements
     void reserve(size_type new_capacity) {
@@ -160,22 +165,32 @@ private:
     }
 
     void grow(size_type min_capacity) {
+        if (min_capacity > std::numeric_limits<std::size_t>::max() / 8) {
+            throw std::bad_alloc();
+        }
+
         size_type new_capacity = 4;
         while (new_capacity < min_capacity) {
+            if (new_capacity > std::numeric_limits<std::size_t>::max() / 2) {
+                new_capacity = min_capacity;
+                break;
+            }
             new_capacity *= 2;
         }
+
         reallocate(new_capacity);
     }
 
     void reallocate(size_type new_capacity) {
         void* dense;
-        if (dense = std::realloc(m_dense.get(), new_capacity * sizeof(value_type)); !dense) /* NOLINT */ {
+        if (dense = std::realloc(m_dense.get(), new_capacity * sizeof(value_type)); !dense) {
             throw std::bad_alloc();
         }
 
         void* sparse;
-        if (sparse = std::realloc(m_sparse.get(), new_capacity * sizeof(index_type)); !sparse) /* NOLINT */ {
-            std::free(dense);
+        if (sparse = std::realloc(m_sparse.get(), new_capacity * sizeof(index_type)); !sparse) {
+            m_dense.release(); // avoid double freeing memory
+            m_dense.reset(static_cast<value_type*>(dense));
             throw std::bad_alloc();
         }
 
