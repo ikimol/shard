@@ -65,18 +65,46 @@ TEST_CASE("bit") {
         REQUIRE(shard::bit::lowest(n) == 8);
     }
 
-    SUBCASE("count") {
+    SUBCASE("popcount") {
         auto n = 0b0'1011u; // 11
 
-        REQUIRE(shard::bit::count(n) == 3);
+        REQUIRE(shard::bit::popcount(n) == 3);
         shard::bit::strip_last(n);
 
-        REQUIRE(shard::bit::count(n) == 2);
+        REQUIRE(shard::bit::popcount(n) == 2);
         shard::bit::strip_last(n);
 
-        REQUIRE(shard::bit::count(n) == 1);
+        REQUIRE(shard::bit::popcount(n) == 1);
         shard::bit::strip_last(n);
 
-        REQUIRE(shard::bit::count(n) == 0);
+        REQUIRE(shard::bit::popcount(n) == 0);
+    }
+
+    SUBCASE("countr_zero") {
+        std::uint8_t n = 0b1000'1011u; // 139
+
+        REQUIRE(shard::bit::popcount(n) == 4);
+
+        REQUIRE(shard::bit::countr_zero(n) == 0);
+        shard::bit::strip_last(n);
+
+        REQUIRE(shard::bit::countr_zero(n) == 1);
+        shard::bit::strip_last(n);
+
+        REQUIRE(shard::bit::countr_zero(n) == 3);
+        shard::bit::strip_last(n);
+
+        REQUIRE(shard::bit::countr_zero(n) == 7);
+        shard::bit::strip_last(n);
+
+        REQUIRE(shard::bit::countr_zero(n) == 8);
+        REQUIRE(n == 0);
+
+        SUBCASE("different sizes") {
+            REQUIRE(shard::bit::countr_zero(static_cast<std::uint8_t>(0)) == 8);
+            REQUIRE(shard::bit::countr_zero(static_cast<std::uint16_t>(0)) == 16);
+            REQUIRE(shard::bit::countr_zero(static_cast<std::uint32_t>(0)) == 32);
+            REQUIRE(shard::bit::countr_zero(static_cast<std::uint64_t>(0)) == 64);
+        }
     }
 }
