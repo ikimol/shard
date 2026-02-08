@@ -198,6 +198,12 @@ TEST_CASE("containers.dynamic_bitset") {
         shard::dynamic_bitset empty(8);
         REQUIRE(bits_1.contains(empty));
         REQUIRE(empty.contains(empty));
+
+        // different sizes
+        shard::dynamic_bitset bits_4(16, 0b0000'0000'0000'1111);
+        shard::dynamic_bitset bits_5(4, 0b0001);
+        REQUIRE(bits_3.contains(bits_4));
+        REQUIRE(bits_4.contains(bits_5));
     }
 
     SUBCASE("operators") {

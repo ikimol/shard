@@ -126,10 +126,10 @@ public:
             return;
         }
 
-        constexpr size_type bit_count = std::numeric_limits<std::uint64_t>::digits;
-        constexpr auto required_blocks = bit_count / bits_per_block;
+        constexpr std::size_t bit_count = std::numeric_limits<std::uint64_t>::digits;
+        constexpr std::size_t required_blocks = bit_count / bits_per_block;
 
-        if (required_blocks == 1) {
+        if constexpr (required_blocks == 1) {
             m_blocks[0] = value;
         } else {
             auto mask = static_cast<std::uint64_t>(one_block);
@@ -364,9 +364,9 @@ public:
 
     /// Check if this bitset contains all bits of some other bitset
     bool contains(const dynamic_bitset& other) const noexcept {
-        assert(size() == other.size());
-        for (auto i = 0ul; i < m_blocks.size(); ++i) {
-            if ((m_blocks[i] & other.m_blocks[i]) != other.m_blocks[i]) {
+        for (auto i = 0ul; i < other.m_blocks.size(); ++i) {
+            auto this_block = i < m_blocks.size() ? m_blocks[i] : zero_block;
+            if ((this_block & other.m_blocks[i]) != other.m_blocks[i]) {
                 return false;
             }
         }
