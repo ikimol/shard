@@ -24,7 +24,7 @@ struct traits<std::uint64_t> {
 #endif
     }
 
-    static std::uint64_t popcount(std::uint64_t x) noexcept {
+    static unsigned int popcount(std::uint64_t x) noexcept {
 #if defined(_MSC_VER)
         return __popcnt64(x);
 #else
@@ -32,7 +32,7 @@ struct traits<std::uint64_t> {
 #endif
     }
 
-    static std::uint64_t countr_zero(std::uint64_t x) noexcept {
+    static unsigned int countr_zero(std::uint64_t x) noexcept {
 #if defined(_MSC_VER)
         unsigned long index;
         return _BitScanForward64(&index, x);
@@ -53,7 +53,7 @@ struct traits<std::uint32_t> {
 #endif
     }
 
-    static std::uint32_t popcount(std::uint32_t x) noexcept {
+    static unsigned int popcount(std::uint32_t x) noexcept {
 #if defined(_MSC_VER)
         return __popcnt(x);
 #else
@@ -61,7 +61,7 @@ struct traits<std::uint32_t> {
 #endif
     }
 
-    static std::uint32_t countr_zero(std::uint32_t x) noexcept {
+    static unsigned int countr_zero(std::uint32_t x) noexcept {
 #if defined(_MSC_VER)
         unsigned long index;
         _BitScanForward(&index, static_cast<unsigned long>(x));
@@ -82,7 +82,7 @@ struct traits<std::uint16_t> {
 #endif
     }
 
-    static std::uint16_t popcount(std::uint16_t x) noexcept {
+    static unsigned int popcount(std::uint16_t x) noexcept {
 #if defined(_MSC_VER)
         return __popcnt16(x);
 #else
@@ -90,16 +90,16 @@ struct traits<std::uint16_t> {
 #endif
     }
 
-    static std::uint16_t countr_zero(std::uint16_t x) noexcept { return traits<std::uint32_t>::countr_zero(x); }
+    static unsigned int countr_zero(std::uint16_t x) noexcept { return traits<std::uint32_t>::countr_zero(x); }
 };
 
 template <>
 struct traits<std::uint8_t> {
     static std::uint8_t byteswap(std::uint8_t x) noexcept { return x; }
 
-    static std::uint8_t popcount(std::uint8_t x) noexcept { return traits<std::uint32_t>::popcount(x); }
+    static unsigned int popcount(std::uint8_t x) noexcept { return traits<std::uint32_t>::popcount(x); }
 
-    static std::uint8_t countr_zero(std::uint8_t x) noexcept { return traits<std::uint32_t>::countr_zero(x); }
+    static unsigned int countr_zero(std::uint8_t x) noexcept { return traits<std::uint32_t>::countr_zero(x); }
 };
 
 } // namespace shard::bit
