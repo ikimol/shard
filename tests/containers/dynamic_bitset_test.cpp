@@ -12,6 +12,8 @@ TEST_CASE("containers.dynamic_bitset") {
             REQUIRE(bits.size() == 0);
             REQUIRE(bits.num_blocks() == 0);
             REQUIRE(bits.count() == 0);
+            REQUIRE(bits.none());
+            REQUIRE(bits.all());
         }
 
         SUBCASE("value larger than size") {

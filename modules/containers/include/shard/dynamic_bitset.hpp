@@ -181,18 +181,20 @@ public:
 
     /// Check if all bits are set
     bool all() const {
-        // full blocks
-        for (auto i = 0ul; i < m_blocks.size() - 1; ++i) {
+        const auto extra_bits = extra_bit_count();
+        const auto num_normal_blocks = num_blocks() - (extra_bits != 0 ? 1 : 0);
+
+        for (auto i = 0ul; i < num_normal_blocks; ++i) {
             if (m_blocks[i] != one_block) {
                 return false;
             }
         }
-
-        // last block
-        if (last_block() != (one_block >> unused_bit_count())) {
-            return false;
+        if (extra_bits != 0) {
+            const block_type mask = (block_type(1) << extra_bits) - 1;
+            if (last_block() != mask) {
+                return false;
+            }
         }
-
         return true;
     }
 
@@ -460,9 +462,9 @@ private:
     static size_type blocks_required(size_type size) noexcept { return (size + bits_per_block - 1) / bits_per_block; }
 
 private:
-    block_type& last_block() { return m_blocks[m_blocks.size() - 1]; }
+    block_type& last_block() { return m_blocks.back(); }
 
-    block_type last_block() const { return m_blocks[m_blocks.size() - 1]; }
+    block_type last_block() const { return m_blocks.back(); }
 
     // used & unused bits in the last block
     size_type extra_bit_count() const { return bit_index(m_size); }
