@@ -114,9 +114,9 @@ public:
 
     iterator end() const { return iterator(*this, N); }
 
-    bool operator==(const enum_set<E, N>& other) const { return m_bits == other.m_bits; }
+    bool operator==(const enum_set& other) const { return m_bits == other.m_bits; }
 
-    bool operator!=(const enum_set<E, N>& other) const { return m_bits != other.m_bits; }
+    bool operator!=(const enum_set& other) const { return m_bits != other.m_bits; }
 
     bool operator==(E other) const { return m_bits.count() == 1 && m_bits.test(to_index(other)); }
 
@@ -124,14 +124,14 @@ private:
     constexpr explicit enum_set(std::bitset<N> bits)
     : m_bits(bits) {}
 
-    static constexpr inline underlying_type to_index(value_type value) {
+    static constexpr underlying_type to_index(value_type value) {
         auto index = static_cast<underlying_type>(value);
-        assert(index < (underlying_type) (N));
+        assert(index < static_cast<underlying_type>(N));
         return index;
     }
 
     template <typename Iterator>
-    static constexpr inline underlying_type to_index_set(Iterator begin, Iterator end) {
+    static constexpr underlying_type to_index_set(Iterator begin, Iterator end) {
         underlying_type result = 0;
         for (auto it = begin; it != end; ++it) {
             result |= 1 << to_index(*it);
@@ -140,7 +140,7 @@ private:
     }
 
     underlying_type next_bit(underlying_type after) const {
-        while (after < (underlying_type) (N) && !m_bits.test(after)) {
+        while (after < static_cast<underlying_type>(N) && !m_bits.test(after)) {
             ++after;
         }
         return after;
