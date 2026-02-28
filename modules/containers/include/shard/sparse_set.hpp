@@ -16,7 +16,7 @@ namespace containers {
 template <typename T>
 class sparse_set {
     static_assert(std::is_trivially_copyable_v<T>);
-    static_assert(std::is_convertible_v<T, std::size_t>);
+    static_assert(std::is_convertible_v<T, std::size_t> || std::is_constructible_v<std::size_t, T>);
 
 public:
     using value_type = unqualified_t<T>;
