@@ -5,6 +5,7 @@
 #include <cstdint>
 
 #if defined(_MSC_VER)
+#include <intrin.h>
 #include <stdlib.h>
 #endif
 

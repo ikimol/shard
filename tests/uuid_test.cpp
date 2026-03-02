@@ -4,6 +4,7 @@
 
 #include <doctest.h>
 
+#include <algorithm>
 #include <vector>
 
 TEST_CASE("uuid") {

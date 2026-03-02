@@ -4,6 +4,8 @@
 
 #include <doctest.h>
 
+#include <ostream>
+
 enum class side : unsigned int {
     left = 0x1,
     top = 0x2,

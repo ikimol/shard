@@ -5,6 +5,7 @@
 #include "shard/signal/connection.hpp"
 #include "shard/signal/slot.hpp"
 
+#include <algorithm>
 #include <vector>
 
 namespace shard {
