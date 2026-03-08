@@ -17,6 +17,11 @@ shard_add_example(string.replace
                   MODULES shard::string
                   )
 
+shard_add_example(string.search
+                  SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/search.cpp
+                  MODULES shard::string
+                  )
+
 shard_add_example(string.split
                   SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/split.cpp
                   MODULES shard::string

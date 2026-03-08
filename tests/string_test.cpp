@@ -180,6 +180,76 @@ TEST_CASE("string") {
         REQUIRE(shard::to_string(test::streamable {"#0"}) == "streamable(\"#0\")");
     }
 
+    SUBCASE("search") {
+        SUBCASE("single occurrence") {
+            std::vector<std::size_t> matches;
+            shard::search("hello world", "world", std::back_inserter(matches));
+            REQUIRE(matches.size() == 1);
+            REQUIRE(matches[0] == 6);
+        }
+
+        SUBCASE("pattern at the start") {
+            std::vector<std::size_t> matches;
+            shard::search("foobar", "foo", std::back_inserter(matches));
+            REQUIRE(matches.size() == 1);
+            REQUIRE(matches[0] == 0);
+        }
+
+        SUBCASE("pattern at the end") {
+            std::vector<std::size_t> matches;
+            shard::search("foobar", "bar", std::back_inserter(matches));
+            REQUIRE(matches.size() == 1);
+            REQUIRE(matches[0] == 3);
+        }
+
+        SUBCASE("multiple non-overlapping occurrences") {
+            std::vector<std::size_t> matches;
+            shard::search("abcabcabc", "abc", std::back_inserter(matches));
+            REQUIRE(matches.size() == 3);
+            REQUIRE(matches[0] == 0);
+            REQUIRE(matches[1] == 3);
+            REQUIRE(matches[2] == 6);
+        }
+
+        SUBCASE("overlapping occurrences") {
+            std::vector<std::size_t> matches;
+            shard::search("aaaaa", "aa", std::back_inserter(matches));
+            REQUIRE(matches.size() == 4);
+            REQUIRE(matches[0] == 0);
+            REQUIRE(matches[1] == 1);
+            REQUIRE(matches[2] == 2);
+            REQUIRE(matches[3] == 3);
+        }
+
+        SUBCASE("single character pattern") {
+            std::vector<std::size_t> matches;
+            shard::search("banana", "a", std::back_inserter(matches));
+            REQUIRE(matches.size() == 3);
+            REQUIRE(matches[0] == 1);
+            REQUIRE(matches[1] == 3);
+            REQUIRE(matches[2] == 5);
+        }
+
+        SUBCASE("pattern equals string") {
+            std::vector<std::size_t> matches;
+            shard::search("foobar", "foobar", std::back_inserter(matches));
+            REQUIRE(matches.size() == 1);
+            REQUIRE(matches[0] == 0);
+        }
+
+        SUBCASE("no match") {
+            std::vector<std::size_t> matches;
+            shard::search("foobar", "baz", std::back_inserter(matches));
+            REQUIRE(matches.empty());
+        }
+
+        SUBCASE("pattern longer than string") {
+            std::vector<std::size_t> matches;
+            shard::search("foo", "foobar", std::back_inserter(matches));
+            REQUIRE(matches.empty());
+        }
+    }
+
     SUBCASE("trimming") {
         REQUIRE(shard::ltrim_copy("  foo") == "foo");
         REQUIRE(shard::ltrim_copy("\tfoo") == "foo");
