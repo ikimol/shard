@@ -19,20 +19,18 @@ template <typename T>
 class typespace;
 
 /// Represents a unique ID for a type
-template <typename T>
+template <typename>
 class type_id {
-    friend class typespace<T>;
-
 public:
+    /// Convert a previously assigned number back to a type ID
+    explicit constexpr type_id(std::size_t value)
+    : m_value(value) {}
+
     /// Get the underlying value of the type ID
-    std::size_t value() const { return m_value; }
+    constexpr std::size_t value() const { return m_value; }
 
     /// Conversion operator to the underlying value
-    /* implicit */ operator std::size_t() const /* NOLINT */ { return value(); }
-
-private:
-    explicit type_id(std::size_t value)
-    : m_value(value) {}
+    /* implicit */ constexpr operator std::size_t() const /* NOLINT */ { return value(); }
 
 private:
     std::size_t m_value;
@@ -45,7 +43,7 @@ public:
     /// Get the unique ID for a type
     template <typename>
     static type_id<T> id() {
-        static type_id<T> id(s_counter++);
+        static type_id<T> id(s_counter.fetch_add(1, std::memory_order_relaxed));
         return id;
     }
 
