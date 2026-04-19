@@ -64,7 +64,7 @@ sink_ptr console_sink() {
 sink_ptr make_file_sink(std::string_view path) {
     std::ofstream file(std::string(path), std::ios::app);
     if (file.is_open()) {
-        auto name = std::filesystem::path(path).filename();
+        auto name = std::filesystem::path(path).filename().string();
         auto context = new file_sink_context {std::move(file)};
         return std::make_shared<sink>(name, file_sink_writer, context, file_sink_cleanup);
     }
