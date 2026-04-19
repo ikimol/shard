@@ -5,7 +5,7 @@
 if (NOT shard_FIND_COMPONENTS)
     # request all components if none were provided
     set(shard_FIND_COMPONENTS
-        algorithm alloc bit concurrency containers enums expected math memory
+        algorithm alloc bit concurrency containers enums expected log math memory
         meta net property random signal sqlite stlxt string system utility uuid
         )
 endif ()
@@ -17,6 +17,7 @@ set(FIND_SHARD_CONCURRENCY_DEPENDENCIES meta utility system)
 set(FIND_SHARD_CONTAINERS_DEPENDENCIES meta)
 set(FIND_SHARD_ENUMS_DEPENDENCIES meta)
 set(FIND_SHARD_EXPECTED_DEPENDENCIES memory meta)
+set(FIND_SHARD_LOG_DEPENDENCIES common enums)
 set(FIND_SHARD_MATH_DEPENDENCIES "")
 set(FIND_SHARD_MEMORY_DEPENDENCIES utility)
 set(FIND_SHARD_META_DEPENDENCIES "")
