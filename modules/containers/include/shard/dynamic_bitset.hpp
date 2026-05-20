@@ -15,22 +15,6 @@
 
 namespace shard {
 namespace containers {
-namespace detail {
-
-template <typename T = void>
-struct bit_diff {
-    T operator()(const T& x, const T& y) const { return x & ~y; }
-};
-
-template <>
-struct bit_diff<void> {
-    template <typename T1, typename T2>
-    auto operator()(const T1& x, const T2& y) const {
-        return x & ~y;
-    }
-};
-
-} // namespace detail
 
 template <typename Block = std::uint32_t, typename Allocator = std::allocator<Block>>
 class dynamic_bitset {
@@ -401,16 +385,6 @@ public:
         return *this;
     }
 
-    dynamic_bitset& operator-=(const dynamic_bitset& other) {
-        assert(size() == other.size());
-        std::transform(m_blocks.cbegin(),
-                       m_blocks.cend(),
-                       other.m_blocks.cbegin(),
-                       m_blocks.begin(),
-                       detail::bit_diff {});
-        return *this;
-    }
-
     dynamic_bitset operator~() const {
         dynamic_bitset copy(*this);
         copy.flip();
@@ -473,15 +447,6 @@ private:
 
     static size_type count_bits_in_block(block_type block) noexcept { return bit::popcount(block); }
 
-    static size_type count_bits_in_block(block_type block, size_type bit_count) noexcept {
-        if (bit_count >= bits_per_block) {
-            return bit::popcount(block);
-        }
-        // mask to only count the first bit_count bits
-        block_type mask = (block_type(1) << bit_count) - 1;
-        return bit::popcount(block & mask);
-    }
-
     static size_type count_trailing_zero_bits_in_block(block_type block) noexcept {
         if (block == zero_block) {
             return npos;
@@ -539,13 +504,6 @@ dynamic_bitset<Block, Allocator> operator^(const dynamic_bitset<Block, Allocator
                                            const dynamic_bitset<Block, Allocator>& rhs) {
     dynamic_bitset<Block, Allocator> result(lhs);
     return result ^= rhs;
-}
-
-template <typename Block, typename Allocator>
-dynamic_bitset<Block, Allocator> operator-(const dynamic_bitset<Block, Allocator>& lhs,
-                                           const dynamic_bitset<Block, Allocator>& rhs) {
-    dynamic_bitset<Block, Allocator> result(lhs);
-    return result -= rhs;
 }
 
 } // namespace containers

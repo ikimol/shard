@@ -259,7 +259,7 @@ TEST_CASE("containers.dynamic_bitset") {
             shard::dynamic_bitset bits(8, 0b1111'1111);
             shard::dynamic_bitset mask(8, 0b0011'1100);
 
-            auto bits_sub = bits - mask; // 1100 0011
+            auto bits_sub = bits & ~mask; // 1100 0011
             REQUIRE(bits_sub.count() == 4);
             REQUIRE(bits_sub.test(0));
             REQUIRE(bits_sub.test(1));
@@ -267,7 +267,7 @@ TEST_CASE("containers.dynamic_bitset") {
             REQUIRE(bits_sub.test(7));
 
             mask.set(6).set(7);
-            bits_sub = bits - mask;
+            bits_sub = bits & ~mask;
             REQUIRE(bits_sub.count() == 2);
             REQUIRE(bits_sub.test(0));
             REQUIRE(bits_sub.test(1));
