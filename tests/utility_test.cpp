@@ -2,6 +2,7 @@
 
 #include <shard/utility/defer.hpp>
 #include <shard/utility/exception_guard.hpp>
+#include <shard/utility/function_ref.hpp>
 #include <shard/utility/lazy.hpp>
 #include <shard/utility/span.hpp>
 
@@ -41,6 +42,91 @@ TEST_CASE("utility") {
                 } catch (std::exception& e) {}
             }
             REQUIRE_FALSE(did_rollback);
+        }
+    }
+
+    SUBCASE("function_ref") {
+        SUBCASE("from lambda") {
+            int x = 0;
+            auto lambda = [&] { ++x; };
+            shard::function_ref<void()> f(lambda);
+            f();
+            REQUIRE(x == 1);
+        }
+
+        SUBCASE("from function pointer") {
+            auto add = [](int a, int b) { return a + b; };
+            shard::function_ref<int(int, int)> f(add);
+            REQUIRE(f(3, 4) == 7);
+        }
+
+        SUBCASE("from functor") {
+            struct multiply {
+                int factor;
+
+                int operator()(int x) const { return x * factor; }
+            };
+
+            multiply m {5};
+            shard::function_ref<int(int)> f(m);
+            REQUIRE(f(3) == 15);
+        }
+
+        SUBCASE("copy constructor") {
+            int x = 0;
+            auto lambda = [&] { ++x; };
+            shard::function_ref<void()> f(lambda);
+            shard::function_ref<void()> g(f);
+            g();
+            REQUIRE(x == 1);
+        }
+
+        SUBCASE("copy assignment") {
+            int a = 0, b = 0;
+            auto la = [&] { ++a; };
+            auto lb = [&] { ++b; };
+            shard::function_ref<void()> f(la);
+            shard::function_ref<void()> g(lb);
+            f = g;
+            f();
+            REQUIRE(a == 0);
+            REQUIRE(b == 1);
+        }
+
+        SUBCASE("assign from callable") {
+            int a = 0, b = 0;
+            auto la = [&] { ++a; };
+            auto lb = [&] { ++b; };
+            shard::function_ref<void()> f(la);
+            f();
+            f = lb;
+            f();
+            REQUIRE(a == 1);
+            REQUIRE(b == 1);
+        }
+
+        SUBCASE("swap") {
+            int a = 0, b = 0;
+            auto la = [&] { ++a; };
+            auto lb = [&] { ++b; };
+            shard::function_ref<void()> f(la);
+            shard::function_ref<void()> g(lb);
+            f.swap(g);
+            f();
+            REQUIRE(a == 0);
+            REQUIRE(b == 1);
+        }
+
+        SUBCASE("free swap") {
+            int a = 0, b = 0;
+            auto la = [&] { ++a; };
+            auto lb = [&] { ++b; };
+            shard::function_ref<void()> f(la);
+            shard::function_ref<void()> g(lb);
+            swap(f, g);
+            f();
+            REQUIRE(a == 0);
+            REQUIRE(b == 1);
         }
     }
 
