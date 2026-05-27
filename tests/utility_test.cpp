@@ -12,6 +12,10 @@
 
 #include <doctest.h>
 
+static int add(int a, int b) {
+    return a + b;
+}
+
 TEST_CASE("utility") {
     SUBCASE("defer") {
         bool called = false;
@@ -55,8 +59,7 @@ TEST_CASE("utility") {
         }
 
         SUBCASE("from function pointer") {
-            auto add = [](int a, int b) { return a + b; };
-            shard::function_ref<int(int, int)> f(add);
+            shard::function_ref f(&add);
             REQUIRE(f(3, 4) == 7);
         }
 
@@ -76,7 +79,7 @@ TEST_CASE("utility") {
             int x = 0;
             auto lambda = [&] { ++x; };
             shard::function_ref<void()> f(lambda);
-            shard::function_ref<void()> g(f);
+            shard::function_ref g(f);
             g();
             REQUIRE(x == 1);
         }
@@ -94,7 +97,8 @@ TEST_CASE("utility") {
         }
 
         SUBCASE("assign from callable") {
-            int a = 0, b = 0;
+            int a = 0;
+            int b = 0;
             auto la = [&] { ++a; };
             auto lb = [&] { ++b; };
             shard::function_ref<void()> f(la);
@@ -106,7 +110,8 @@ TEST_CASE("utility") {
         }
 
         SUBCASE("swap") {
-            int a = 0, b = 0;
+            int a = 0;
+            int b = 0;
             auto la = [&] { ++a; };
             auto lb = [&] { ++b; };
             shard::function_ref<void()> f(la);
@@ -118,7 +123,8 @@ TEST_CASE("utility") {
         }
 
         SUBCASE("free swap") {
-            int a = 0, b = 0;
+            int a = 0;
+            int b = 0;
             auto la = [&] { ++a; };
             auto lb = [&] { ++b; };
             shard::function_ref<void()> f(la);

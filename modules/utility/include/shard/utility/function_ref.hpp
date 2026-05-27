@@ -30,8 +30,8 @@ public:
     /// Constructor from a callable
     template <typename F, typename = std::enable_if_t<is_callable_v<F>>>
     constexpr /* implicit */ function_ref(F&& f) noexcept /* NOLINT */
-    : m_callable(const_cast<void*>(reinterpret_cast<const void*>(std::addressof(f)))) {
-        m_callback = [](void* callable, Args... args) -> R {
+    : m_callable(reinterpret_cast<callable_type>(std::addressof(f))) {
+        m_callback = [](callable_type callable, Args... args) -> R {
             return std::invoke(*reinterpret_cast<std::add_pointer_t<F>>(callable), std::forward<Args>(args)...);
         };
     }
@@ -42,8 +42,8 @@ public:
     /// Assignment from a callable
     template <typename F, typename = std::enable_if_t<is_callable_v<F>>>
     constexpr function_ref& operator=(F&& f) noexcept {
-        m_callable = reinterpret_cast<void*>(std::addressof(f));
-        m_callback = [](void* callable, Args... args) -> R {
+        m_callable = reinterpret_cast<callable_type>(std::addressof(f));
+        m_callback = [](callable_type callable, Args... args) -> R {
             return std::invoke(*reinterpret_cast<std::add_pointer_t<F>>(callable), std::forward<Args>(args)...);
         };
         return *this;
@@ -59,10 +59,11 @@ public:
     R operator()(Args... args) const { return m_callback(m_callable, std::forward<Args>(args)...); }
 
 private:
-    using callback_type = R (*)(void*, Args...);
+    using callable_type = void (*)();
+    using callback_type = R (*)(callable_type, Args...);
 
 private:
-    void* m_callable = nullptr;
+    callable_type m_callable = nullptr;
     callback_type m_callback = nullptr;
 };
 
