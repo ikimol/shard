@@ -138,7 +138,7 @@ TEST_CASE("memory") {
                     std::size_t size = 0;
                 };
 
-                auto padding_with_header = shard::memory::get_padding<header>(p1, 4);
+                auto padding_with_header = shard::memory::get_padding_with_header<header>(p1, 4);
                 REQUIRE(padding_with_header == 15);
             }
 
@@ -147,7 +147,7 @@ TEST_CASE("memory") {
                     short size = 0;
                 };
 
-                auto padding_with_header = shard::memory::get_padding<header>(p1, 4);
+                auto padding_with_header = shard::memory::get_padding_with_header<header>(p1, 4);
                 REQUIRE(padding_with_header == 3);
             }
         }

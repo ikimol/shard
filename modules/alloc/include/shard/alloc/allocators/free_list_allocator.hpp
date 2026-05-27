@@ -36,7 +36,7 @@ public:
         // the one with the smallest size that is big enough
         while (free_block) {
             // calculate padding needed to keep object correctly aligned
-            auto padding = get_padding<allocation_header>(free_block, align);
+            auto padding = get_padding_with_header<allocation_header>(free_block, align);
             auto total_size = size + padding;
 
             // use this block if it's a perfect fit

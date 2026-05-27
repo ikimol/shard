@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <utility>
 
 namespace shard::memory {
 
@@ -51,31 +52,27 @@ inline std::size_t get_padding(const void* ptr, std::size_t align) {
     // because the most significant bits, that do not affect the alignment, are
     // simply masked out
     // only the log2(align) least significant bits affect the alignment
-    if (auto padding = align - (as_uint(ptr) & (align - 1)); padding != align) {
-        return padding;
-    }
-    // already aligned
-    return 0;
+    auto padding = align - (as_uint(ptr) & (align - 1));
+    return padding != align ? padding : 0;
 }
 
+/// Calculate how many bytes the address would need to be shifted forward to be
+/// aligned, accounting for the size and alignment of a header
 template <typename T>
-std::size_t get_padding(const void* ptr, std::size_t align) {
-    if (alignof(T) > align) {
-        align = alignof(T);
-    }
+std::size_t get_padding_with_header(const void* ptr, std::size_t align) {
+    align = alignof(T) > align ? alignof(T) : align;
     return sizeof(T) + get_padding(add(ptr, sizeof(T)), align);
 }
 
 /// Return the pointer aligned to the given bytes
 inline void* align(const void* ptr, std::size_t align) {
-    auto padding = get_padding(ptr, align);
-    return as_ptr(as_uint(ptr) + padding);
+    return as_ptr(as_uint(ptr) + get_padding(ptr, align));
 }
 
 /// Return the pointer aligned to the given bytes
 template <typename T>
-inline T* align(const T* ptr) {
-    return align(ptr, alignof(T));
+T* align(T* ptr) {
+    return static_cast<T*>(align(static_cast<void*>(ptr), alignof(T)));
 }
 
 /// Check if a memory address is n-byte aligned
