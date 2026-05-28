@@ -118,9 +118,22 @@ TEST_CASE("meta") {
             REQUIRE_FALSE(shard::has_key_value_pair_v<std::set<int>>);
         }
 
+        SUBCASE("is_empty") {
+            REQUIRE(shard::is_empty_v<>);
+            REQUIRE_FALSE(shard::is_empty_v<void>);
+            REQUIRE_FALSE(shard::is_empty_v<bool, int>);
+        }
+
         SUBCASE("are_same") {
             REQUIRE(shard::are_same_v<int, int, int>);
             REQUIRE_FALSE(shard::are_same_v<int, float, int>);
+        }
+
+        SUBCASE("are_enum") {
+            enum class my_enum_1 {};
+            enum class my_enum_2 {};
+            enum class my_enum_3 {};
+            REQUIRE(shard::are_enum_v<my_enum_1, my_enum_2, my_enum_3>);
         }
 
         SUBCASE("unqualified") {
@@ -156,6 +169,18 @@ TEST_CASE("meta") {
             REQUIRE(std::is_same_v<shard::result_of_t<decltype(dummy_1)>, bool>);
             REQUIRE(std::is_same_v<shard::result_of_t<decltype(dummy_2)>, const char*>);
             REQUIRE(std::is_same_v<shard::result_of_t<decltype(&dummy_2)>, const char*>);
+        }
+
+        SUBCASE("functor_traits") {
+            REQUIRE(shard::functor_traits<decltype(dummy_1)>::arity == 2);
+            REQUIRE(std::is_same_v<shard::functor_traits<decltype(dummy_1)>::return_type, bool>);
+            REQUIRE(std::is_same_v<shard::functor_traits<decltype(dummy_1)>::args_type, std::tuple<int, char>>);
+            REQUIRE(std::is_same_v<shard::functor_traits<decltype(dummy_1)>::arg_type<0>, int>);
+            REQUIRE(std::is_same_v<shard::functor_traits<decltype(dummy_1)>::arg_type<1>, char>);
+
+            REQUIRE(shard::functor_traits<decltype(dummy_2)>::arity == 1);
+            REQUIRE(std::is_same_v<shard::functor_traits<decltype(dummy_2)>::args_type, std::tuple<float>>);
+            REQUIRE(std::is_same_v<shard::functor_traits<decltype(dummy_2)>::arg_type<0>, float>);
         }
     }
 
