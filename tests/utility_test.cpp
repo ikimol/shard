@@ -12,6 +12,10 @@
 
 #include <doctest.h>
 
+static int add(int a, int b) {
+    return a + b;
+}
+
 TEST_CASE("utility") {
     SUBCASE("defer") {
         bool called = false;
@@ -55,9 +59,11 @@ TEST_CASE("utility") {
         }
 
         SUBCASE("from function pointer") {
-            auto add = [](int a, int b) { return a + b; };
-            shard::function_ref<int(int, int)> f(add);
+            shard::function_ref f(add);
             REQUIRE(f(3, 4) == 7);
+
+            shard::function_ref f_ptr(&add);
+            REQUIRE(f_ptr(3, 4) == 7);
         }
 
         SUBCASE("from functor") {
@@ -76,7 +82,7 @@ TEST_CASE("utility") {
             int x = 0;
             auto lambda = [&] { ++x; };
             shard::function_ref<void()> f(lambda);
-            shard::function_ref<void()> g(f);
+            shard::function_ref g(f);
             g();
             REQUIRE(x == 1);
         }

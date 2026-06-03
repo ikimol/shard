@@ -29,11 +29,8 @@ public:
 
     /// Constructor from a callable
     template <typename F, typename = std::enable_if_t<is_callable_v<F>>>
-    constexpr /* implicit */ function_ref(F&& f) noexcept /* NOLINT */
-    : m_callable(const_cast<void*>(reinterpret_cast<const void*>(std::addressof(f)))) {
-        m_callback = [](void* callable, Args... args) -> R {
-            return std::invoke(*reinterpret_cast<std::add_pointer_t<F>>(callable), std::forward<Args>(args)...);
-        };
+    /* implicit */ function_ref(F&& f) noexcept /* NOLINT */ {
+        construct(std::forward<F>(f));
     }
 
     /// Copy assignment
@@ -41,11 +38,8 @@ public:
 
     /// Assignment from a callable
     template <typename F, typename = std::enable_if_t<is_callable_v<F>>>
-    constexpr function_ref& operator=(F&& f) noexcept {
-        m_callable = reinterpret_cast<void*>(std::addressof(f));
-        m_callback = [](void* callable, Args... args) -> R {
-            return std::invoke(*reinterpret_cast<std::add_pointer_t<F>>(callable), std::forward<Args>(args)...);
-        };
+    function_ref& operator=(F&& f) noexcept {
+        construct(std::forward<F>(f));
         return *this;
     }
 
@@ -60,6 +54,22 @@ public:
 
 private:
     using callback_type = R (*)(void*, Args...);
+
+private:
+    template <typename F>
+    void construct(F&& f) noexcept {
+        if constexpr (std::is_function_v<std::remove_pointer_t<std::decay_t<F>>>) {
+            m_callable = reinterpret_cast<void*>(f);
+            m_callback = [](void* callable, Args... args) -> R {
+                return std::invoke(reinterpret_cast<std::decay_t<F>>(callable), std::forward<Args>(args)...);
+            };
+        } else {
+            m_callable = const_cast<void*>(reinterpret_cast<const void*>(std::addressof(f)));
+            m_callback = [](void* callable, Args... args) -> R {
+                return std::invoke(*reinterpret_cast<std::add_pointer_t<F>>(callable), std::forward<Args>(args)...);
+            };
+        }
+    }
 
 private:
     void* m_callable = nullptr;
