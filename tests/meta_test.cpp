@@ -36,6 +36,10 @@ static const char* dummy_2(float) {
     return "dummy";
 }
 
+struct type_tag {};
+
+using my_type = shard::type_id<std::uint8_t, type_tag>;
+
 TEST_CASE("meta") {
     SUBCASE("type_traits") {
         SUBCASE("is_integer") {
@@ -186,7 +190,7 @@ TEST_CASE("meta") {
 
     SUBCASE("type_id") {
         SUBCASE("conversion") {
-            auto id = shard::meta::typespace<void>::id<int>();
+            auto id = shard::meta::typespace<std::uint8_t, void>::id<int>();
             std::size_t value = id;
             REQUIRE(value == 0);
         }
@@ -199,11 +203,11 @@ TEST_CASE("meta") {
         }
 
         SUBCASE("separate typespaces") {
-            REQUIRE(shard::meta::typespace<void>::id<int>() == 0);
-            REQUIRE(shard::meta::typespace<void>::id<unsigned int>() == 1);
+            REQUIRE(shard::meta::typespace<std::uint8_t, void>::id<int>() == 0);
+            REQUIRE(shard::meta::typespace<std::uint8_t, void>::id<unsigned int>() == 1);
 
-            REQUIRE(shard::meta::typespace<char>::id<int>() == 0);
-            REQUIRE(shard::meta::typespace<char>::id<unsigned int>() == 1);
+            REQUIRE(shard::meta::typespace<std::uint8_t, char>::id<int>() == 0);
+            REQUIRE(shard::meta::typespace<std::uint8_t, char>::id<unsigned int>() == 1);
         }
 
         SUBCASE("relational operators") {
