@@ -3,6 +3,7 @@
 #pragma once
 
 #include <atomic>
+#include <cassert>
 #include <cstdint>
 #include <functional>
 
@@ -19,7 +20,9 @@ public:
 public:
     /// Convert a previously assigned number back to a type ID
     explicit constexpr type_id(value_type value)
-    : m_value(value) {}
+    : m_value(value) {
+        assert(value < std::numeric_limits<value_type>::max());
+    }
 
     /// Get the underlying value of the type ID
     constexpr value_type value() const { return m_value; }
