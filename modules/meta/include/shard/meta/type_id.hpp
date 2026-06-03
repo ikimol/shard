@@ -8,17 +8,13 @@
 
 namespace shard {
 namespace meta {
-namespace detail {
-
-struct default_typespace {};
-
-} // namespace detail
 
 /// Represents a unique ID for a type
-template <typename T, typename>
+template <typename T, typename U>
 class type_id {
 public:
     using value_type = T;
+    using tag_type = U;
 
 public:
     /// Convert a previously assigned number back to a type ID
@@ -89,6 +85,13 @@ bool operator>=(const type_id<T, U>& lhs, const type_id<T, U>& rhs) noexcept {
     return !(lhs < rhs);
 }
 
+namespace detail {
+
+struct default_tag final {};
+
+using default_type = type_id<std::uint32_t, default_tag>;
+
+} // namespace detail
 } // namespace meta
 
 // bring symbols into parent namespace
@@ -106,9 +109,8 @@ struct std::hash<shard::meta::type_id<T, U>> {
     }
 };
 
-#define SHARD_INTERNAL_TYPEID_1(T)                                                                                     \
-    shard::meta::typespace<std::uint16_t, shard::meta::detail::default_typespace>::id<T>()
-#define SHARD_INTERNAL_TYPEID_2(ID_T, T) shard::meta::typespace<ID_T::value_type, ID_T>::id<T>()
+#define SHARD_INTERNAL_TYPEID_1(T) SHARD_INTERNAL_TYPEID_2(shard::meta::detail::default_type, T)
+#define SHARD_INTERNAL_TYPEID_2(T_ID, T) shard::meta::typespace<T_ID::value_type, T_ID::tag_type>::id<T>()
 
 #define SHARD_INTERNAL_TYPEID_SELECT(_1, _2, MACRO, ...) MACRO
 #define SHARD_TYPEID(...)                                                                                              \
