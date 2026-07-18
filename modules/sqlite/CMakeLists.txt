@@ -15,5 +15,5 @@ shard_add_header_only_library(${MODULE_NAME} ${MODULE_INCLUDE_DIR}
                               shard::meta
                               shard::memory
                               # third party
-                              SQLite::SQLite3
+                              SQLite3::SQLite3
                               )
